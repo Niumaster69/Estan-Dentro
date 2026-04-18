@@ -241,20 +241,20 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 3
   enabled:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   enabledTransparent:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   tracing:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 2
   m_MinSmoothness:
-    m_OverrideState: 0
-    m_Value: 0.391
+    m_OverrideState: 1
+    m_Value: 0.372
   m_SmoothnessFadeStart:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 0.477
   reflectSky:
     m_OverrideState: 0
     m_Value: 1
@@ -312,25 +312,25 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   m_RayLength:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 50
   m_ClampValue:
     m_OverrideState: 0
     m_Value: 100
   m_Denoise:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   m_DenoiserRadius:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.75
   m_DenoiserAntiFlickeringStrength:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   mode:
     m_OverrideState: 0
     m_Value: 2
   m_FullResolution:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   sampleCount:
     m_OverrideState: 0
@@ -339,8 +339,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   m_RayMaxIterationsRT:
-    m_OverrideState: 0
-    m_Value: 48
+    m_OverrideState: 1
+    m_Value: 32
   adaptiveProbeVolumesLayerMask:
     m_OverrideState: 0
     m_Value:
