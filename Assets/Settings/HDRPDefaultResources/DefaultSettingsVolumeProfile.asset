@@ -623,7 +623,7 @@ MonoBehaviour:
   active: 1
   enable:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   layerMask:
     m_OverrideState: 1
     m_Value:
@@ -1014,7 +1014,7 @@ MonoBehaviour:
   active: 1
   cameraClusterRange:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 15
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2199,7 +2199,7 @@ MonoBehaviour:
     m_Value: 1
   extendCameraCulling:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   directionalShadowRayLength:
     m_OverrideState: 1
     m_Value: 1000
