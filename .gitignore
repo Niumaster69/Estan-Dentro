@@ -65,3 +65,10 @@ sysinfo.txt
 *.rar
 *.tar
 *.zip
+
+# Unity autorecovery
+Assets/_Recovery/
+Assets/_Recovery.meta
+
+# Unity Performance Testing artifacts
+Assets/Resources/PerformanceTestRun*
