@@ -1329,6 +1329,63 @@ Transform:
   - {fileID: 7113939075937611588}
   m_Father: {fileID: 54415161}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &348281932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 348281934}
+  - component: {fileID: 348281933}
+  m_Layer: 0
+  m_Name: IntrusionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &348281933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348281932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1770d78c56d25e44d8460e04de7b6314, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Intrusions.IntrusionManager
+  onIntrusionTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onObserver:
+    m_PersistentCalls:
+      m_Calls: []
+  onIracundo:
+    m_PersistentCalls:
+      m_Calls: []
+  onInfante:
+    m_PersistentCalls:
+      m_Calls: []
+  logToConsole: 1
+--- !u!4 &348281934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348281932}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.26982, y: 0.02125, z: -0.06675}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &377956958
 GameObject:
   m_ObjectHideFlags: 0
@@ -1772,6 +1829,7 @@ MonoBehaviour:
   m_Script: {fileID: 1955260053}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.SceneObjectIDMapSceneAsset
+  m_Entries: []
 --- !u!4 &467624280
 Transform:
   m_ObjectHideFlags: 19
@@ -2920,6 +2978,11 @@ MonoScript:
   m_ClassName: SceneObjectIDMapSceneAsset
   m_Namespace: UnityEngine.Rendering.HighDefinition
   m_AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+--- !u!1 &1109818730 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+  m_PrefabInstance: {fileID: 1664285684}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1209905473
 GameObject:
   m_ObjectHideFlags: 0
@@ -4241,13 +4304,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1664285689}
   m_SourcePrefab: {fileID: 100100000, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
 --- !u!20 &1664285685 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 5894713580206735907, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
   m_PrefabInstance: {fileID: 1664285684}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1664285689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109818730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003dd2c5901b7d047aac0b177f18d53b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Intrusions.Gaze.GazeDetector
+  maxDistance: 50
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerInteraction: 2
+  sourceCamera: {fileID: 0}
+  drawGizmo: 1
+  logTargetChanges: 0
 --- !u!1 &1762341018
 GameObject:
   m_ObjectHideFlags: 0
@@ -28288,3 +28374,4 @@ SceneRoots:
   - {fileID: 1664285684}
   - {fileID: 100592468}
   - {fileID: 63431174}
+  - {fileID: 348281934}
