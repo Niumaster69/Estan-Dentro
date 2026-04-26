@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using EstanDentro.UI;
 
 namespace EstanDentro.Player
 {
@@ -7,14 +8,19 @@ namespace EstanDentro.Player
     public class PlayerController : MonoBehaviour
     {
         [Header("Movimiento")]
-        [SerializeField] private float walkSpeed = 4f;
-        [SerializeField] private float sprintSpeed = 7f;
-        [SerializeField] private float crouchSpeed = 2f;
+        [SerializeField] private float walkSpeed = 2.8f;
+        [SerializeField] private float sprintSpeed = 4.5f;
+        [SerializeField] private float crouchSpeed = 1.4f;
         [SerializeField] private float gravity = -20f;
 
         [Header("Camara")]
         [SerializeField] private Transform cameraPivot;
-        [SerializeField] private float mouseSensitivity = 0.15f;
+        [SerializeField, Tooltip("Grados por pixel de delta del mouse. Subir = mas rapido. Tipico 0.1 - 0.4.")]
+        private float mouseSensitivity = 0.25f;
+        [SerializeField, Tooltip("Grados por segundo cuando el stick esta a tope. Subir = mas rapido. Tipico 150 - 320.")]
+        private float gamepadSensitivity = 240f;
+        [SerializeField, Tooltip("Zona muerta del stick para evitar drift. 0.1 - 0.2 es comun.")]
+        private float gamepadDeadzone = 0.12f;
         [SerializeField] private float minPitch = -85f;
         [SerializeField] private float maxPitch = 85f;
         [SerializeField] private bool invertY = false;
@@ -26,7 +32,8 @@ namespace EstanDentro.Player
 
         private CharacterController controller;
         private Vector2 moveInput;
-        private Vector2 lookInput;
+        private Vector2 mouseLookInput;
+        private Vector2 gamepadLookInput;
         private bool sprintHeld;
         private bool crouchHeld;
         private float verticalVelocity;
@@ -40,23 +47,59 @@ namespace EstanDentro.Player
             Cursor.visible = false;
         }
 
+        private void Start()
+        {
+            ApplySettings();
+        }
+
+        public void ApplySettings()
+        {
+            mouseSensitivity = Settings.MouseSensitivity;
+            gamepadSensitivity = Settings.GamepadSensitivity;
+            invertY = Settings.InvertY;
+        }
+
         private void Update()
         {
+            PollHoldInputs();
             HandleLook();
             HandleMove();
             HandleCrouchHeight();
         }
 
+        private void PollHoldInputs()
+        {
+            var kb = Keyboard.current;
+            var gp = Gamepad.current;
+            sprintHeld = (kb != null && kb.leftShiftKey.isPressed) ||
+                         (gp != null && gp.leftStickButton.isPressed);
+            crouchHeld = (kb != null && kb.cKey.isPressed) ||
+                         (gp != null && gp.rightTrigger.isPressed);
+        }
+
         private void HandleLook()
         {
-            float yaw = lookInput.x * mouseSensitivity;
-            float pitchDelta = lookInput.y * mouseSensitivity * (invertY ? 1f : -1f);
+            float yaw = mouseLookInput.x * mouseSensitivity;
+            float pitchDelta = mouseLookInput.y * mouseSensitivity;
+
+            Vector2 stick = ApplyDeadzone(gamepadLookInput, gamepadDeadzone);
+            yaw += stick.x * gamepadSensitivity * Time.deltaTime;
+            pitchDelta += stick.y * gamepadSensitivity * Time.deltaTime;
+
+            pitchDelta *= invertY ? 1f : -1f;
 
             transform.Rotate(0f, yaw, 0f, Space.Self);
 
             pitch = Mathf.Clamp(pitch + pitchDelta, minPitch, maxPitch);
             if (cameraPivot != null)
                 cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+        }
+
+        private static Vector2 ApplyDeadzone(Vector2 v, float deadzone)
+        {
+            float mag = v.magnitude;
+            if (mag < deadzone) return Vector2.zero;
+            return v * ((mag - deadzone) / (1f - deadzone) / mag);
         }
 
         private void HandleMove()
@@ -90,8 +133,29 @@ namespace EstanDentro.Player
         }
 
         public void OnMove(InputValue value) => moveInput = value.Get<Vector2>();
-        public void OnLook(InputValue value) => lookInput = value.Get<Vector2>();
-        public void OnSprint(InputValue value) => sprintHeld = value.isPressed;
-        public void OnCrouch(InputValue value) => crouchHeld = value.isPressed;
+        public void OnLook(InputValue value) => mouseLookInput = value.Get<Vector2>();
+        public void OnLookGamepad(InputValue value) => gamepadLookInput = value.Get<Vector2>();
+        public void OnSprint(InputValue value) { /* polled in Update — Send Messages no propaga release */ }
+        public void OnCrouch(InputValue value) { /* polled in Update — Send Messages no propaga release */ }
+
+        public void OnInteract(InputValue value)
+        {
+            if (value.isPressed) Debug.Log("[Input] Interact pressed");
+        }
+
+        public void OnFlashlight(InputValue value)
+        {
+            if (value.isPressed) Debug.Log("[Input] Flashlight pressed");
+        }
+
+        public void OnPause(InputValue value)
+        {
+            if (value.isPressed) Debug.Log("[Input] Pause pressed");
+        }
+
+        public void OnBreatheFallback(InputValue value)
+        {
+            Debug.Log($"[Input] BreatheFallback {(value.isPressed ? "down" : "up")}");
+        }
     }
 }
