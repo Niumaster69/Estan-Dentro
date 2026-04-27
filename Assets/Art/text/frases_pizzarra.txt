@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 					 TEXTOS DE PIZARRA – OBSERVADOR
 
 Propuesta (rotan / aparecen por frames)
@@ -48,54 +47,3 @@ Es clave que:
 -Nunca esté completa del todo
 -Se perciba como acusación incompleta
 
-=======
-					 TEXTOS DE PIZARRA – OBSERVADOR
-
-Propuesta (rotan / aparecen por frames)
-“No estaban dormidos.”
-“La salida no está donde crees.”
-“Mira el suelo.”
-“Algo ocurrió antes de que despertaras.”
-“No es un aula.”
-“Estás recordando mal.”
-“No mires donde quieres mirar.”
-“Falta alguien.”
-“No es polvo.”
-“Eso no debería estar aquí.”
- 					EXPLICACION 
-
-
-El Observador es frío, analítico y sin emoción, por eso Las frases son cortas, directas y clínicas
-No explican, solo corrigen percepción
-
-Funcionan como:
-
-Guía indirecta del puzzle
-Disonancia cognitiva (rompen la lógica del jugador)
-
-Ejemplo clave:
-
-“No estaban dormidos” - niega la interpretación cómoda (alumnos dormidos - muertos)
-
-Importante:
-
-Nunca cuentan la verdad completa - solo la insinúan
-
- Esto respeta la regla del juego el terror viene de lo que falta, no de lo que aparece.
-
-					FRASE AMBIGUA OCULTA
-
-“Tú no deberías haber salido.”
-
-					EXPLICACION 
-
-Esta frase conecta directamente con:
-- culpa del sobreviviente
-- la presencia de “El que se sienta delante”
- 
-Es clave que:
-
--Nunca esté completa del todo
--Se perciba como acusación incompleta
-
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
