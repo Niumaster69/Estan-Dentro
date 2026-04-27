@@ -563,6 +563,7 @@ MonoBehaviour:
   - {fileID: 3715688724286252913}
   - {fileID: -5953404646214148493}
   - {fileID: -2370427227104682737}
+<<<<<<< HEAD
   - {fileID: 854484889054148101}
 --- !u!114 &854484889054148101
 MonoBehaviour:
@@ -655,6 +656,8 @@ MonoBehaviour:
   directionalLightsOnly:
     m_OverrideState: 0
     m_Value: 0
+=======
+>>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
 --- !u!114 &2849026678995511636
 MonoBehaviour:
   m_ObjectHideFlags: 3
