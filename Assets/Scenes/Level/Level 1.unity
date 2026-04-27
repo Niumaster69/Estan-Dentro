@@ -2880,7 +2880,6 @@ MonoBehaviour:
   m_Script: {fileID: 1955260053}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.SceneObjectIDMapSceneAsset
-  m_Entries: []
 --- !u!4 &467624280
 Transform:
   m_ObjectHideFlags: 19
@@ -10130,6 +10129,67 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &3329885400105832209
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1523506683277595581, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779713423299982382, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9043144504946080374, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
+      propertyPath: m_Name
+      value: Cortina
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b2cd2f5fa3a10a44f9c1590a5a980367, type: 3}
 --- !u!1001 &3965377154075198495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10561,3 +10621,4 @@ SceneRoots:
   - {fileID: 6145464218408760267}
   - {fileID: 3965377154075198495}
   - {fileID: 1472584409}
+  - {fileID: 3329885400105832209}

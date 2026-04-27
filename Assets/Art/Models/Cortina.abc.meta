@@ -31,8 +31,8 @@ ScriptedImporter:
     createCurveRenderers: 0
   abcStartTime: 0
   abcEndTime: 13.333333333333334
-  startTime: 0
-  endTime: 13.333333333333334
+  startTime: 1.2367149591445923
+  endTime: 13.062800407409668
   importWarning: 
   firstImport: 0
   isHDF5: 0
