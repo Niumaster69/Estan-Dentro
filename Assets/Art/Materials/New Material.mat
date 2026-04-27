@@ -9,13 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: New Material
   m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
-<<<<<<< HEAD
-  m_Parent: {fileID: 2100000, guid: 03490adc46f3c9a478f3fb5ffb6f46fa, type: 2}
-  m_ModifiedSerializedProperties: 28
-=======
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
   m_ValidKeywords:
   - _DOUBLESIDED_ON
   - _ENABLE_FOG_ON_TRANSPARENT
@@ -38,19 +33,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-<<<<<<< HEAD
-=======
     - _AnisotropyMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
     - _BaseColorMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-<<<<<<< HEAD
-=======
     - _BentNormalMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -83,7 +73,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -96,24 +85,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-<<<<<<< HEAD
-    m_Ints: []
-    m_Floats:
-    - _AlphaDstBlend: 10
-    - _CullMode: 0
-    - _CullModeForward: 0
-    - _DoubleSidedEnable: 1
-    - _DstBlend: 10
-    - _DstBlend2: 10
-    - _Ior: 1.977
-    - _ReceivesSSRTransparent: 1
-    - _RefractionModel: 3
-    - _Smoothness: 0.919
-    - _StencilRefDepth: 24
-    - _StencilWriteMaskDepth: 25
-    - _SurfaceType: 1
-    - _ZTestDepthEqualForOpaque: 4
-=======
     - _NormalMapOS:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -273,13 +244,10 @@ Material:
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.749199, g: 0.8679245, b: 0.8136184, a: 0.02745098}
     - _Color: {r: 0.749199, g: 0.8679245, b: 0.8136184, a: 0.02745098}
-<<<<<<< HEAD
-=======
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
@@ -293,7 +261,6 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &5557866362569004845

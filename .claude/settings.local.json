@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "permissions": {
     "allow": [
@@ -8,14 +7,3 @@
     ]
   }
 }
-=======
-{
-  "permissions": {
-    "allow": [
-      "Bash(git checkout *)",
-      "Bash(git add *)",
-      "Bash(git commit *)"
-    ]
-  }
-}
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75

@@ -1,12 +1,8 @@
 {
   "dependencies": {
-<<<<<<< HEAD
-    "com.unity.feature.development": "1.0.2",
-    "com.unity.formats.alembic": "2.4.4",
-=======
     "com.unity.collab-proxy": "2.11.3",
     "com.unity.feature.development": "1.0.2",
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
+    "com.unity.formats.alembic": "2.4.4",
     "com.unity.inputsystem": "1.18.0",
     "com.unity.multiplayer.center": "1.0.1",
     "com.unity.render-pipelines.high-definition": "17.3.0",
@@ -50,8 +46,4 @@
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 0a110bca3c7d383d84ab6cc6c8aec8abc0cf9a75
