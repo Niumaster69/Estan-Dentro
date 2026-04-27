@@ -41,7 +41,7 @@ namespace EstanDentro.Interaction
         {
             if (IsBlackedOut) return;
             int count = 0;
-            var lights = FindObjectsOfType<Light>();
+            var lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
             foreach (var lt in lights)
             {
                 if (excludedLights.Contains(lt)) continue;
@@ -54,7 +54,7 @@ namespace EstanDentro.Interaction
             Debug.Log($"[Blackout] Apagaron {count} luces.");
 
             // Desbloquea todas las linternas de la escena (overlay narrativo).
-            var flashlights = FindObjectsOfType<Flashlight>();
+            var flashlights = FindObjectsByType<Flashlight>(FindObjectsSortMode.None);
             foreach (var f in flashlights) f.Unlock();
 
             OnBlackout?.Invoke();
