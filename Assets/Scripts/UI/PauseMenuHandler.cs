@@ -57,7 +57,7 @@ namespace EstanDentro.UI
 
         private void EnsureEventSystem()
         {
-            if (FindObjectOfType<EventSystem>() != null) return;
+            if (FindFirstObjectByType<EventSystem>() != null) return;
             var go = new GameObject("EventSystem");
             go.AddComponent<EventSystem>();
             go.AddComponent<InputSystemUIInputModule>();
@@ -126,7 +126,8 @@ namespace EstanDentro.UI
         public void OnMainMenuClicked()
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene(mainMenuSceneName);
+            ClosePause();
+            SceneTransition.LoadScene(mainMenuSceneName, tip: "Volviendo al inicio.");
         }
 
         // ---------- BuildUI ----------

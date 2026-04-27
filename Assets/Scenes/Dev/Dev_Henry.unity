@@ -2455,15 +2455,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2685884952588761181, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2685884952588761181, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2685884952588761181, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2685884952588761181, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2508,6 +2508,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1741461716}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7238908316989154282, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 752747795}
     - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       insertIndex: -1
       addedObject: {fileID: 752747793}
@@ -2542,6 +2545,39 @@ MonoBehaviour:
   sourceCamera: {fileID: 0}
   drawGizmo: 1
   logTargetChanges: 1
+--- !u!1 &752747794 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7238908316989154282, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+  m_PrefabInstance: {fileID: 752747790}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &752747795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752747794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f240f818f1e04f5409edfcbd73ca79a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Player.PlayerWakeUp
+  playOnStart: 1
+  blackHoldSeconds: 1.8
+  blinks: 3
+  blinkOpenSeconds: 1
+  blinkCloseSeconds: 0.4
+  blinkPauseOpen: 0.4
+  lookStartDelay: 0.6
+  lookYawAmplitude: 22
+  lookLeftSeconds: 2.2
+  lookLeftPause: 0.5
+  lookRightSeconds: 3
+  lookRightPause: 0.5
+  lookCenterSeconds: 1.5
+  startPitch: 55
+  endPitch: 0
+  finalFadeSeconds: 1.2
 --- !u!1 &791221580
 GameObject:
   m_ObjectHideFlags: 0
