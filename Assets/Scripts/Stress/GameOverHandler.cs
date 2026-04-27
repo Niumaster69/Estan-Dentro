@@ -117,7 +117,7 @@ namespace EstanDentro.Stress
         private void RestartScene()
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            EstanDentro.UI.SceneTransition.Reload(tip: "Respira. Empieza otra vez.");
         }
 
         private void BuildUI()

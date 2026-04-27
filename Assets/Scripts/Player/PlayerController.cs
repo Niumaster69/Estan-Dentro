@@ -15,6 +15,9 @@ namespace EstanDentro.Player
 
         [Header("Camara")]
         [SerializeField] private Transform cameraPivot;
+        public Transform CameraPivot => cameraPivot;
+        public bool InputEnabled { get; set; } = true;
+        public void SetPitch(float p) { pitch = Mathf.Clamp(p, minPitch, maxPitch); }
         [SerializeField, Tooltip("Grados por pixel de delta del mouse. Subir = mas rapido. Tipico 0.1 - 0.4.")]
         private float mouseSensitivity = 0.25f;
         [SerializeField, Tooltip("Grados por segundo cuando el stick esta a tope. Subir = mas rapido. Tipico 150 - 320.")]
@@ -61,9 +64,12 @@ namespace EstanDentro.Player
 
         private void Update()
         {
-            PollHoldInputs();
-            HandleLook();
-            HandleMove();
+            if (InputEnabled)
+            {
+                PollHoldInputs();
+                HandleLook();
+            }
+            HandleMove(); // gravedad sigue funcionando aunque input este bloqueado
             HandleCrouchHeight();
         }
 
@@ -106,7 +112,8 @@ namespace EstanDentro.Player
         {
             float speed = crouchHeld ? crouchSpeed : (sprintHeld ? sprintSpeed : walkSpeed);
 
-            Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
+            Vector2 effectiveMove = InputEnabled ? moveInput : Vector2.zero;
+            Vector3 move = transform.right * effectiveMove.x + transform.forward * effectiveMove.y;
             move *= speed;
 
             if (controller.isGrounded && verticalVelocity < 0f)
