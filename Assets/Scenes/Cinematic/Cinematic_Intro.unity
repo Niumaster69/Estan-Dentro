@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1331835641
+--- !u!1 &241222745
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,86 +127,67 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1331835643}
-  - component: {fileID: 1331835642}
+  - component: {fileID: 241222747}
+  - component: {fileID: 241222746}
   m_Layer: 0
-  m_Name: _MainMenu
+  m_Name: _Cinematic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1331835642
+--- !u!114 &241222746
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1331835641}
+  m_GameObject: {fileID: 241222745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c17e3fa0ca474ca103fed032a0f68, type: 3}
+  m_Script: {fileID: 11500000, guid: f171b3be268198c4da8f6d17b0ab8c9c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.MainMenuController
-  gameTitle: ESTAN DENTRO
-  gameSubtitle: Lo que no puedo ver
-  versionLabel: Capitulo 1 - prototipo
-  playSceneName: Cinematic_Intro
-  titleFont: {fileID: 12800000, guid: e9c26eb2539462346ae7d7550c321438, type: 3}
-  bodyFont: {fileID: 12800000, guid: a394af61c53250d46938e06f8c641ede, type: 3}
-  backgroundImage: {fileID: 21300000, guid: 42c6ea4af384acb4a9ae24390a6f3ff5, type: 3}
-  backgroundImageTint: {r: 1, g: 1, b: 1, a: 1}
-  kenBurnsPan: 1
-  kenBurnsSpeed: 0.04
-  kenBurnsZoom: 0.05
-  backgroundOverlayColor: {r: 0, g: 0, b: 0, a: 0.45}
-  backgroundOverlayAlpha: 0
-  vignetteAlpha: 0.6
-  noiseEnabled: 0
-  noiseAlpha: 0.02
-  intenseGlitchEnabled: 1
-  intenseGlitchMinInterval: 2
-  intenseGlitchMaxInterval: 5
-  intenseGlitchDuration: 0.06
-  glitchBandCount: 5
-  glitchBandMinHeight: 12
-  glitchBandMaxHeight: 70
-  intenseGlitchColors:
-  - {r: 0, g: 0, b: 0, a: 0.85}
-  backgroundGlitchShift: 4
-  backgroundTopColor: {r: 0.025, g: 0.02, b: 0.025, a: 1}
-  backgroundBottomColor: {r: 0.06, g: 0.025, b: 0.03, a: 1}
-  titleColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
-  subtitleColor: {r: 0.85, g: 0.7, b: 0.28, a: 0.85}
-  bodyColor: {r: 0.92, g: 0.89, b: 0.83, a: 0.95}
-  buttonNormalColor: {r: 0, g: 0, b: 0, a: 0.5}
-  buttonHoverColor: {r: 0.85, g: 0.7, b: 0.28, a: 0.7}
-  buttonPressedColor: {r: 0.62, g: 0.12, b: 0.12, a: 0.85}
-  buttonTextColor: {r: 0.95, g: 0.93, b: 0.85, a: 1}
-  vignetteColor: {r: 0.078431375, g: 0, b: 0, a: 0.85}
-  glitchColor: {r: 0.95, g: 0.25, b: 0.25, a: 1}
-  buttonWidth: 360
-  buttonHeight: 60
-  buttonSpacing: 18
-  fadeInSeconds: 1.5
-  selectedButtonScale: 1.06
-  selectedLerpSpeed: 12
-  titlePulseSpeed: 1.2
-  titlePulseAmplitude: 0.06
-  glitchMinInterval: 4
-  glitchMaxInterval: 11
-  glitchDuration: 0.08
-  glitchMaxShift: 8
---- !u!4 &1331835643
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.CinematicController
+  slides:
+  - text: No recuerdo como llegue aqui.
+    charsPerSecond: 22
+    holdSeconds: 2.8
+    fadeOutSeconds: 0.6
+  - text: 'El aula esta vacia.
+
+      Solo yo. Y lo que sea
+
+      que este dentro
+      de mi.'
+    charsPerSecond: 24
+    holdSeconds: 3
+    fadeOutSeconds: 0.6
+  - text: Algo no esta bien.
+    charsPerSecond: 18
+    holdSeconds: 2.2
+    fadeOutSeconds: 0.6
+  - text: Antes de entrar... respira.
+    charsPerSecond: 22
+    holdSeconds: 3
+    fadeOutSeconds: 1
+  nextSceneName: Dev_Henry
+  loadingTip: Cuando entres, sosten el mando cerca de tu boca.
+  bgColor: {r: 0, g: 0, b: 0, a: 1}
+  textColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
+  skipHintColor: {r: 0.92, g: 0.89, b: 0.83, a: 0.4}
+  textSize: 38
+  skipHint: '[Pulsa cualquier tecla para saltar / siguiente]'
+  textFont: {fileID: 0}
+--- !u!4 &241222747
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1331835641}
+  m_GameObject: {fileID: 241222745}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -216,4 +197,4 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1331835643}
+  - {fileID: 241222747}
