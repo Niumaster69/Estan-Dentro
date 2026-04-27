@@ -1,6 +1,5 @@
 # =============================================
 # ESTÁN DENTRO - Git LFS & Unity Smart Merge
-
 # Unity YAML merge
 *.unity merge=unityyamlmerge eol=lf
 *.prefab merge=unityyamlmerge eol=lf
