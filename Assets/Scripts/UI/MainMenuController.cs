@@ -15,7 +15,7 @@ namespace EstanDentro.UI
         [SerializeField] private string versionLabel = "Capitulo 1 - prototipo";
 
         [Header("Carga")]
-        [SerializeField] private string playSceneName = "Dev_Henry";
+        [SerializeField] private string playSceneName = "Level1";
 
         [Header("Tipografia (opcional - asignar .ttf desde Inspector)")]
         [SerializeField, Tooltip("Fuente del titulo grande. Recomendado: Creepster de Google Fonts. Vacio = LegacyRuntime.")]
