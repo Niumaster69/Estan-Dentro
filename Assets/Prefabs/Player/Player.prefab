@@ -86,7 +86,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.35
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -140,6 +140,8 @@ MonoBehaviour:
   gravity: -20
   cameraPivot: {fileID: 706583210696686529}
   mouseSensitivity: 0.08
+  gamepadSensitivity: 240
+  gamepadDeadzone: 0.12
   minPitch: -85
   maxPitch: 85
   invertY: 0

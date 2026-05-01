@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -7173185392218428129, guid: a68f64d8aa45afc449cd3949ad6319a0, type: 3}
       propertyPath: endTime
-      value: 13.333333
+      value: 12.413793
       objectReference: {fileID: 0}
     - target: {fileID: -7173185392218428129, guid: a68f64d8aa45afc449cd3949ad6319a0, type: 3}
       propertyPath: startTime
-      value: 0
+      value: 1.0217113
       objectReference: {fileID: 0}
     - target: {fileID: -6938603179887089163, guid: a68f64d8aa45afc449cd3949ad6319a0, type: 3}
       propertyPath: m_LocalPosition.x
