@@ -232,7 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.Flashlight
   startEnabled: 0
-  unlocked: 1
+  unlocked: 0
+  requireInventoryItem: linterna
   applyDefaultLook: 1
   intensityLumens: 2000
   range: 10
@@ -478,9 +479,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
-  correctCode: 07000000040000000200000009000000
+  correctCode: 01000000070000000000000005000000
   autoCloseOnSolved: 1
   oneShot: 1
+  contextualMissionId: 
+  contextualMissionText: 
   onSolved:
     m_PersistentCalls:
       m_Calls:
@@ -704,12 +707,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
       propertyPath: m_Name
-      value: Casillero Doble v2 1 (1)
+      value: Casillero_Falso_3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 237017719}
   m_SourcePrefab: {fileID: 100100000, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
 --- !u!4 &90900495 stripped
 Transform:
@@ -1565,7 +1571,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3476868531720441737, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_Name
-      value: papel (2)
+      value: Nota_Cuaderno_Matematicas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777598960340998566, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
+      propertyPath: noteText
+      value: "17 / 05 / 2023\r\n\r\n  Tarea para hoy: ejercicios pag 142.\r\n  Examen
+        viernes.\r\n  Estudiar geometria 4 hs."
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777598960340998566, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
+      propertyPath: noteTitle
+      value: Cuaderno de matematicas
       objectReference: {fileID: 0}
     - target: {fileID: 4254636310659994931, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1612,6 +1627,32 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
+--- !u!1 &237017716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 90900494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &237017717 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 90900494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &237017719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237017716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e74d10468f5a134bba1169fb7904458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.SimpleOpenable
+  animator: {fileID: 237017717}
+  animatorBoolParam: Open
+  oneShot: 0
+  hudMessageOnOpen: 
 --- !u!4 &245986082 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8106909970973386683, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
@@ -1671,9 +1712,8 @@ MonoBehaviour:
 
 
     Respira con el ritmo del circulo, no con tu reloj interno.'
-  minScale: 0.45
-  maxScale: 1
-  circleSize: 220
+  minVignetteAlpha: 0.18
+  maxVignetteAlpha: 0.85
   fadeSeconds: 1
   inhaleColor: {r: 0.4, g: 0.65, b: 0.85, a: 0.85}
   exhaleColor: {r: 0.55, g: 0.85, b: 0.6, a: 0.85}
@@ -1697,6 +1737,13 @@ MonoBehaviour:
   panelColor: {r: 0, g: 0, b: 0, a: 0.92}
   textColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
   levelColor: {r: 0.85, g: 0.71, b: 0.28, a: 1}
+  accentColor: {r: 0.96, g: 0.85, b: 0.42, a: 1}
+  labelColor: {r: 0.65, g: 0.6, b: 0.55, a: 0.85}
+  stepInactiveBg: {r: 0.1, g: 0.09, b: 0.09, a: 0.85}
+  stepActiveBg: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  buttonNormalColor: {r: 0.1, g: 0.1, b: 0.1, a: 0.9}
+  buttonHoverColor: {r: 0.85, g: 0.7, b: 0.28, a: 0.7}
+  buttonPressedColor: {r: 0.62, g: 0.12, b: 0.12, a: 0.9}
 --- !u!114 &271359501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,6 +1778,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &290554886 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 6787876809916944527}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &292073011 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8106909970973386683, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
@@ -1986,6 +2038,11 @@ Light:
   m_LightUnit: 2
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!4 &338854130 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3852150411044221513, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+  m_PrefabInstance: {fileID: 683460197}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &395415128
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,6 +2075,58 @@ Transform:
   - {fileID: 193552402}
   m_Father: {fileID: 791221581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &401391964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 401391966}
+  - component: {fileID: 401391965}
+  m_Layer: 0
+  m_Name: HiddenMessage_Techo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &401391965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401391964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8e6a9969f39ce4383f73cc97d1ff26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.HiddenMessage
+  messageText: Subi, hijo. Todavia estas abajo.
+  messageColor: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  fontSize: 30
+  characterSize: 0.05
+  fadeSpeed: 1.5
+  maxAlpha: 0.95
+  targetLight: {fileID: 0}
+  maxDistance: 0
+--- !u!4 &401391966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401391964}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: 6.79, y: 2, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -270, z: 0}
 --- !u!1 &414779356
 GameObject:
   m_ObjectHideFlags: 0
@@ -2155,7 +2264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.PauseMenuHandler
   titleText: PAUSA
   continueLabel: Continuar
-  notesLabel: Notas
+  notesLabel: Inventario
   settingsLabel: Ajustes
   mainMenuLabel: Salir al menu
   mainMenuSceneName: MainMenu
@@ -2178,6 +2287,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51be003a28b384b4b8ea0e438743b1ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Inventory.Inventory
+--- !u!1 &417017033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+  m_PrefabInstance: {fileID: 3965377154075198495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &467624278
 GameObject:
   m_ObjectHideFlags: 19
@@ -2207,6 +2321,7 @@ MonoBehaviour:
   m_Script: {fileID: 1955260053}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.SceneObjectIDMapSceneAsset
+  m_Entries: []
 --- !u!4 &467624280
 Transform:
   m_ObjectHideFlags: 19
@@ -2217,6 +2332,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &550827451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 550827452}
+  m_Layer: 0
+  m_Name: PlayerInDuctPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &550827452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550827451}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5, y: 3, z: 4.064389}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2272,7 +2418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 628280852397861230, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
       propertyPath: m_Name
-      value: Lonchera v2
+      value: Lonchera_Linterna
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2287,6 +2433,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 628280852397861230, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1215548407}
+    - targetCorrespondingSourceObject: {fileID: 628280852397861230, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1215548409}
   m_SourcePrefab: {fileID: 100100000, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
 --- !u!1 &578008774
 GameObject:
@@ -2409,6 +2558,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1989999781}
     m_Modifications:
+    - target: {fileID: 1964970215300553371, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6773504349765213002, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
       propertyPath: m_Name
       value: Escritorio v2 (10)
@@ -2870,6 +3023,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       insertIndex: -1
       addedObject: {fileID: 752747793}
+    - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 752747798}
+    - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 752747797}
+    - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 752747796}
   m_SourcePrefab: {fileID: 100100000, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
 --- !u!4 &752747791 stripped
 Transform:
@@ -2933,7 +3095,236 @@ MonoBehaviour:
   lookCenterSeconds: 1.5
   startPitch: 55
   endPitch: 0
-  finalFadeSeconds: 1.2
+  firstObjective: "Sal del sal\xF3n"
+  firstObjectiveDisplayTime: 6
+--- !u!114 &752747796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752747792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.HDAdditionalLightData
+  m_PointlightHDType: 0
+  m_SpotLightShape: 0
+  m_AreaLightShape: 0
+  m_EnableSpotReflector: 1
+  m_LightUnit: 0
+  m_LuxAtDistance: 1
+  m_Intensity: 0
+  m_InnerSpotPercent: -1
+  m_ShapeWidth: -1
+  m_ShapeHeight: -1
+  m_AspectRatio: -1
+  m_SpotIESCutoffPercent: 100
+  m_LightDimmer: 1
+  m_VolumetricDimmer: 1
+  m_FadeDistance: 10000
+  m_VolumetricFadeDistance: 10000
+  m_AffectDiffuse: 1
+  m_AffectSpecular: 1
+  m_NonLightmappedOnly: 0
+  m_ShapeRadius: 0.025
+  m_SoftnessScale: 1
+  m_UseCustomSpotLightShadowCone: 0
+  m_CustomSpotLightShadowCone: 30
+  m_MaxSmoothness: 0.99
+  m_ApplyRangeAttenuation: 1
+  m_DisplayAreaLightEmissiveMesh: 0
+  m_AreaLightCookie: {fileID: 0}
+  m_IESPoint: {fileID: 0}
+  m_IESSpot: {fileID: 0}
+  m_IncludeForRayTracing: 1
+  m_IncludeForPathTracing: 1
+  m_AreaLightShadowCone: 120
+  m_UseScreenSpaceShadows: 0
+  m_InteractsWithSky: 1
+  m_AngularDiameter: 0.5
+  diameterMultiplerMode: 0
+  diameterMultiplier: 1
+  diameterOverride: 0.5
+  celestialBodyShadingSource: 1
+  sunLightOverride: {fileID: 0}
+  sunColor: {r: 1, g: 1, b: 1, a: 1}
+  sunIntensity: 130000
+  moonPhase: 0.2
+  moonPhaseRotation: 0
+  earthshine: 1
+  flareSize: 2
+  flareTint: {r: 1, g: 1, b: 1, a: 1}
+  flareFalloff: 4
+  flareMultiplier: 1
+  surfaceTexture: {fileID: 0}
+  surfaceTint: {r: 1, g: 1, b: 1, a: 1}
+  m_Distance: 1.5e+11
+  m_UseRayTracedShadows: 0
+  m_NumRayTracingSamples: 4
+  m_FilterTracedShadow: 1
+  m_FilterSizeTraced: 16
+  m_SunLightConeAngle: 0.5
+  m_LightShadowRadius: 0.5
+  m_SemiTransparentShadow: 0
+  m_ColorShadow: 1
+  m_DistanceBasedFiltering: 0
+  m_EvsmExponent: 15
+  m_EvsmLightLeakBias: 0
+  m_EvsmVarianceBias: 0.00001
+  m_EvsmBlurPasses: 0
+  m_LightlayersMask: 1
+  m_LinkShadowLayers: 1
+  m_ShadowNearPlane: 0.1
+  m_BlockerSampleCount: 24
+  m_FilterSampleCount: 16
+  m_MinFilterSize: 0.1
+  m_DirLightPCSSBlockerSampleCount: 24
+  m_DirLightPCSSFilterSampleCount: 16
+  m_DirLightPCSSMaxPenumbraSize: 0.56
+  m_DirLightPCSSMaxSamplingDistance: 0.5
+  m_DirLightPCSSMinFilterSizeTexels: 1.5
+  m_DirLightPCSSMinFilterMaxAngularDiameter: 10
+  m_DirLightPCSSBlockerSearchAngularDiameter: 12
+  m_DirLightPCSSBlockerSamplingClumpExponent: 2
+  m_KernelSize: 5
+  m_LightAngle: 1
+  m_MaxDepthBias: 0.001
+  m_ShadowResolution:
+    m_Override: 512
+    m_UseOverride: 1
+    m_Level: 0
+  m_ShadowDimmer: 1
+  m_VolumetricShadowDimmer: 1
+  m_ShadowFadeDistance: 10000
+  m_UseContactShadow:
+    m_Override: 0
+    m_UseOverride: 1
+    m_Level: 0
+  m_RayTracedContactShadow: 0
+  m_ShadowTint: {r: 0, g: 0, b: 0, a: 1}
+  m_PenumbraTint: 0
+  m_NormalBias: 0.75
+  m_SlopeBias: 0.5
+  m_ShadowUpdateMode: 0
+  m_AlwaysDrawDynamicShadows: 0
+  m_UpdateShadowOnLightMovement: 0
+  m_CachedShadowTranslationThreshold: 0.01
+  m_CachedShadowAngularThreshold: 0.5
+  m_BarnDoorAngle: 90
+  m_BarnDoorLength: 0.05
+  m_preserveCachedShadow: 0
+  m_OnDemandShadowRenderOnPlacement: 1
+  m_ShadowCascadeRatios:
+  - 0.05
+  - 0.2
+  - 0.3
+  m_ShadowCascadeBorders:
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.2
+  m_ShadowAlgorithm: 0
+  m_ShadowVariant: 0
+  m_ShadowPrecision: 0
+  useOldInspector: 0
+  useVolumetric: 1
+  featuresFoldout: 1
+  m_AreaLightEmissiveMeshShadowCastingMode: 0
+  m_AreaLightEmissiveMeshMotionVectorGenerationMode: 0
+  m_AreaLightEmissiveMeshLayer: -1
+  m_Version: 14
+  m_ObsoleteShadowResolutionTier: 1
+  m_ObsoleteUseShadowQualitySettings: 0
+  m_ObsoleteCustomShadowResolution: 512
+  m_ObsoleteContactShadows: 0
+--- !u!114 &752747797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752747792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85fcd5eb60377fc499dd936221f1f362, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.Flashlight
+  startEnabled: 0
+  unlocked: 0
+  requireInventoryItem: linterna
+  applyDefaultLook: 1
+  intensityLumens: 2000
+  range: 10
+  spotAngle: 50
+  tint: {r: 1, g: 0.92, b: 0.78, a: 1}
+  softShadows: 1
+--- !u!108 &752747798
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752747792}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 47.746483
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 2
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 1
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 0
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!54 &752747803
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2961,6 +3352,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &769839774 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 6145464218408760267}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &791221580
 GameObject:
   m_ObjectHideFlags: 0
@@ -3051,6 +3447,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+--- !u!1 &803249847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 803249849}
+  - component: {fileID: 803249848}
+  m_Layer: 0
+  m_Name: InventoryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &803249848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803249847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51be003a28b384b4b8ea0e438743b1ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Inventory.Inventory
+--- !u!4 &803249849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803249847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &854547239
 GameObject:
   m_ObjectHideFlags: 0
@@ -3334,6 +3774,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6087692879361634469, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
   m_PrefabInstance: {fileID: 1310304883}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &965070373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 965070374}
+  m_Layer: 0
+  m_Name: ' DeskTargetPos'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &965070374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965070373}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: 0, z: 4.064389}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1025460448
 GameObject:
   m_ObjectHideFlags: 0
@@ -3617,7 +4088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9215210525183160226, guid: fc703a10db0ec874f902083197feeba3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.949
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 9215210525183160226, guid: fc703a10db0ec874f902083197feeba3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4402,15 +4873,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
-  correctCode: 00000000000000000000000000000000
+  correctCode: 000000000400000006000000
   autoCloseOnSolved: 1
   oneShot: 1
+  contextualMissionId: decifrar_codigo_lonchera
+  contextualMissionText: " Descifra el c\xF3digo de la lonchera"
   onSolved:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1516512867}
-        m_TargetAssemblyTypeName: EstanDentro.Interaction.BlackoutEvent, Assembly-CSharp
-        m_MethodName: TriggerBlackout
+      - m_Target: {fileID: 1215548409}
+        m_TargetAssemblyTypeName: EstanDentro.Interaction.LockedContainer, Assembly-CSharp
+        m_MethodName: OpenContainer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4466,6 +4939,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1215548409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215548403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98813ee19254ff47bb1a3be6af00fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.LockedContainer
+  animator: {fileID: 1215548407}
+  animatorBoolParam: Open
+  itemToGiveId: linterna
+  itemToGiveDisplayName: Linterna
+  interiorNoteTitle: 
+  interiorNoteBody: 
+  autoShowNote: 1
+  hudMessage: 'Usa la linterna con [F] o [Cuadrado]'
+  hudDisplayTime: 5
+  triggerBlackoutOnOpen: 1
+  oneShot: 1
 --- !u!1 &1252506406
 GameObject:
   m_ObjectHideFlags: 0
@@ -4763,6 +5259,98 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+--- !u!1 &1275230375 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1500326837722791765, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+  m_PrefabInstance: {fileID: 3475457200741633184}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1275230376 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8792236460172531707, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+  m_PrefabInstance: {fileID: 3475457200741633184}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1275230379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275230375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f10238199c3a440af7fd7ad0fce6ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.DuctoTechoInteractable
+  lookUpThresholdPitch: -30
+  alsoRequireProximity: 0
+  activationRadius: 5
+  drawGizmo: 1
+  debugLogState: 0
+  requiredItemId: destornillador
+  promptText: 'Mira arriba [E] / [Cross]'
+  rejillaRigidbody: {fileID: 0}
+  rejillaTransform: {fileID: 1275230376}
+  rejillaAutoMass: 2
+  detachRejillaFromParent: 1
+  rejillaDropImpulse: 0.5
+  rejillaRandomTorque: 1.5
+  animator: {fileID: 0}
+  animatorBoolParam: Open
+  escritorio: {fileID: 338854130}
+  escritorioTargetPos: {fileID: 965070374}
+  escritorioMoveOffset: {x: 0, y: 0, z: 1.2}
+  escritorioMoveDuration: 2.5
+  deskRotationWobble: 3
+  deskForwardLean: 4
+  flinchBackDistance: 0.15
+  flinchPitchDelta: 6
+  flinchDuration: 0.7
+  playerOnDeskPos: {fileID: 1939956475}
+  playerInDuctPos: {fileID: 550827452}
+  climbToDeskDuration: 1.4
+  climbIntoDuctDuration: 1.6
+  climbBobAmount: 0.07
+  climbBobFrequency: 2.6
+  climbArcHeight: 0.18
+  climbDeskPitchDip: 12
+  climbYawWobble: 2.5
+  climbRollWobble: 1.5
+  lookAtDeskPitch: 5
+  lookDownDuration: 0.6
+  trackDeskYawSpeed: 3
+  deskLingerSeconds: 0.6
+  idleBreathPitch: 1.2
+  idleBreathYaw: 1.5
+  idleBreathRoll: 0.8
+  cameraTargetPitch: -75
+  cameraTiltDuration: 1.8
+  autoOrientToDesk: 1
+  orientToDeskDuration: 0.5
+  mesaRodandoClip: {fileID: 0}
+  destornilladorClip: {fileID: 0}
+  ductoCayendoClip: {fileID: 0}
+  volumeScale: 0.85
+  waitBeforeMesa: 0.3
+  waitBeforeDestornillador: 1.5
+  waitBeforeCaida: 1.8
+  fadeToBlackDuration: 1
+  slides:
+  - text: Subi.
+    durationSeconds: 2.2
+    audio: {fileID: 0}
+  - text: Mas arriba.
+    durationSeconds: 2
+    audio: {fileID: 0}
+  - text: Solo un poco mas.
+    durationSeconds: 2.5
+    audio: {fileID: 0}
+  slideFadeIn: 0.6
+  slideFadeOut: 0.6
+  slideFontSize: 38
+  slideTextColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
+  nextSceneName: EsecenaUno-DuctosDeVentilacion
+  loadingTip: "Inhala 4. Sost\xE9n 4. Sigue arriba."
+  completedMissionId: salir_salon
 --- !u!1001 &1310304883
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4773,7 +5361,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2855634301745256335, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4540192750036047477, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
       propertyPath: m_Enabled
@@ -5068,6 +5656,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1808133712}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1421316975 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+  m_PrefabInstance: {fileID: 3209132272188832615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1464450287 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+  m_PrefabInstance: {fileID: 3965377154881500765}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1516512866
 GameObject:
   m_ObjectHideFlags: 0
@@ -5365,7 +5963,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.Flashlight
   startEnabled: 0
-  unlocked: 1
+  unlocked: 0
+  requireInventoryItem: linterna
   applyDefaultLook: 1
   intensityLumens: 2000
   range: 10
@@ -5953,6 +6552,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+--- !u!1 &1852829673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1852829675}
+  - component: {fileID: 1852829674}
+  m_Layer: 0
+  m_Name: BlackoutManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1852829674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852829673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 666ab028143211443932aea3ab1e8471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.BlackoutEvent
+  excludedLights: []
+  debugKeyEnabled: 1
+--- !u!4 &1852829675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852829673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1859856744
 GameObject:
   m_ObjectHideFlags: 0
@@ -6338,21 +6983,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3476868531720441737, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_Name
-      value: papel (1)
+      value: Nota_PistaPa
       objectReference: {fileID: 0}
     - target: {fileID: 3777598960340998566, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: noteText
-      value: "Profe pas\xF3 lista hoy.\r\n  Faltaron siete compa\xF1eros.\r\n  Cuatro
-        mujeres, tres hombres.\r\n  Los nombres est\xE1n borrados de mi cuaderno.\r\n\r\n 
-        \xBFPor qu\xE9 no recuerdo cu\xE1les?"
+      value: "Mateo,\r\n\r\n  Si llegaste a esto, ya entendiste como\r\n  buscar
+        las cosas.\r\n\r\n  El codigo de mi lonchera son tres digitos:\r\n  0 - 4
+        - 6\r\n\r\n  No se lo digas a nadie.\r\n\r\n  \u2014 Pa"
       objectReference: {fileID: 0}
     - target: {fileID: 3777598960340998566, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: noteTitle
-      value: Lista de presentes
+      value: Nota
       objectReference: {fileID: 0}
     - target: {fileID: 4254636310659994931, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.876
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 4254636310659994931, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6430,6 +7075,7 @@ MonoBehaviour:
   noteTitle: Tarea de hoy
   noteText: "\"Cap\xEDtulo dos.\r\n  Leer p\xE1ginas nueve a catorce.\"\r\n\r\n 
     Eso fue lo \xFAltimo que escribi\xF3\r\n  antes de que se apagara la luz."
+  disappearAfterRead: 1
 --- !u!65 &1934644748
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6523,6 +7169,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 86.188, y: 0, z: 0}
+--- !u!1 &1939956474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1939956475}
+  m_Layer: 0
+  m_Name: PlayerOnDeskPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1939956475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1939956474}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5, y: 1.5, z: 4.064389}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!115 &1955260053
 MonoScript:
   m_ObjectHideFlags: 0
@@ -6927,6 +7604,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1808133712}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &2054746786 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 6145464220003478626}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2071074793
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6996,6 +7678,22 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: d817fe6121fa07048a900ed41ebcdb08, type: 2}
+    - target: {fileID: -7219076460700332019, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7219076460700332019, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: -7219076460700332019, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2245623774801616189, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d817fe6121fa07048a900ed41ebcdb08, type: 2}
     - target: {fileID: -8679921383154817045, guid: ff6cae59051a83142b7b78b2790cd3fe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.319991
@@ -7036,22 +7734,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7219076460700332019, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7219076460700332019, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: -7219076460700332019, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -2245623774801616189, guid: 8979aeb6502b34947b64cc787ebd0366, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: d817fe6121fa07048a900ed41ebcdb08, type: 2}
     - target: {fileID: 919132149155446097, guid: ff6cae59051a83142b7b78b2790cd3fe, type: 3}
       propertyPath: m_Name
       value: Reloj
@@ -7079,7 +7761,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3476868531720441737, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_Name
-      value: papel
+      value: "Nota_Cuaderno_Compa\xF1ero"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777598960340998566, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
+      propertyPath: noteText
+      value: "Pa,\r\n\r\n  Gracias por traerme hoy.\r\n  Se que el bus es mas comodo
+        para vos\r\n  pero esto es mejor.\r\n\r\n  Te quiero. Nos vemos a la salida.\r\n\r\n 
+        \u2014 M.M."
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777598960340998566, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
+      propertyPath: noteTitle
+      value: Nota en el bolsillo
       objectReference: {fileID: 0}
     - target: {fileID: 4254636310659994931, guid: 73f6a7f4a1a9dc5478f38ab8300719d2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7136,7 +7828,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
       propertyPath: m_Name
-      value: Casillero simple v2
+      value: Casillero_Falso_4
       objectReference: {fileID: 0}
     - target: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7181,7 +7873,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3498559131143817036}
   m_SourcePrefab: {fileID: 100100000, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
 --- !u!1001 &3475457200741633184
 PrefabInstance:
@@ -7193,7 +7888,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5966882444367704661, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
       propertyPath: m_Name
-      value: Ducto v2
+      value: DuctoTecho
       objectReference: {fileID: 0}
     - target: {fileID: 6450649266623703279, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7238,13 +7933,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1500326837722791765, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1275230379}
   m_SourcePrefab: {fileID: 100100000, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
 --- !u!4 &3498559131143817033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
   m_PrefabInstance: {fileID: 3209132272188832615}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &3498559131143817034 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1767633796813181005, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+  m_PrefabInstance: {fileID: 3209132272188832615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3498559131143817036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421316975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e74d10468f5a134bba1169fb7904458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.SimpleOpenable
+  animator: {fileID: 3498559131143817034}
+  animatorBoolParam: Open
+  oneShot: 0
+  hudMessageOnOpen: 
 --- !u!1001 &3965377154075198495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7255,7 +7974,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
       propertyPath: m_Name
-      value: Casillero simple v2 1 (1)
+      value: Casillero_Falso_6
       objectReference: {fileID: 0}
     - target: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7300,13 +8019,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3965377154075198499}
   m_SourcePrefab: {fileID: 100100000, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
 --- !u!4 &3965377154075198496 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
   m_PrefabInstance: {fileID: 3965377154075198495}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &3965377154075198497 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1767633796813181005, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+  m_PrefabInstance: {fileID: 3965377154075198495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3965377154075198499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417017033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e74d10468f5a134bba1169fb7904458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.SimpleOpenable
+  animator: {fileID: 3965377154075198497}
+  animatorBoolParam: Open
+  oneShot: 0
+  hudMessageOnOpen: 
 --- !u!1001 &3965377154881500765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7317,7 +8060,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
       propertyPath: m_Name
-      value: Casillero simple v2 1
+      value: Casillero_Falso_5
       objectReference: {fileID: 0}
     - target: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7362,13 +8105,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8295386353650172782, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3965377154881500769}
   m_SourcePrefab: {fileID: 100100000, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
 --- !u!4 &3965377154881500766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
   m_PrefabInstance: {fileID: 3965377154881500765}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &3965377154881500767 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1767633796813181005, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
+  m_PrefabInstance: {fileID: 3965377154881500765}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3965377154881500769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464450287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e74d10468f5a134bba1169fb7904458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.SimpleOpenable
+  animator: {fileID: 3965377154881500767}
+  animatorBoolParam: Open
+  oneShot: 0
+  hudMessageOnOpen: 
 --- !u!1001 &4004256907796308241
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7440,6 +8207,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3716220013454190332, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
   m_PrefabInstance: {fileID: 6787876809916944527}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &5963797628893521827 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 6787876809916944527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5963797628893521829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290554886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e74d10468f5a134bba1169fb7904458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.SimpleOpenable
+  animator: {fileID: 5963797628893521827}
+  animatorBoolParam: Open
+  oneShot: 0
+  hudMessageOnOpen: 
 --- !u!1001 &6145464218408760267
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7488,20 +8276,101 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      propertyPath: m_AnimatePhysics
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
       propertyPath: m_Name
-      value: Casillero Doble v2 1 (2)
+      value: Casillero_REAL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6145464218408760271}
+    - targetCorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6145464218408760272}
   m_SourcePrefab: {fileID: 100100000, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
 --- !u!4 &6145464218408760268 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3716220013454190332, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
   m_PrefabInstance: {fileID: 6145464218408760267}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &6145464218408760269 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 6145464218408760267}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6145464218408760271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769839774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
+  correctCode: 010000000400000002000000
+  autoCloseOnSolved: 1
+  oneShot: 1
+  contextualMissionId: buscar_codigo_armario
+  contextualMissionText: "Busca el c\xF3digo del armario"
+  onSolved:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6145464218408760272}
+        m_TargetAssemblyTypeName: EstanDentro.Interaction.LockedContainer, Assembly-CSharp
+        m_MethodName: OpenContainer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onFailed:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6145464218408760272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769839774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98813ee19254ff47bb1a3be6af00fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.LockedContainer
+  animator: {fileID: 6145464218408760269}
+  animatorBoolParam: Open
+  itemToGiveId: destornillador
+  itemToGiveDisplayName: Destornillador
+  interiorNoteTitle: 
+  interiorNoteBody: 
+  autoShowNote: 1
+  hudMessage: Has encontrado un destornillador
+  hudDisplayTime: 5
+  triggerBlackoutOnOpen: 0
+  oneShot: 1
 --- !u!1001 &6145464220003478626
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7552,18 +8421,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
       propertyPath: m_Name
-      value: Casillero Doble v2 1
+      value: Casillero_Falso_2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6145464220003478630}
   m_SourcePrefab: {fileID: 100100000, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
 --- !u!4 &6145464220003478627 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3716220013454190332, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
   m_PrefabInstance: {fileID: 6145464220003478626}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &6145464220003478628 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4647852563292940824, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+  m_PrefabInstance: {fileID: 6145464220003478626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6145464220003478630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054746786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e74d10468f5a134bba1169fb7904458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.SimpleOpenable
+  animator: {fileID: 6145464220003478628}
+  animatorBoolParam: Open
+  oneShot: 0
+  hudMessageOnOpen: 
 --- !u!1001 &6787876809916944527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7614,12 +8507,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
       propertyPath: m_Name
-      value: Casillero Doble v2
+      value: Casillero_Falso_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5963797628893521829}
   m_SourcePrefab: {fileID: 100100000, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
 --- !u!1001 &7738021761601974891
 PrefabInstance:
@@ -7838,3 +8734,9 @@ SceneRoots:
   - {fileID: 1807350556}
   - {fileID: 7797849516234141272}
   - {fileID: 566164221}
+  - {fileID: 1852829675}
+  - {fileID: 401391966}
+  - {fileID: 803249849}
+  - {fileID: 965070374}
+  - {fileID: 1939956475}
+  - {fileID: 550827452}

@@ -151,7 +151,7 @@ MonoBehaviour:
   gameTitle: ESTAN DENTRO
   gameSubtitle: Lo que no puedo ver
   versionLabel: Capitulo 1 - prototipo
-  playSceneName: Level1
+  playSceneName: Cinematic_Intro
   titleFont: {fileID: 12800000, guid: e9c26eb2539462346ae7d7550c321438, type: 3}
   bodyFont: {fileID: 12800000, guid: a394af61c53250d46938e06f8c641ede, type: 3}
   backgroundImage: {fileID: 21300000, guid: 42c6ea4af384acb4a9ae24390a6f3ff5, type: 3}

@@ -4,18 +4,25 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem.UI;
+using EstanDentro.Breathing;
+using EstanDentro.Network;
 
 namespace EstanDentro.UI
 {
     public class MainMenuController : MonoBehaviour
     {
+        // Fonts compartidas con otras pantallas (LoadingScreenController, etc).
+        // Se setean en Awake() y persisten via static aunque MainMenu se descargue.
+        public static Font SharedTitleFont { get; private set; }
+        public static Font SharedBodyFont { get; private set; }
+
         [Header("Texto")]
         [SerializeField] private string gameTitle = "ESTAN DENTRO";
         [SerializeField] private string gameSubtitle = "Lo que no puedo ver";
         [SerializeField] private string versionLabel = "Capitulo 1 - prototipo";
 
         [Header("Carga")]
-        [SerializeField] private string playSceneName = "Level1";
+        [SerializeField] private string playSceneName = "Cinematic_Intro";
 
         [Header("Tipografia (opcional - asignar .ttf desde Inspector)")]
         [SerializeField, Tooltip("Fuente del titulo grande. Recomendado: Creepster de Google Fonts. Vacio = LegacyRuntime.")]
@@ -99,6 +106,8 @@ namespace EstanDentro.UI
         private Canvas canvas;
         private CanvasGroup canvasGroup;
         private Button playButton;
+        private Button continueButton;
+        private Text continueHintText;
         private Button settingsButton;
         private Button quitButton;
         private RectTransform[] buttonRTs;
@@ -119,6 +128,11 @@ namespace EstanDentro.UI
 
         private void Awake()
         {
+            // Registrar fuentes en el static para que el LoadingScreenController las use
+            // (se mantiene aunque MainMenu se descargue — Font es un asset, sobrevive).
+            SharedTitleFont = titleFont;
+            SharedBodyFont = bodyFont;
+
             EnsureCamera();
             EnsureEventSystem();
             BuildUI();
@@ -134,8 +148,77 @@ namespace EstanDentro.UI
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
+            // El boton "Continuar" empieza oculto y solo se muestra si el jugador tiene partidas guardadas.
+            RefreshContinueButton();
+
             // Fade-in
             StartCoroutine(FadeInRoutine());
+        }
+
+        // Habilita/deshabilita el boton "Continuar" segun si el jugador tiene partidas en BD.
+        // Si no hay (offline o lista vacia) el boton queda visible pero gris + texto "(sin partidas guardadas)".
+        private void RefreshContinueButton()
+        {
+            if (continueButton == null) return;
+            // Estado por default: deshabilitado con mensaje (mientras llega el GET)
+            SetContinueState(enabled: false, hint: "(verificando...)");
+
+            if (!GameSession.IsOnline)
+            {
+                SetContinueState(enabled: false, hint: "(sin conexion)");
+                return;
+            }
+
+            ApiClient.Instance.GetAllPartidas(
+                partidas =>
+                {
+                    int jugadorId = GameSession.CurrentJugadorId;
+                    int countMias = 0;
+                    foreach (var p in partidas)
+                    {
+                        if (p.idJugador == jugadorId) countMias++;
+                    }
+                    Debug.Log($"[MainMenu] GET partidas OK. Total={partidas.Length}, mias (idJugador={jugadorId})={countMias}.");
+                    if (countMias > 0) SetContinueState(enabled: true, hint: "");
+                    else SetContinueState(enabled: false, hint: "(sin partidas guardadas)");
+                },
+                err =>
+                {
+                    Debug.LogWarning($"[MainMenu] No se pudo cargar partidas para decidir 'Continuar': {err}");
+                    SetContinueState(enabled: false, hint: "(sin conexion)");
+                }
+            );
+        }
+
+        private void SetContinueState(bool enabled, string hint)
+        {
+            if (continueButton != null) continueButton.interactable = enabled;
+            if (continueHintText != null)
+            {
+                continueHintText.text = hint;
+                continueHintText.gameObject.SetActive(!string.IsNullOrEmpty(hint));
+            }
+        }
+
+        // Recalcula las posiciones Y de los botones del menu, saltando los inactivos
+        // para que no quede un hueco visible cuando "Continuar" esta oculto.
+        private void RelayoutButtons()
+        {
+            const float startY = -40f;
+            Button[] order = { playButton, continueButton, settingsButton, quitButton };
+            int visibleIdx = 0;
+            string debugStr = "[MainMenu] RelayoutButtons: ";
+            foreach (var btn in order)
+            {
+                if (btn == null) { debugStr += $"{(btn == playButton ? "play" : btn == continueButton ? "continue" : btn == settingsButton ? "settings" : "quit")}=NULL, "; continue; }
+                if (!btn.gameObject.activeSelf) { debugStr += $"{btn.name}=hidden, "; continue; }
+                var rt = btn.GetComponent<RectTransform>();
+                float y = startY - visibleIdx * (buttonHeight + buttonSpacing);
+                rt.anchoredPosition = new Vector2(0f, y);
+                debugStr += $"{btn.name}=slot{visibleIdx}(y={y:F0}), ";
+                visibleIdx++;
+            }
+            Debug.Log(debugStr);
         }
 
         private IEnumerator FadeInRoutine()
@@ -293,16 +376,137 @@ namespace EstanDentro.UI
 
         public void OnPlayClicked()
         {
+            // Flow: JUGAR -> CALIBRACION (en este mismo MainMenu) -> CINEMATICA -> LOADING -> juego.
+            // La calibracion no debe invadir el gameplay: corre aqui antes de cargar la cinematica.
+            HideMenuPanel();
+            StartCoroutine(RunCalibrationThenLoad());
+        }
+
+        public void OnContinueClicked()
+        {
+            PartidasOverlay.Open(
+                onResume: (idPartida, fechaInicio, capituloAlcanzado) =>
+                {
+                    HideMenuPanel();
+                    StartCoroutine(RunCalibrationThenResume(idPartida, fechaInicio, capituloAlcanzado));
+                },
+                onClose: () => { /* el overlay se cerro, no hay que hacer nada extra */ }
+            );
+        }
+
+        // Igual que RunCalibrationThenLoad pero NO crea partida nueva — reutiliza el idPartida
+        // que vino de la lista (partida vieja, posiblemente Completada o Abandonada).
+        private IEnumerator RunCalibrationThenResume(int idPartida, System.DateTime fechaInicioOriginal, int capituloAlcanzado)
+        {
+            // 1. BreathingInputProvider
+            if (BreathingInputProvider.Instance == null)
+            {
+                var providerGo = new GameObject("__BreathingInputProvider");
+                providerGo.AddComponent<BreathingInputProvider>();
+            }
+
+            // 2. MicCalibration (skip si ya esta calibrado)
+            var calibGo = new GameObject("__MicCalibration");
+            var calib = calibGo.AddComponent<MicCalibration>();
+            bool done = false;
+            calib.OnCalibrationDone += _ => done = true;
+            while (!done) yield return null;
+
+            // 3. Reusar idPartida viejo (no POST nueva)
+            GameSession.ResumePartida(idPartida, fechaInicioOriginal);
+            Debug.Log($"[MainMenu] Retomando idPartida={idPartida} (capituloAlcanzado={capituloAlcanzado}).");
+
+            // 4. Cargar la escena del capitulo. Por ahora solo Cap 1 esta implementado;
+            //    cuando haya Cap 2/3 mapear capituloAlcanzado a la escena correspondiente.
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            SceneTransition.LoadScene(playSceneName, tip: "Respira despacio. Vamos a entrar.");
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(playSceneName);
+        }
+
+        private IEnumerator RunCalibrationThenLoad()
+        {
+            // 1. Asegurar que existe BreathingInputProvider (singleton). Si no esta, lo creamos.
+            if (BreathingInputProvider.Instance == null)
+            {
+                var providerGo = new GameObject("__BreathingInputProvider");
+                providerGo.AddComponent<BreathingInputProvider>();
+            }
+
+            // 2. Spawnear MicCalibration. Su Start() decide:
+            //    - Si ya hay calibracion guardada -> skip inmediato (canvas oculto, dispara OnCalibrationDone).
+            //    - Si no -> muestra UI y arranca el flujo.
+            var calibGo = new GameObject("__MicCalibration");
+            var calib = calibGo.AddComponent<MicCalibration>();
+
+            bool done = false;
+            calib.OnCalibrationDone += _ => done = true;
+
+            // Esperar a que la calibracion termine (auto-skip o usuario completo el flujo).
+            while (!done) yield return null;
+
+            // 3. Crear la partida en la API (best-effort).
+            //    Si no hay jugador (modo offline), saltar. Si la API no responde, continuar igual.
+            yield return CreatePartidaBestEffort();
+
+            // 4. Continuar al cinematica DIRECTAMENTE (sin loading screen).
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Time.timeScale = 1f; // por si vinimos de un Time.timeScale=0 de la calibracion
+            SceneManager.LoadScene(playSceneName);
+        }
+
+        private IEnumerator CreatePartidaBestEffort()
+        {
+            // Reset contadores antes de cualquier cosa (la partida arranca limpia)
+            GameSession.ResetForNewPartida();
+
+            // Sin jugador (la API fallo al crear el auto-perfil) => skip POST silenciosamente.
+            if (!GameSession.IsOnline)
+            {
+                Debug.LogWarning("[MainMenu] Sin IdJugador. Partida se juega offline (no se persiste).");
+                yield break;
+            }
+
+            System.DateTime now = System.DateTime.UtcNow;
+            var data = new PartidaCreateDto
+            {
+                idJugador = GameSession.CurrentJugadorId,
+                nombrePartida = "Partida " + now.ToString("yyyy-MM-dd HH:mm"),
+                fechaInicio = now.ToString("o"), // ISO 8601 UTC
+                estado = 0,                       // EnCurso
+                capituloAlcanzado = 1,
+                tiempoSegundos = 0
+            };
+
+            bool finished = false;
+            ApiClient.Instance.CreatePartida(
+                data,
+                response =>
+                {
+                    GameSession.CurrentPartidaId = response.idPartida;
+                    GameSession.PartidaStartTime = now;
+                    Debug.Log($"[MainMenu] Partida creada idPartida={response.idPartida}");
+                    finished = true;
+                },
+                error =>
+                {
+                    Debug.LogWarning($"[MainMenu] No se pudo crear partida en API. Modo offline para esta sesion. {error}");
+                    finished = true;
+                }
+            );
+
+            // Esperar respuesta (max ~6s — el ApiClient ya tiene timeout interno de 5s)
+            float waited = 0f;
+            while (!finished && waited < 6f) { waited += Time.unscaledDeltaTime; yield return null; }
         }
 
         public void OnSettingsClicked()
         {
             Debug.Log("[MainMenu] OnSettingsClicked - hide menu, open settings");
             HideMenuPanel();
-            SettingsOverlay.Open(onClose: ShowMenuPanel, transparentBg: true);
+            // transparentBg: false → fondo 100% negro, no se ve la imagen del menu detras.
+            SettingsOverlay.Open(onClose: ShowMenuPanel, transparentBg: false);
         }
 
         private void HideMenuPanel()
@@ -444,7 +648,7 @@ namespace EstanDentro.UI
                 }
             }
 
-            // === LAYOUT ALINEADO A LA IZQUIERDA ===
+            // === LAYOUT CINEMATOGRAFICO CENTRADO ===
             // MenuPanel agrupa el UI del menu (titulo, botones, etc) bajo un CanvasGroup
             // para poder ocultarlos al abrir Ajustes sin perder el fondo.
             var menuPanelGo = new GameObject("MenuPanel", typeof(RectTransform));
@@ -457,40 +661,47 @@ namespace EstanDentro.UI
             menuPanelGroup = menuPanelGo.AddComponent<CanvasGroup>();
             menuPanelTransform = menuPanelGo.transform;
 
-            // Origen: borde izquierdo del canvas. X positivo = mas a la derecha.
-            float leftMargin = 160f;
-
-            // Title (mas arriba)
-            titleText = MakeTextLeft("Title", gameTitle, 110, FontStyle.Bold, titleColor,
-                new Vector2(leftMargin, 340), new Vector2(1200, 160), useTitleFont: true);
+            // Origen: centro del canvas. Todos los elementos se anclan en (0.5, 0.5).
+            // Title arriba del centro, subtitle pegado abajo, botones en columna, footer al pie.
+            titleText = MakeMenuText("Title", gameTitle, 110, FontStyle.Bold, titleColor,
+                new Vector2(0f, 220f), new Vector2(1400, 160), useTitleFont: true);
             titleRT = titleText.GetComponent<RectTransform>();
             titleAnchoredOriginalPos = titleRT.anchoredPosition;
 
-            // Subtitle - debajo del titulo
-            MakeTextLeft("Subtitle", "— " + gameSubtitle + " —", 28, FontStyle.Italic, subtitleColor,
-                new Vector2(leftMargin + 8f, 250), new Vector2(900, 44), useTitleFont: false);
+            // Subtitle - pegado debajo del titulo
+            MakeMenuText("Subtitle", "— " + gameSubtitle + " —", 28, FontStyle.Italic, subtitleColor,
+                new Vector2(0f, 120f), new Vector2(900, 44), useTitleFont: false);
 
-            // Botones - mas arriba que antes
-            float startY = 80f;
-            playButton = MakeButtonLeft("Btn_Play", "JUGAR",
-                new Vector2(leftMargin, startY), OnPlayClicked);
-            settingsButton = MakeButtonLeft("Btn_Settings", "AJUSTES",
-                new Vector2(leftMargin, startY - (buttonHeight + buttonSpacing)), OnSettingsClicked);
-            quitButton = MakeButtonLeft("Btn_Quit", "SALIR",
-                new Vector2(leftMargin, startY - 2 * (buttonHeight + buttonSpacing)), OnQuitClicked);
+            // Botones en columna centrada, debajo del subtitle.
+            playButton = MakeMenuButton("Btn_Play", "NUEVA PARTIDA", Vector2.zero, OnPlayClicked);
+            continueButton = MakeMenuButton("Btn_Continue", "CONTINUAR", Vector2.zero, OnContinueClicked);
+            settingsButton = MakeMenuButton("Btn_Settings", "AJUSTES", Vector2.zero, OnSettingsClicked);
+            quitButton = MakeMenuButton("Btn_Quit", "SALIR", Vector2.zero, OnQuitClicked);
 
             buttonRTs = new RectTransform[] {
                 playButton.GetComponent<RectTransform>(),
+                continueButton.GetComponent<RectTransform>(),
                 settingsButton.GetComponent<RectTransform>(),
                 quitButton.GetComponent<RectTransform>()
             };
 
-            SetupNavigation(playButton, settingsButton, quitButton);
+            SetupNavigation(playButton, continueButton, settingsButton, quitButton);
+            RelayoutButtons();
 
-            // Footer / version - esquina inferior izquierda
-            MakeTextLeft("Footer", versionLabel, 14, FontStyle.Normal,
+            // Hint pequeño debajo del boton Continuar para indicar estado (sin partidas / sin conexion).
+            continueHintText = MakeMenuText("ContinueHint", "", 12, FontStyle.Italic,
+                new Color(bodyColor.r, bodyColor.g, bodyColor.b, 0.6f),
+                Vector2.zero, new Vector2(buttonWidth, 14f), useTitleFont: false);
+            var continueRT = continueButton.GetComponent<RectTransform>();
+            var hintRT = continueHintText.GetComponent<RectTransform>();
+            hintRT.anchoredPosition = new Vector2(continueRT.anchoredPosition.x,
+                continueRT.anchoredPosition.y - (buttonHeight * 0.5f) - 7f);
+            continueHintText.gameObject.SetActive(false);
+
+            // Footer / version - centrado al pie del canvas
+            MakeMenuText("Footer", versionLabel, 14, FontStyle.Normal,
                 new Color(bodyColor.r, bodyColor.g, bodyColor.b, 0.45f),
-                new Vector2(leftMargin, -480), new Vector2(800, 28), useTitleFont: false);
+                new Vector2(0f, -460f), new Vector2(800, 28), useTitleFont: false);
         }
 
         private void BuildVignette(Transform parent)
@@ -584,14 +795,14 @@ namespace EstanDentro.UI
             return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
         }
 
-        private Button MakeButtonLeft(string name, string label, Vector2 anchoredPos, System.Action onClick)
+        private Button MakeMenuButton(string name, string label, Vector2 anchoredPos, System.Action onClick)
         {
             var go = new GameObject(name, typeof(RectTransform));
             var rt = go.GetComponent<RectTransform>();
             rt.SetParent(menuPanelTransform != null ? menuPanelTransform : canvas.transform, false);
-            rt.anchorMin = new Vector2(0f, 0.5f);
-            rt.anchorMax = new Vector2(0f, 0.5f);
-            rt.pivot = new Vector2(0f, 0.5f);
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
             rt.sizeDelta = new Vector2(buttonWidth, buttonHeight);
             rt.anchoredPosition = anchoredPos;
 
@@ -625,87 +836,6 @@ namespace EstanDentro.UI
             var lblTxt = lblGo.AddComponent<Text>();
             lblTxt.font = GetBodyFont();
             lblTxt.text = label;
-            lblTxt.alignment = TextAnchor.MiddleLeft;
-            lblTxt.fontSize = 28;
-            lblTxt.fontStyle = FontStyle.Bold;
-            lblTxt.color = buttonTextColor;
-            lblTxt.raycastTarget = false;
-
-            return btn;
-        }
-
-        private Text MakeTextLeft(string name, string content, int size, FontStyle style, Color color,
-            Vector2 anchoredPos, Vector2 sizeDelta, bool useTitleFont)
-        {
-            var go = new GameObject(name, typeof(RectTransform));
-            var rt = go.GetComponent<RectTransform>();
-            rt.SetParent(menuPanelTransform != null ? menuPanelTransform : canvas.transform, false);
-            rt.anchorMin = new Vector2(0f, 0.5f);
-            rt.anchorMax = new Vector2(0f, 0.5f);
-            rt.pivot = new Vector2(0f, 0.5f);
-            rt.sizeDelta = sizeDelta;
-            rt.anchoredPosition = anchoredPos;
-            var t = go.AddComponent<Text>();
-            t.font = useTitleFont ? GetTitleFont() : GetBodyFont();
-            t.text = content;
-            t.alignment = TextAnchor.MiddleLeft;
-            t.fontSize = size;
-            t.fontStyle = style;
-            t.color = color;
-            t.raycastTarget = false;
-
-            if (useTitleFont)
-            {
-                var shadow = go.AddComponent<Shadow>();
-                shadow.effectColor = new Color(0f, 0f, 0f, 0.7f);
-                shadow.effectDistance = new Vector2(3f, -4f);
-            }
-
-            return t;
-        }
-
-        private Button MakeButton(string name, string label, Vector2 anchoredPos, System.Action onClick)
-        {
-            var go = new GameObject(name);
-            go.transform.SetParent(canvas.transform, false);
-            var rt = go.AddComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(buttonWidth, buttonHeight);
-            rt.anchoredPosition = anchoredPos;
-
-            var img = go.AddComponent<Image>();
-            img.color = buttonNormalColor;
-            img.raycastTarget = true;
-
-            var btn = go.AddComponent<Button>();
-            var colors = btn.colors;
-            colors.normalColor = buttonNormalColor;
-            colors.highlightedColor = buttonHoverColor;
-            colors.pressedColor = buttonPressedColor;
-            colors.selectedColor = buttonHoverColor;
-            colors.disabledColor = new Color(0.2f, 0.2f, 0.2f, 0.4f);
-            colors.fadeDuration = 0.12f;
-            btn.colors = colors;
-            btn.onClick.AddListener(() => onClick?.Invoke());
-
-            // Borde sutil (Outline component)
-            var outline = go.AddComponent<Outline>();
-            outline.effectColor = new Color(buttonHoverColor.r, buttonHoverColor.g, buttonHoverColor.b, 0.4f);
-            outline.effectDistance = new Vector2(2f, -2f);
-
-            // Label
-            var lblGo = new GameObject("Label");
-            lblGo.transform.SetParent(go.transform, false);
-            var lblRT = lblGo.AddComponent<RectTransform>();
-            lblRT.anchorMin = Vector2.zero;
-            lblRT.anchorMax = Vector2.one;
-            lblRT.offsetMin = Vector2.zero;
-            lblRT.offsetMax = Vector2.zero;
-            var lblTxt = lblGo.AddComponent<Text>();
-            lblTxt.font = GetBodyFont();
-            lblTxt.text = label;
             lblTxt.alignment = TextAnchor.MiddleCenter;
             lblTxt.fontSize = 28;
             lblTxt.fontStyle = FontStyle.Bold;
@@ -715,28 +845,12 @@ namespace EstanDentro.UI
             return btn;
         }
 
-        private void SetupNavigation(Button a, Button b, Button c)
-        {
-            SetVerticalNav(a, prev: c, next: b);
-            SetVerticalNav(b, prev: a, next: c);
-            SetVerticalNav(c, prev: b, next: a);
-        }
-
-        private void SetVerticalNav(Button btn, Button prev, Button next)
-        {
-            var nav = btn.navigation;
-            nav.mode = Navigation.Mode.Explicit;
-            nav.selectOnUp = prev;
-            nav.selectOnDown = next;
-            btn.navigation = nav;
-        }
-
-        private Text MakeText(string name, string content, int size, FontStyle style, Color color,
+        private Text MakeMenuText(string name, string content, int size, FontStyle style, Color color,
             Vector2 anchoredPos, Vector2 sizeDelta, bool useTitleFont)
         {
-            var go = new GameObject(name);
-            go.transform.SetParent(canvas.transform, false);
-            var rt = go.AddComponent<RectTransform>();
+            var go = new GameObject(name, typeof(RectTransform));
+            var rt = go.GetComponent<RectTransform>();
+            rt.SetParent(menuPanelTransform != null ? menuPanelTransform : canvas.transform, false);
             rt.anchorMin = new Vector2(0.5f, 0.5f);
             rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);
@@ -751,7 +865,6 @@ namespace EstanDentro.UI
             t.color = color;
             t.raycastTarget = false;
 
-            // Sombra sutil para el titulo
             if (useTitleFont)
             {
                 var shadow = go.AddComponent<Shadow>();
@@ -760,6 +873,26 @@ namespace EstanDentro.UI
             }
 
             return t;
+        }
+
+        private void SetupNavigation(params Button[] btns)
+        {
+            int n = btns.Length;
+            for (int i = 0; i < n; i++)
+            {
+                SetVerticalNav(btns[i],
+                    prev: btns[(i - 1 + n) % n],
+                    next: btns[(i + 1) % n]);
+            }
+        }
+
+        private void SetVerticalNav(Button btn, Button prev, Button next)
+        {
+            var nav = btn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+            nav.selectOnUp = prev;
+            nav.selectOnDown = next;
+            btn.navigation = nav;
         }
 
         private Font GetTitleFont()

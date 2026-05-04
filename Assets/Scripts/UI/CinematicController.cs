@@ -36,7 +36,7 @@ namespace EstanDentro.UI
 
         [Header("Siguiente escena")]
         [SerializeField, Tooltip("Escena a cargar al terminar la cinematica.")]
-        private string nextSceneName = "Dev_Henry";
+        private string nextSceneName = "EscenaUno-salonPrincipal";
         [SerializeField, Tooltip("Tip que muestra la pantalla de carga al pasar a la siguiente escena.")]
         private string loadingTip = "Cuando entres, sosten el mando cerca de tu boca.";
 

@@ -3282,7 +3282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.Flashlight
   startEnabled: 0
-  unlocked: 1
+  unlocked: 0
   applyDefaultLook: 1
   intensityLumens: 2000
   range: 10

@@ -170,7 +170,7 @@ MonoBehaviour:
     charsPerSecond: 22
     holdSeconds: 3
     fadeOutSeconds: 1
-  nextSceneName: Dev_Henry
+  nextSceneName: EscenaUno-salonPrincipal
   loadingTip: Cuando entres, sosten el mando cerca de tu boca.
   bgColor: {r: 0, g: 0, b: 0, a: 1}
   textColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}

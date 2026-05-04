@@ -5,12 +5,20 @@ namespace EstanDentro.UI
     public static class Settings
     {
         private const string K_VOLUME = "settings_volume";
+        private const string K_MUSIC_VOLUME = "settings_musicVolume";
+        private const string K_SFX_VOLUME = "settings_sfxVolume";
+        private const string K_CINEMATIC_VOLUME = "settings_cinematicVolume";
+        private const string K_VOICE_VOLUME = "settings_voiceVolume";
         private const string K_MOUSE_SENS = "settings_mouseSens";
         private const string K_GAMEPAD_SENS = "settings_gamepadSens";
         private const string K_INVERT_Y = "settings_invertY";
         private const string K_BRIGHTNESS = "settings_brightness";
 
         public const float DEFAULT_VOLUME = 1.0f;
+        public const float DEFAULT_MUSIC_VOLUME = 0.85f;
+        public const float DEFAULT_SFX_VOLUME = 1.0f;
+        public const float DEFAULT_CINEMATIC_VOLUME = 1.0f;
+        public const float DEFAULT_VOICE_VOLUME = 1.0f;
         public const float DEFAULT_MOUSE_SENS = 0.25f;
         public const float DEFAULT_GAMEPAD_SENS = 240f;
         public const bool DEFAULT_INVERT_Y = false;
@@ -33,6 +41,32 @@ namespace EstanDentro.UI
                 PlayerPrefs.Save();
                 AudioListener.volume = value;
             }
+        }
+
+        // Volumenes por categoria. La integracion con AudioMixer se hace cuando Carlos arme el pipeline de audio.
+        // Hoy solo persisten en PlayerPrefs.
+        public static float MusicVolume
+        {
+            get => PlayerPrefs.GetFloat(K_MUSIC_VOLUME, DEFAULT_MUSIC_VOLUME);
+            set { value = Mathf.Clamp01(value); PlayerPrefs.SetFloat(K_MUSIC_VOLUME, value); PlayerPrefs.Save(); }
+        }
+
+        public static float SfxVolume
+        {
+            get => PlayerPrefs.GetFloat(K_SFX_VOLUME, DEFAULT_SFX_VOLUME);
+            set { value = Mathf.Clamp01(value); PlayerPrefs.SetFloat(K_SFX_VOLUME, value); PlayerPrefs.Save(); }
+        }
+
+        public static float CinematicVolume
+        {
+            get => PlayerPrefs.GetFloat(K_CINEMATIC_VOLUME, DEFAULT_CINEMATIC_VOLUME);
+            set { value = Mathf.Clamp01(value); PlayerPrefs.SetFloat(K_CINEMATIC_VOLUME, value); PlayerPrefs.Save(); }
+        }
+
+        public static float VoiceVolume
+        {
+            get => PlayerPrefs.GetFloat(K_VOICE_VOLUME, DEFAULT_VOICE_VOLUME);
+            set { value = Mathf.Clamp01(value); PlayerPrefs.SetFloat(K_VOICE_VOLUME, value); PlayerPrefs.Save(); }
         }
 
         public static float MouseSensitivity
@@ -90,6 +124,10 @@ namespace EstanDentro.UI
         public static void ResetToDefaults()
         {
             MasterVolume = DEFAULT_VOLUME;
+            MusicVolume = DEFAULT_MUSIC_VOLUME;
+            SfxVolume = DEFAULT_SFX_VOLUME;
+            CinematicVolume = DEFAULT_CINEMATIC_VOLUME;
+            VoiceVolume = DEFAULT_VOICE_VOLUME;
             MouseSensitivity = DEFAULT_MOUSE_SENS;
             GamepadSensitivity = DEFAULT_GAMEPAD_SENS;
             InvertY = DEFAULT_INVERT_Y;
