@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using EstanDentro.Network;
 
 namespace EstanDentro.Stress
 {
@@ -88,6 +89,7 @@ namespace EstanDentro.Stress
         private void Collapse()
         {
             IsCollapsed = true;
+            GameSession.StressCollapsed = true; // flag para evaluar logro 'superviviente' al fin de capitulo
             Debug.Log("[Stress] Collapse — estres maximo alcanzado");
             OnCollapse?.Invoke();
         }

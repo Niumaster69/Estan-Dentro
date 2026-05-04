@@ -1,4 +1,5 @@
 using UnityEngine;
+using EstanDentro.Network;
 
 namespace EstanDentro.Intrusions.Gaze
 {
@@ -28,6 +29,7 @@ namespace EstanDentro.Intrusions.Gaze
             }
 
             mgr.Trigger(IntrusionType.Observer);
+            GameSession.ObserverTriggeredAtLeastOnce = true; // flag para evaluar 'sigilo_observer' al fin de capitulo
             nextAllowedTime = Time.time + cooldownSec;
         }
     }

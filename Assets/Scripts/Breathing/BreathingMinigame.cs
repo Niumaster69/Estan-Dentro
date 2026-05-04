@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using EstanDentro.Stress;
+using EstanDentro.Network;
 
 namespace EstanDentro.Breathing
 {
@@ -34,16 +35,20 @@ namespace EstanDentro.Breathing
             "El miedo subio tu estres.\n\n" +
             "Manten ESPACIO (teclado) o TRIANGLE (mando) mientras inhalas por la nariz.\n" +
             "Soltalo cuando exhalas suave por la boca.\n\n" +
-            "Respira con el ritmo del circulo, no con tu reloj interno.";
+            "Cuando los bordes se abran, inhala. Cuando se cierren, exhala.";
 
-        [Header("Visual")]
-        [SerializeField] private float minScale = 0.45f;
-        [SerializeField] private float maxScale = 1.0f;
-        [SerializeField] private int circleSize = 220;
+        [Header("Visual - Vignette diegetico")]
+        [SerializeField, Range(0f, 1f), Tooltip("Alpha del vignette al inhalar pleno (bordes mas abiertos / claridad central).")]
+        private float minVignetteAlpha = 0.18f;
+        [SerializeField, Range(0f, 1f), Tooltip("Alpha del vignette al exhalar pleno (bordes envuelven la vista).")]
+        private float maxVignetteAlpha = 0.85f;
         [SerializeField] private float fadeSeconds = 1f;
-        [SerializeField] private Color inhaleColor = new Color(0.4f, 0.65f, 0.85f, 0.85f);
-        [SerializeField] private Color exhaleColor = new Color(0.55f, 0.85f, 0.6f, 0.85f);
-        [SerializeField] private Color pauseColor = new Color(0.7f, 0.7f, 0.7f, 0.55f);
+        [SerializeField, Tooltip("Color/tinte del vignette durante INHALA (sugerido: azul oscuro suave).")]
+        private Color inhaleColor = new Color(0.05f, 0.07f, 0.12f, 1f);
+        [SerializeField, Tooltip("Color/tinte del vignette durante EXHALA (sugerido: negro/rojo seco).")]
+        private Color exhaleColor = new Color(0.10f, 0.02f, 0.02f, 1f);
+        [SerializeField, Tooltip("Color/tinte del vignette durante PAUSA (sugerido: gris neutro).")]
+        private Color pauseColor = new Color(0.03f, 0.03f, 0.03f, 1f);
         [SerializeField] private Color labelColor = new Color(0.95f, 0.93f, 0.85f, 0.95f);
         [SerializeField] private Color freeCycleBadgeColor = new Color(0.4f, 0.7f, 0.45f, 0.95f);
 
@@ -58,8 +63,8 @@ namespace EstanDentro.Breathing
         // UI
         private Canvas canvas;
         private CanvasGroup canvasGroup;
-        private RectTransform circleRT;
-        private Image circleImg;
+        private RectTransform vignetteRT;
+        private Image vignetteImg;
         private Text guideText;
         private Text hintText;
         private Text inputBadge;
@@ -259,6 +264,12 @@ namespace EstanDentro.Breathing
         private void ScoreFail()
         {
             if (StressSystem.Instance == null) return;
+
+            // Contar TODOS los fallos para el logro 'respiracion_zen' (incluso los ciclos
+            // de aprendizaje "free"). El logro requiere terminar el capitulo sin fallar
+            // ningun ciclo, por lo que cualquier fallo cuenta.
+            GameSession.BreathingFailedCycles++;
+
             if (remainingFreeCycles > 0)
             {
                 remainingFreeCycles--;
@@ -273,29 +284,33 @@ namespace EstanDentro.Breathing
 
         private void ApplyVisuals()
         {
-            float scale;
-            Color c;
+            // Vignette diegetico:
+            //   INHALA: alpha decrece de max -> min (bordes se abren, claridad central crece)
+            //   EXHALA: alpha crece de min -> max (bordes cierran, oscuridad envuelve)
+            //   PAUSA:  alpha sostenido en max (envuelto, antes del proximo inhale)
+            float vignetteAlpha;
+            Color tint;
             string guide;
             switch (phase)
             {
                 case Phase.Inhale:
-                    scale = Mathf.Lerp(minScale, maxScale, phaseElapsed / inhaleSeconds);
-                    c = inhaleColor;
+                    vignetteAlpha = Mathf.Lerp(maxVignetteAlpha, minVignetteAlpha, phaseElapsed / inhaleSeconds);
+                    tint = inhaleColor;
                     guide = "INHALA";
                     break;
                 case Phase.Exhale:
-                    scale = Mathf.Lerp(maxScale, minScale, phaseElapsed / exhaleSeconds);
-                    c = exhaleColor;
+                    vignetteAlpha = Mathf.Lerp(minVignetteAlpha, maxVignetteAlpha, phaseElapsed / exhaleSeconds);
+                    tint = exhaleColor;
                     guide = cycleAlreadyScored ? "EXHALA  ✓" : "EXHALA";
                     break;
                 default:
-                    scale = minScale;
-                    c = pauseColor;
+                    vignetteAlpha = maxVignetteAlpha;
+                    tint = pauseColor;
                     guide = "PAUSA";
                     break;
             }
-            circleRT.localScale = new Vector3(scale, scale, 1f);
-            circleImg.color = c;
+            if (vignetteImg != null)
+                vignetteImg.color = new Color(tint.r, tint.g, tint.b, vignetteAlpha);
             guideText.text = guide;
 
             UpdateInputBadge();
@@ -326,7 +341,7 @@ namespace EstanDentro.Breathing
         {
             var provider = BreathingInputProvider.Instance;
             hintText.text = provider != null && provider.Mode == BreathingInputProvider.InputMode.KeyboardFallback
-                ? "El miedo es real, pero no manda. Respira con el circulo."
+                ? "El miedo es real, pero no manda. Respira con el ritmo de los bordes."
                 : "Sosten el mando cerca de tu boca. Inhala por la nariz, exhala al mando.";
 
             if (remainingFreeCycles > 0)
@@ -363,33 +378,35 @@ namespace EstanDentro.Breathing
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
 
-            // Circulo
-            var circleGo = new GameObject("Breathing_Circle");
-            circleGo.transform.SetParent(canvas.transform, false);
-            circleRT = circleGo.AddComponent<RectTransform>();
-            circleRT.anchorMin = new Vector2(0.5f, 0.5f);
-            circleRT.anchorMax = new Vector2(0.5f, 0.5f);
-            circleRT.pivot = new Vector2(0.5f, 0.5f);
-            circleRT.sizeDelta = new Vector2(circleSize, circleSize);
-            circleImg = circleGo.AddComponent<Image>();
-            circleImg.sprite = CreateCircleSprite(128);
-            circleImg.color = inhaleColor;
+            // Vignette fullscreen — bordes que pulsan con la respiracion (no tapa el centro)
+            var vignetteGo = new GameObject("Breathing_Vignette", typeof(RectTransform));
+            vignetteRT = vignetteGo.GetComponent<RectTransform>();
+            vignetteRT.SetParent(canvas.transform, false);
+            vignetteRT.anchorMin = Vector2.zero;
+            vignetteRT.anchorMax = Vector2.one;
+            vignetteRT.offsetMin = Vector2.zero;
+            vignetteRT.offsetMax = Vector2.zero;
+            vignetteImg = vignetteGo.AddComponent<Image>();
+            vignetteImg.sprite = CreateVignetteSprite(256);
+            vignetteImg.color = new Color(inhaleColor.r, inhaleColor.g, inhaleColor.b, minVignetteAlpha);
+            vignetteImg.raycastTarget = false;
 
+            // Texto guia abajo (diegetico, no tapa el centro)
             guideText = MakeText(canvas.transform, "Guide", "INHALA",
-                34, FontStyle.Bold,
-                new Vector2(400f, 50f), Vector2.zero);
+                28, FontStyle.Bold,
+                new Vector2(400f, 44f), new Vector2(0f, -340f));
 
             inputBadge = MakeText(canvas.transform, "InputBadge", "",
-                22, FontStyle.Bold,
-                new Vector2(700f, 36f), new Vector2(0f, -150f));
+                18, FontStyle.Bold,
+                new Vector2(700f, 32f), new Vector2(0f, -390f));
 
             hintText = MakeText(canvas.transform, "Hint", "",
-                18, FontStyle.Italic,
-                new Vector2(900f, 28f), new Vector2(0f, -200f));
+                15, FontStyle.Italic,
+                new Vector2(900f, 24f), new Vector2(0f, -430f));
 
             freeCycleBadge = MakeText(canvas.transform, "FreeCycleBadge", "",
-                16, FontStyle.Normal,
-                new Vector2(500f, 24f), new Vector2(0f, 180f));
+                14, FontStyle.Normal,
+                new Vector2(500f, 22f), new Vector2(0f, -470f));
             freeCycleBadge.color = freeCycleBadgeColor;
             freeCycleBadge.gameObject.SetActive(false);
 
@@ -415,21 +432,25 @@ namespace EstanDentro.Breathing
             tutorialPanel.SetActive(false);
         }
 
-        private Sprite CreateCircleSprite(int size)
+        private Sprite CreateVignetteSprite(int size)
         {
+            // Radial alpha gradient: alpha=0 en el centro (claridad), alpha=1 en los bordes (oscuridad).
+            // Curva ease-in cuadratica para que la transicion sea suave y los bordes se sientan envolventes.
             var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
             tex.filterMode = FilterMode.Bilinear;
             tex.wrapMode = TextureWrapMode.Clamp;
             var px = new Color[size * size];
             float cx = size * 0.5f, cy = size * 0.5f;
-            float r = size * 0.5f - 1f;
+            float r = size * 0.5f;
             for (int y = 0; y < size; y++)
             for (int x = 0; x < size; x++)
             {
-                float dx = x - cx, dy = y - cy;
+                float dx = (x - cx) / r;
+                float dy = (y - cy) / r;
                 float d = Mathf.Sqrt(dx * dx + dy * dy);
-                float a = Mathf.Clamp01(r - d);
-                px[y * size + x] = new Color(1f, 1f, 1f, a);
+                float t = Mathf.Clamp01((d - 0.25f) / 0.75f);
+                t = t * t;
+                px[y * size + x] = new Color(1f, 1f, 1f, t);
             }
             tex.SetPixels(px);
             tex.Apply();

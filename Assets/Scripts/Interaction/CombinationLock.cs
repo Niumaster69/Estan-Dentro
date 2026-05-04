@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using EstanDentro.Network;
 
 namespace EstanDentro.Interaction
 {
@@ -7,22 +8,46 @@ namespace EstanDentro.Interaction
     {
         [Header("Combinacion")]
         [SerializeField, Tooltip("Codigo correcto. Cantidad de digitos = cantidad de ruedas.")]
-        private int[] correctCode = new int[] { 7, 4, 2 };
+        private int[] correctCode = new int[] { 1, 7, 0, 5 };
 
         [Header("Feedback")]
         [SerializeField] private bool autoCloseOnSolved = true;
         [SerializeField] private bool oneShot = true;
+
+        [Header("Mision contextual (opcional)")]
+        [SerializeField, Tooltip("Si se setea, al primer intento de abrir el lock aparece una mision secundaria en el inventario. Al resolver, se marca completada.")]
+        private string contextualMissionId = "";
+        [SerializeField, Tooltip("Texto de la mision contextual. Ej: 'Descifra el codigo del armario'.")]
+        private string contextualMissionText = "";
+
+        [Header("Logro")]
+        [SerializeField, Tooltip("Si true, al resolver SIN equivocarse desbloquea el logro 'cerradura_primera' (Maestro de cerraduras).")]
+        private bool grantsCerraduraPrimera = true;
 
         [Header("Eventos")]
         public UnityEvent onSolved;
         public UnityEvent onFailed;
 
         public bool IsSolved { get; private set; }
+        public int FailsCount { get; private set; }
         public int[] CorrectCode => correctCode;
 
         public override void Interact()
         {
             if (oneShot && IsSolved) return;
+
+            // Agregar mision contextual al primer intento (si esta configurada y aun no se agrego).
+            if (!string.IsNullOrEmpty(contextualMissionId)
+                && Inventory.Inventory.Instance != null
+                && !Inventory.Inventory.Instance.HasMission(contextualMissionId))
+            {
+                Inventory.Inventory.Instance.AddMission(contextualMissionId,
+                    contextualMissionText,
+                    Inventory.Inventory.MissionCategory.Secundaria);
+                EstanDentro.UI.ObjectiveHUD.PulseCircle();
+                EstanDentro.UI.ObjectiveHUD.Notify("Nueva pista: " + contextualMissionText, 4f);
+            }
+
             LockOverlay.Open(this);
         }
 
@@ -31,13 +56,26 @@ namespace EstanDentro.Interaction
             if (CodeMatches(attempt))
             {
                 IsSolved = true;
-                Debug.Log($"[Lock] Resuelto en '{name}'.");
+                Debug.Log($"[Lock] Resuelto en '{name}' con {FailsCount} fallos.");
+
+                // Completar mision contextual al resolver
+                if (!string.IsNullOrEmpty(contextualMissionId)
+                    && Inventory.Inventory.Instance != null)
+                {
+                    Inventory.Inventory.Instance.CompleteMission(contextualMissionId);
+                }
+
+                // Logro 'cerradura_primera': resolver sin equivocarse
+                if (grantsCerraduraPrimera && FailsCount == 0)
+                    GameSession.TryUnlockLogro("cerradura_primera");
+
                 onSolved?.Invoke();
                 if (autoCloseOnSolved) LockOverlay.Close();
             }
             else
             {
-                Debug.Log($"[Lock] Fallo en '{name}'. Intento: {string.Join("", attempt)}");
+                FailsCount++;
+                Debug.Log($"[Lock] Fallo en '{name}'. Intento: {string.Join("", attempt)} (totalFallos={FailsCount})");
                 onFailed?.Invoke();
             }
         }

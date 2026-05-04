@@ -15,7 +15,7 @@ namespace EstanDentro.UI
         [Header("Texto")]
         [SerializeField] private string titleText = "PAUSA";
         [SerializeField] private string continueLabel = "Continuar";
-        [SerializeField] private string notesLabel = "Notas";
+        [SerializeField] private string notesLabel = "Inventario";
         [SerializeField] private string settingsLabel = "Ajustes";
         [SerializeField] private string mainMenuLabel = "Salir al menu";
 

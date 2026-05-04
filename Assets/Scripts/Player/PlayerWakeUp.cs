@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using EstanDentro.UI;
 
 namespace EstanDentro.Player
 {
@@ -34,8 +35,9 @@ namespace EstanDentro.Player
         [SerializeField] private float startPitch = 55f;
         [SerializeField] private float endPitch = 0f;
 
-        [Header("Fase 3 - Cierre")]
-        [SerializeField] private float finalFadeSeconds = 0.8f;
+        [Header("Objetivo HUD")]
+        [SerializeField, Tooltip("Texto que aparece en el ObjectiveHUD al terminar la animacion de despertar. Vacio = no se muestra.")]
+        private string firstObjective = "Sal del salón";
 
         private PlayerController playerController;
         private Transform cameraPivot;
@@ -106,6 +108,26 @@ namespace EstanDentro.Player
 
             // Devolver control
             playerController.InputEnabled = true;
+
+            // Tutorial primer toast: explica el inventario + bindings
+            ObjectiveHUD.Notify("Apretá [I] (teclado) o [Touchpad] (mando) para abrir tu inventario y misiones.", 7f);
+
+            // Esperar un momento para que se vea el tutorial antes del objetivo
+            yield return new WaitForSecondsRealtime(2.5f);
+
+            // Agregar primer objetivo principal al sistema de misiones
+            if (!string.IsNullOrEmpty(firstObjective))
+            {
+                if (Inventory.Inventory.Instance != null)
+                {
+                    Inventory.Inventory.Instance.AddMission(
+                        "salir_salon",
+                        firstObjective,
+                        Inventory.Inventory.MissionCategory.Principal);
+                }
+                ObjectiveHUD.PulseCircle();
+                ObjectiveHUD.Notify("Nueva misión: " + firstObjective, 4f);
+            }
         }
 
         // ---------- helpers ----------

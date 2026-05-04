@@ -760,7 +760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
-  correctCode: 07000000040000000200000009000000
+  correctCode: 01000000070000000000000005000000
   autoCloseOnSolved: 1
   oneShot: 1
   onSolved:
@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.PauseMenuHandler
   titleText: PAUSA
   continueLabel: Continuar
-  notesLabel: Notas
+  notesLabel: Inventario
   settingsLabel: Ajustes
   mainMenuLabel: Salir al menu
   mainMenuSceneName: MainMenu

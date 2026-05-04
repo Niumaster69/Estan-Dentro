@@ -8,8 +8,10 @@ namespace EstanDentro.Interaction
     {
         [Header("Estado")]
         [SerializeField] private bool startEnabled = false;
-        [SerializeField, Tooltip("Si false, la tecla F / Square no hace nada. Util para bloquearla hasta el apagon.")]
-        private bool unlocked = true;
+        [SerializeField, Tooltip("Si false, la tecla F / Square no hace nada. Por default la linterna esta bloqueada hasta que el jugador la recoge (la lonchera del Acto 1).")]
+        private bool unlocked = false;
+        [SerializeField, Tooltip("Si esta seteado, la linterna se desbloquea automaticamente cuando este item este en Inventory. Vacio = ignorar (solo desbloquea con Unlock()).")]
+        private string requireInventoryItem = "linterna";
 
         [Header("Apariencia (se aplica al Light al iniciar)")]
         [SerializeField] private bool applyDefaultLook = true;
@@ -44,6 +46,15 @@ namespace EstanDentro.Interaction
 
         private void Update()
         {
+            // Auto-unlock cuando el item este en Inventory (no requiere llamada manual a Unlock()).
+            if (!unlocked
+                && !string.IsNullOrEmpty(requireInventoryItem)
+                && Inventory.Inventory.Instance != null
+                && Inventory.Inventory.Instance.HasItem(requireInventoryItem))
+            {
+                unlocked = true;
+            }
+
             if (!unlocked) return;
             var kb = Keyboard.current;
             var gp = Gamepad.current;

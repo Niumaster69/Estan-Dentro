@@ -194,7 +194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2685884952588761181, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.045
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2685884952588761181, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       propertyPath: m_LocalPosition.z
@@ -308,7 +308,8 @@ MonoBehaviour:
   lookCenterSeconds: 1.5
   startPitch: 55
   endPitch: 0
-  finalFadeSeconds: 1.2
+  firstObjective: "Sal del sal\xF3n"
+  firstObjectiveDisplayTime: 6
 --- !u!114 &607047122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,7 +615,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.Flashlight
   startEnabled: 0
-  unlocked: 1
+  unlocked: 0
+  requireInventoryItem: linterna
   applyDefaultLook: 1
   intensityLumens: 2000
   range: 10

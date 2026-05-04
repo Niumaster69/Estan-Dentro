@@ -126,3 +126,10 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Local recovery backups (Unity auto-saves)
+/[Aa]ssets/_[Rr]ecovery/
+
+# Claude Code local settings
+/.claude/settings.local.json
+/[Aa]ssets/_[Rr]ecovery.meta

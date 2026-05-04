@@ -17,11 +17,22 @@ namespace EstanDentro.Interaction
         [SerializeField] private string noteTitle = "Nota";
         [SerializeField, TextArea(3, 10)] private string noteText = "Si la sientes subir, respira despacio.";
 
+        [Header("Comportamiento")]
+        [SerializeField, Tooltip("Si true, el GameObject se destruye al cerrar el NoteOverlay. La nota queda registrada en el Inventory para releer con I.")]
+        private bool disappearAfterRead = true;
+
         public override void Interact()
         {
+            Debug.Log($"[Note] Interact en '{name}'. title='{noteTitle}'");
             if (Inventory.Inventory.Instance != null)
                 Inventory.Inventory.Instance.RegisterNote(noteTitle, noteText);
-            NoteOverlay.Show(noteTitle, noteText);
+            else
+                Debug.LogWarning("[Note] Inventory.Instance es null! La nota no se registra.");
+
+            if (disappearAfterRead)
+                NoteOverlay.Show(noteTitle, noteText, onClose: () => { if (this != null) Destroy(gameObject); });
+            else
+                NoteOverlay.Show(noteTitle, noteText);
         }
     }
 
@@ -38,7 +49,12 @@ namespace EstanDentro.Interaction
         public static void Show(string title, string body, System.Action onClose = null)
         {
             EnsureInstance();
-            if (instance.canvas.enabled) return;
+            Debug.Log($"[NoteOverlay] Show llamado. title='{title}'. canvas.enabled antes={instance.canvas.enabled}");
+            if (instance.canvas.enabled)
+            {
+                Debug.LogWarning($"[NoteOverlay] BLOQUEADO: canvas ya esta enabled. Title nuevo='{title}' fue ignorado.");
+                return;
+            }
             instance.titleTxt.text = title;
             instance.bodyTxt.text = body;
             instance.prevTimeScale = Time.timeScale;
@@ -47,11 +63,13 @@ namespace EstanDentro.Interaction
             instance.consumeInputThisFrame = true;
             instance.onCloseCallback = onClose;
             OverlayBlocker.Register();
+            Debug.Log($"[NoteOverlay] Show OK. Canvas enabled, esperando input para cerrar.");
         }
 
         public static void Hide()
         {
             if (instance == null || !instance.canvas.enabled) return;
+            Debug.Log("[NoteOverlay] Hide llamado.");
             instance.canvas.enabled = false;
             Time.timeScale = instance.prevTimeScale > 0f ? instance.prevTimeScale : 1f;
             OverlayBlocker.Unregister();
@@ -96,7 +114,7 @@ namespace EstanDentro.Interaction
             co.transform.SetParent(transform, false);
             canvas = co.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 180;
+            canvas.sortingOrder = 220; // por encima de InventoryOverlay (195) e ItemPreviewOverlay (200)
             var scaler = co.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
@@ -131,6 +149,10 @@ namespace EstanDentro.Interaction
                 new Vector2(0, -210), new Vector2(820, 30));
             hint.alignment = TextAnchor.MiddleCenter;
             hint.color = new Color(0.92f, 0.89f, 0.83f, 0.55f);
+
+            // CRITICAL: arrancar oculto. Si no, la guarda 'if (canvas.enabled) return' en Show()
+            // hace que la primera llamada a NoteOverlay.Show salga inmediatamente sin mostrar nada.
+            canvas.enabled = false;
         }
 
         private Text MakeText(Transform parent, string name, string content, int size, FontStyle style,
