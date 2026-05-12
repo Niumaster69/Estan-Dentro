@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &613004734362607115
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.282093
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.021252245
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.03
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.747349
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.66443175
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -83.277
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -511476941701261419, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 23350e81a1f07014bb6d9b30c73d496f, type: 2}
+    - target: {fileID: 919132149155446097, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: m_Name
+      value: SillonGrande_Rectorai
+      objectReference: {fileID: 0}
+    - target: {fileID: 1059791829929334704, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8196e084ee578a64bb8b57d7c41bc1e9, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e27fb5bb2f2c24d4fb746a782ea75b7c, type: 3}
