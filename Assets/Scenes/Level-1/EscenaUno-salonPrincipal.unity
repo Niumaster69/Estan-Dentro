@@ -3782,6 +3782,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+--- !u!4 &683460198 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3852150411044221513, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+  m_PrefabInstance: {fileID: 683460197}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &700835839
 GameObject:
   m_ObjectHideFlags: 0
@@ -11088,11 +11093,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9137884842516492867, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+      propertyPath: escritorio
+      value: 
+      objectReference: {fileID: 683460198}
+    - target: {fileID: 9137884842516492867, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+      propertyPath: rejillaTransform
+      value: 
+      objectReference: {fileID: 3475457200741633185}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+--- !u!4 &3475457200741633185 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2421928925849557369, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+  m_PrefabInstance: {fileID: 3475457200741633184}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3498559131143817033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8546651887321646763, guid: cd623dbf8d63c2245a4b2335d4ee22b6, type: 3}
