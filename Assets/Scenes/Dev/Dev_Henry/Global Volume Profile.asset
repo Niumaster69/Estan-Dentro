@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d7593b3a9277ac4696b20006c21dde2, type: 3}
   m_Name: VisualEnvironment
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.VisualEnvironment
-  active: 0
+  active: 1
   skyType:
     m_OverrideState: 1
     m_Value: 4
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
   m_Name: Exposure
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.Exposure
-  active: 0
+  active: 1
   mode:
     m_OverrideState: 1
     m_Value: 0
@@ -292,10 +292,10 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 8.33
+    m_Value: 5.883911
   compensation:
     m_OverrideState: 1
-    m_Value: 4.19
+    m_Value: 2
   limitMin:
     m_OverrideState: 0
     m_Value: -1
@@ -564,6 +564,7 @@ MonoBehaviour:
   - {fileID: -5953404646214148493}
   - {fileID: -2370427227104682737}
   - {fileID: 854484889054148101}
+  - {fileID: 2777251587658308650}
 --- !u!114 &854484889054148101
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -576,7 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 953beb541740ddc499d005ee80c9ff29, type: 3}
   m_Name: Fog
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.Fog
-  active: 1
+  active: 0
   quality:
     m_OverrideState: 0
     m_Value: 1
@@ -655,6 +656,52 @@ MonoBehaviour:
   directionalLightsOnly:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &2777251587658308650
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24f077503be6ae942a1e1245dbd53ea9, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.Bloom
+  active: 1
+  quality:
+    m_OverrideState: 0
+    m_Value: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 37.8
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.883
+  scatter:
+    m_OverrideState: 0
+    m_Value: 0.7
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  dirtTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  dirtIntensity:
+    m_OverrideState: 0
+    m_Value: 0
+  anamorphic:
+    m_OverrideState: 0
+    m_Value: 1
+  m_Resolution:
+    m_OverrideState: 0
+    m_Value: 2
+  m_HighQualityPrefiltering:
+    m_OverrideState: 0
+    m_Value: 0
+  m_HighQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!114 &2849026678995511636
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -796,7 +843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b6606ef2548734bb6d11b9d160bc7e, type: 3}
   m_Name: HDRISky
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.HDRISky
-  active: 0
+  active: 1
   rotation:
     m_OverrideState: 1
     m_Value: 0
@@ -923,7 +970,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f086a068d4c5889438831b3ae9afc11c, type: 3}
   m_Name: Tonemapping
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.Tonemapping
-  active: 1
+  active: 0
   mode:
     m_OverrideState: 1
     m_Value: 2

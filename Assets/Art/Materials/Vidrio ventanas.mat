@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: Vidrio ventanas
   m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
   m_Parent: {fileID: 2100000, guid: 03490adc46f3c9a478f3fb5ffb6f46fa, type: 2}
   m_ModifiedSerializedProperties: 28
