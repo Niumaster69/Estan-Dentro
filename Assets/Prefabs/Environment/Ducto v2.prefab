@@ -48,14 +48,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8258644843766620650, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67792daed071fad4bba4ba50346d1b76, type: 2}
+    - target: {fileID: -7929856236922863021, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67792daed071fad4bba4ba50346d1b76, type: 2}
     - target: {fileID: -7918335002988649766, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: d817fe6121fa07048a900ed41ebcdb08, type: 2}
+    - target: {fileID: -6870426796361969631, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d718d2b973652c0408c0d976972a47c3, type: 2}
     - target: {fileID: 919132149155446097, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
       propertyPath: m_Name
       value: Ducto v2
       objectReference: {fileID: 0}
+    - target: {fileID: 5495630607150200075, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67792daed071fad4bba4ba50346d1b76, type: 2}
     - target: {fileID: 5670784105149147771, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -63,5 +79,272 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8642772771835619503, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8595025520616784234}
+    - targetCorrespondingSourceObject: {fileID: 4690063682930425678, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9137884842516492867}
+    - targetCorrespondingSourceObject: {fileID: 5430861350590179602, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5675659467041978901}
   m_SourcePrefab: {fileID: 100100000, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+--- !u!1 &1536217537817306646 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5430861350590179602, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+  m_PrefabInstance: {fileID: 6777906623475093252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5675659467041978901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536217537817306646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f10238199c3a440af7fd7ad0fce6ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.DuctoTechoInteractable
+  lookUpThresholdPitch: -30
+  alsoRequireProximity: 0
+  activationRadius: 8
+  drawGizmo: 1
+  debugLogState: 0
+  requiredItemId: destornillador
+  promptText: 'Mira arriba [E] / [Cross]'
+  rejillaRigidbody: {fileID: 0}
+  rejillaTransform: {fileID: 0}
+  rejillaAutoMass: 2
+  detachRejillaFromParent: 1
+  rejillaDropImpulse: 0.5
+  rejillaRandomTorque: 1.5
+  animator: {fileID: 0}
+  animatorBoolParam: Open
+  escritorio: {fileID: 0}
+  escritorioTargetPos: {fileID: 0}
+  escritorioMoveOffset: {x: 0, y: 0, z: 1.2}
+  escritorioMoveDuration: 1.6
+  deskRotationWobble: 3
+  deskForwardLean: 4
+  flinchBackDistance: 0.15
+  flinchPitchDelta: 6
+  flinchDuration: 0.7
+  playerOnDeskPos: {fileID: 0}
+  playerInDuctPos: {fileID: 0}
+  climbToDeskDuration: 1.6
+  climbIntoDuctDuration: 1.6
+  climbBobAmount: 0.07
+  climbBobFrequency: 2.6
+  climbArcHeight: 0.18
+  climbDeskPitchDip: 12
+  climbYawWobble: 2.5
+  climbRollWobble: 1.5
+  lookAtDeskPitch: 0
+  lookDownDuration: 0.7
+  trackDeskYawSpeed: 3
+  deskLingerSeconds: 0.6
+  idleBreathPitch: 1.2
+  idleBreathYaw: 1.5
+  idleBreathRoll: 0.8
+  cameraTargetPitch: -75
+  cameraTiltDuration: 1.4
+  autoOrientToDesk: 1
+  orientToDeskDuration: 0.5
+  mesaRodandoClip: {fileID: 0}
+  destornilladorClip: {fileID: 0}
+  ductoCayendoClip: {fileID: 0}
+  volumeScale: 0.85
+  waitBeforeMesa: 0.3
+  waitBeforeDestornillador: 0.6
+  fadeToBlackDuration: 1
+  slides:
+  - text: Subi.
+    durationSeconds: 2.2
+    audio: {fileID: 0}
+  - text: Mas arriba.
+    durationSeconds: 2
+    audio: {fileID: 0}
+  - text: Solo un poco mas.
+    durationSeconds: 2.5
+    audio: {fileID: 0}
+  slideFadeIn: 0.6
+  slideFadeOut: 0.6
+  slideFontSize: 38
+  slideTextColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
+  nextSceneName: EsecenaUno-DuctosDeVentilacion
+  loadingTip: "Inhala 4. Sost\xE9n 4. Sigue arriba."
+  completedMissionId: salir_salon
+--- !u!1 &2240965483099009098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4690063682930425678, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+  m_PrefabInstance: {fileID: 6777906623475093252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9137884842516492867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2240965483099009098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f10238199c3a440af7fd7ad0fce6ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.DuctoTechoInteractable
+  lookUpThresholdPitch: -30
+  alsoRequireProximity: 0
+  activationRadius: 8
+  drawGizmo: 1
+  debugLogState: 0
+  requiredItemId: destornillador
+  promptText: 'Mira arriba [E] / [Cross]'
+  rejillaRigidbody: {fileID: 0}
+  rejillaTransform: {fileID: 0}
+  rejillaAutoMass: 2
+  detachRejillaFromParent: 1
+  rejillaDropImpulse: 0.5
+  rejillaRandomTorque: 1.5
+  animator: {fileID: 0}
+  animatorBoolParam: Open
+  escritorio: {fileID: 0}
+  escritorioTargetPos: {fileID: 0}
+  escritorioMoveOffset: {x: 0, y: 0, z: 1.2}
+  escritorioMoveDuration: 1.6
+  deskRotationWobble: 3
+  deskForwardLean: 4
+  flinchBackDistance: 0.15
+  flinchPitchDelta: 6
+  flinchDuration: 0.7
+  playerOnDeskPos: {fileID: 0}
+  playerInDuctPos: {fileID: 0}
+  climbToDeskDuration: 1.6
+  climbIntoDuctDuration: 1.6
+  climbBobAmount: 0.07
+  climbBobFrequency: 2.6
+  climbArcHeight: 0.18
+  climbDeskPitchDip: 12
+  climbYawWobble: 2.5
+  climbRollWobble: 1.5
+  lookAtDeskPitch: 0
+  lookDownDuration: 0.7
+  trackDeskYawSpeed: 3
+  deskLingerSeconds: 0.6
+  idleBreathPitch: 1.2
+  idleBreathYaw: 1.5
+  idleBreathRoll: 0.8
+  cameraTargetPitch: -75
+  cameraTiltDuration: 1.4
+  autoOrientToDesk: 1
+  orientToDeskDuration: 0.5
+  mesaRodandoClip: {fileID: 0}
+  destornilladorClip: {fileID: 0}
+  ductoCayendoClip: {fileID: 0}
+  volumeScale: 0.85
+  waitBeforeMesa: 0.3
+  waitBeforeDestornillador: 0.6
+  fadeToBlackDuration: 1
+  slides:
+  - text: Subi.
+    durationSeconds: 2.2
+    audio: {fileID: 0}
+  - text: Mas arriba.
+    durationSeconds: 2
+    audio: {fileID: 0}
+  - text: Solo un poco mas.
+    durationSeconds: 2.5
+    audio: {fileID: 0}
+  slideFadeIn: 0.6
+  slideFadeOut: 0.6
+  slideFontSize: 38
+  slideTextColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
+  nextSceneName: EsecenaUno-DuctosDeVentilacion
+  loadingTip: "Inhala 4. Sost\xE9n 4. Sigue arriba."
+  completedMissionId: salir_salon
+--- !u!1 &3026060657761855403 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8642772771835619503, guid: 2d2eedba18755aa4582a0287d69bea10, type: 3}
+  m_PrefabInstance: {fileID: 6777906623475093252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8595025520616784234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3026060657761855403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f10238199c3a440af7fd7ad0fce6ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.DuctoTechoInteractable
+  lookUpThresholdPitch: -30
+  alsoRequireProximity: 0
+  activationRadius: 8
+  drawGizmo: 1
+  debugLogState: 0
+  requiredItemId: destornillador
+  promptText: 'Mira arriba [E] / [Cross]'
+  rejillaRigidbody: {fileID: 0}
+  rejillaTransform: {fileID: 0}
+  rejillaAutoMass: 2
+  detachRejillaFromParent: 1
+  rejillaDropImpulse: 0.5
+  rejillaRandomTorque: 1.5
+  animator: {fileID: 0}
+  animatorBoolParam: Open
+  escritorio: {fileID: 0}
+  escritorioTargetPos: {fileID: 0}
+  escritorioMoveOffset: {x: 0, y: 0, z: 1.2}
+  escritorioMoveDuration: 1.6
+  deskRotationWobble: 3
+  deskForwardLean: 4
+  flinchBackDistance: 0.15
+  flinchPitchDelta: 6
+  flinchDuration: 0.7
+  playerOnDeskPos: {fileID: 0}
+  playerInDuctPos: {fileID: 0}
+  climbToDeskDuration: 1.6
+  climbIntoDuctDuration: 1.6
+  climbBobAmount: 0.07
+  climbBobFrequency: 2.6
+  climbArcHeight: 0.18
+  climbDeskPitchDip: 12
+  climbYawWobble: 2.5
+  climbRollWobble: 1.5
+  lookAtDeskPitch: 0
+  lookDownDuration: 0.7
+  trackDeskYawSpeed: 3
+  deskLingerSeconds: 0.6
+  idleBreathPitch: 1.2
+  idleBreathYaw: 1.5
+  idleBreathRoll: 0.8
+  cameraTargetPitch: -75
+  cameraTiltDuration: 1.4
+  autoOrientToDesk: 1
+  orientToDeskDuration: 0.5
+  mesaRodandoClip: {fileID: 0}
+  destornilladorClip: {fileID: 0}
+  ductoCayendoClip: {fileID: 0}
+  volumeScale: 0.85
+  waitBeforeMesa: 0.3
+  waitBeforeDestornillador: 0.6
+  fadeToBlackDuration: 1
+  slides:
+  - text: Subi.
+    durationSeconds: 2.2
+    audio: {fileID: 0}
+  - text: Mas arriba.
+    durationSeconds: 2
+    audio: {fileID: 0}
+  - text: Solo un poco mas.
+    durationSeconds: 2.5
+    audio: {fileID: 0}
+  slideFadeIn: 0.6
+  slideFadeOut: 0.6
+  slideFontSize: 38
+  slideTextColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
+  nextSceneName: EsecenaUno-DuctosDeVentilacion
+  loadingTip: "Inhala 4. Sost\xE9n 4. Sigue arriba."
+  completedMissionId: salir_salon
