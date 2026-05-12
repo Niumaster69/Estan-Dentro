@@ -11098,9 +11098,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 683460198}
     - target: {fileID: 9137884842516492867, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+      propertyPath: playerInDuctPos
+      value: 
+      objectReference: {fileID: 550827452}
+    - target: {fileID: 9137884842516492867, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+      propertyPath: playerOnDeskPos
+      value: 
+      objectReference: {fileID: 1939956475}
+    - target: {fileID: 9137884842516492867, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
       propertyPath: rejillaTransform
       value: 
       objectReference: {fileID: 3475457200741633185}
+    - target: {fileID: 9137884842516492867, guid: 89ee0ee1aa845d84e873be52210813ea, type: 3}
+      propertyPath: escritorioTargetPos
+      value: 
+      objectReference: {fileID: 965070374}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
