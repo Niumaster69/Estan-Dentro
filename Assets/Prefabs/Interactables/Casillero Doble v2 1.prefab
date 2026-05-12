@@ -302,10 +302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3716220013454190332}
-  - component: {fileID: 5185469270569324727}
-  - component: {fileID: 8362646535278144367}
   - component: {fileID: 4647852563292940824}
-  - component: {fileID: 1135781201130350601}
   m_Layer: 0
   m_Name: Casillero Doble v2 1
   m_TagString: Untagged
@@ -331,48 +328,6 @@ Transform:
   - {fileID: 1353107708196988082}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5185469270569324727
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5374912725504428491}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.17295313, y: 2.8741941, z: 0.93935585}
-  m_Center: {x: -0.8949845, y: 1.4191983, z: 0.6505022}
---- !u!65 &8362646535278144367
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5374912725504428491}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.17295313, y: 2.8741941, z: 0.93027544}
-  m_Center: {x: 0.94000006, y: 1.4191983, z: 0.645962}
 --- !u!95 &4647852563292940824
 Animator:
   serializedVersion: 7
@@ -395,27 +350,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &1135781201130350601
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5374912725504428491}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.6119337, y: 2.8741941, z: 0.20774984}
-  m_Center: {x: 0.022586823, y: 1.4191983, z: 0.2846992}
 --- !u!1 &5699918870650659994
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +362,7 @@ GameObject:
   - component: {fileID: 487744582252833835}
   - component: {fileID: 6142787192191329664}
   - component: {fileID: 9071758704815816338}
+  - component: {fileID: 3894395225380222028}
   m_Layer: 0
   m_Name: Plane.001
   m_TagString: Untagged
@@ -529,6 +464,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!64 &3894395225380222028
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5699918870650659994}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4579454407841743219, guid: 440ad6edd16658441ad3d605db316593, type: 3}
 --- !u!1 &7570068874373958902
 GameObject:
   m_ObjectHideFlags: 0
