@@ -11018,10 +11018,10 @@ MonoBehaviour:
   loopVolume: 0.004
   loopPitchJitter: 0.04
   randomEventClips:
+  - {fileID: 8300000, guid: cb33081d7b1d07b4a8d8e4481837b77f, type: 3}
+  - {fileID: 8300000, guid: cc16623a86de454478e02d0d3801f2cb, type: 3}
   - {fileID: 8300000, guid: 433dcbe8c0eb0e44a9fa2fc1287c1f45, type: 3}
-  - {fileID: 8300000, guid: 2fd25fd7d40993b4190229ebe27b6e47, type: 3}
-  - {fileID: 8300000, guid: a201f6d36c7c2f240ae2d83b7e130ffd, type: 3}
-  - {fileID: 8300000, guid: ad13031be80ec994a85303cbfe1c2e93, type: 3}
+  - {fileID: 8300000, guid: 604e51ad09f457c4dbff5c45bf2a7aff, type: 3}
   randomEventVolume: 0.85
   randomEventPauseRange: {x: 18, y: 45}
   randomEventPitchJitter: 0.08

@@ -67,6 +67,8 @@ namespace EstanDentro.Interaction
         [SerializeField] private string loadingTip = "Volves al menu... o algo te trae de vuelta.";
         [SerializeField, Tooltip("Si esta seteado, completa esta mision al disparar.")]
         private string completedMissionId = "salir_ductos";
+        [SerializeField, Tooltip("Si true, muestra CreditsScreen despues del video del twist, antes de cargar MainMenu.")]
+        private bool showCreditsAfterTwist = true;
 
         [Header("Comportamiento")]
         [SerializeField, Tooltip("Si true, solo se dispara una vez por ejecucion.")]
@@ -163,6 +165,19 @@ namespace EstanDentro.Interaction
 
             // 7) Pequeno respiro en negro y vuelta al menu
             yield return new WaitForSecondsRealtime(beforeReturnToMenuDelay);
+
+            // 8) Creditos (mensaje reflexivo + equipo) antes del MainMenu
+            if (showCreditsAfterTwist)
+            {
+                var creditsGo = new GameObject("EndGame_Credits");
+                var credits = creditsGo.AddComponent<EstanDentro.UI.CreditsScreen>();
+                bool creditsDone = false;
+                credits.onComplete = new UnityEngine.Events.UnityEvent();
+                credits.onComplete.AddListener(() => creditsDone = true);
+                credits.Play();
+                yield return new WaitUntil(() => creditsDone);
+                Destroy(creditsGo);
+            }
 
             Time.timeScale = 1f;
             SceneTransition.LoadScene(nextSceneName, tip: loadingTip);
