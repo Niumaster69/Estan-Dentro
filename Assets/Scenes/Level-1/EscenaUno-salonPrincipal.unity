@@ -3123,6 +3123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.LockedDoor
   isLocked: 1
+  integratedLock: {fileID: 0}
+  autoBindIntegratedLock: 1
   animator: {fileID: 0}
   animatorBoolParam: 0pen
   forceClosedOnAwake: 1
@@ -7467,9 +7469,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7489588760404005594, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1310304887}
+    - targetCorrespondingSourceObject: {fileID: 7489588760404005594, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1310304894}
     - targetCorrespondingSourceObject: {fileID: 7208928377556168202, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1310304886}
+    - targetCorrespondingSourceObject: {fileID: 7208928377556168202, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1310304888}
     - targetCorrespondingSourceObject: {fileID: 5182574565037033375, guid: 5402ae20811ce1d4cafa6a6403f3d44d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 957007677}
@@ -7500,6 +7508,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.LockedDoor
   isLocked: 1
+  integratedLock: {fileID: 0}
+  autoBindIntegratedLock: 1
   animator: {fileID: 0}
   animatorBoolParam: Open
   forceClosedOnAwake: 1
@@ -7540,6 +7550,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.LockedDoor
   isLocked: 1
+  integratedLock: {fileID: 0}
+  autoBindIntegratedLock: 1
   animator: {fileID: 0}
   animatorBoolParam: Open
   forceClosedOnAwake: 1
@@ -7560,25 +7572,71 @@ MonoBehaviour:
   freezeIncludeChildren: 1
   onTriedWhileLocked:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1857096898}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onUnlocked:
     m_PersistentCalls:
       m_Calls: []
   onOpened:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1310304888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310304884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
+  correctCode: 01000000070000000000000005000000
+  autoCloseOnSolved: 1
+  oneShot: 1
+  contextualMissionId: 
+  contextualMissionText: 
+  grantsCerraduraPrimera: 1
+  digitClickClip: {fileID: 0}
+  digitClickVolume: 0.7
+  solvedClip: {fileID: 0}
+  solvedVolume: 0.9
+  onSolved:
+    m_PersistentCalls:
+      m_Calls: []
+  onFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  disableOnSolved: []
+--- !u!114 &1310304894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310304885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
+  correctCode: 01000000070000000000000005000000
+  autoCloseOnSolved: 1
+  oneShot: 1
+  contextualMissionId: 
+  contextualMissionText: 
+  grantsCerraduraPrimera: 1
+  digitClickClip: {fileID: 0}
+  digitClickVolume: 0.7
+  solvedClip: {fileID: 0}
+  solvedVolume: 0.9
+  onSolved:
+    m_PersistentCalls:
+      m_Calls: []
+  onFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  disableOnSolved: []
 --- !u!1001 &1341003890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9770,102 +9828,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1857096898
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1857096901}
-  - component: {fileID: 1857096900}
-  - component: {fileID: 1857096899}
-  m_Layer: 0
-  m_Name: PadlockFinal_DoorA
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &1857096899
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1857096898}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4, y: 4, z: 0.1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1857096900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1857096898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 562a3de3fa3a41140b5eabf1eabf2150, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.CombinationLock
-  correctCode: 01000000070000000000000005000000
-  autoCloseOnSolved: 1
-  oneShot: 1
-  contextualMissionId: abrir_puerta_final_A
-  contextualMissionText: 
-  grantsCerraduraPrimera: 1
-  digitClickClip: {fileID: 8300000, guid: 573ef7177bb44c247818049a50efdd67, type: 3}
-  digitClickVolume: 0.7
-  solvedClip: {fileID: 8300000, guid: 01709cef9460d654bb37ea62728660f5, type: 3}
-  solvedVolume: 0.9
-  onSolved:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1310304887}
-        m_TargetAssemblyTypeName: EstanDentro.Interaction.LockedDoor, Assembly-CSharp
-        m_MethodName: Unlock
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onFailed:
-    m_PersistentCalls:
-      m_Calls: []
-  disableOnSolved:
-  - {fileID: 1310304885}
---- !u!4 &1857096901
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1857096898}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: 1.6, z: 8.653334}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1859856744
 GameObject:
   m_ObjectHideFlags: 0
@@ -10991,6 +10953,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.LockedDoor
   isLocked: 1
+  integratedLock: {fileID: 0}
+  autoBindIntegratedLock: 1
   animator: {fileID: 0}
   animatorBoolParam: Open
   forceClosedOnAwake: 1
@@ -14377,4 +14341,3 @@ SceneRoots:
   - {fileID: 1891793789}
   - {fileID: 1221085837}
   - {fileID: 1767171742}
-  - {fileID: 1857096901}

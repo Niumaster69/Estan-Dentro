@@ -28,6 +28,16 @@ namespace EstanDentro.Interaction
         [SerializeField, Tooltip("Si true, en Awake se suscribe automaticamente al onSolved del integratedLock para llamar Unlock(). Asi no hay que wirear UnityEvent.")]
         private bool autoBindIntegratedLock = true;
 
+        [Header("Animacion por codigo (fallback si Animator no funciona)")]
+        [SerializeField, Tooltip("Si true Y no hay Animator, la puerta gira con un coroutine. Util cuando el modelo no tiene Animator configurado.")]
+        private bool useCodeAnimationFallback = true;
+        [SerializeField, Tooltip("Transform que rota al abrir. Si null, se usa este transform. Si la puerta tiene un pivot hijo, asignalo aqui.")]
+        private Transform doorPivotTransform;
+        [SerializeField, Tooltip("Angulo a abrir (grados sobre el eje Y local). 90 = puerta a 90 grados, -90 = otro lado.")]
+        private float codeOpenAngleY = 90f;
+        [SerializeField, Tooltip("Duracion de la animacion por codigo (segundos).")]
+        private float codeAnimDuration = 0.9f;
+
         [Header("Animator")]
         [SerializeField, Tooltip("Animator de la puerta. Si es null, se busca en este GO o en hijos.")]
         private Animator animator;
@@ -227,22 +237,57 @@ namespace EstanDentro.Interaction
             isShaking = false;
         }
 
+        private Coroutine codeAnimCo;
+
         private void ToggleOpen()
         {
+            bool animatorOK = animator != null && HasBoolParam(animator, animatorBoolParam);
+
+            if (animatorOK)
+            {
+                currentOpen = !currentOpen;
+                animator.SetBool(animatorBoolParam, currentOpen);
+                Debug.Log($"[LockedDoor] '{name}' ToggleOpen: animator.SetBool('{animatorBoolParam}', {currentOpen}) OK.");
+                if (currentOpen) onOpened?.Invoke();
+                return;
+            }
+
+            // Fallback por codigo: rotar el transform
+            if (useCodeAnimationFallback)
+            {
+                currentOpen = !currentOpen;
+                Transform pivot = doorPivotTransform != null ? doorPivotTransform : transform;
+                if (codeAnimCo != null) StopCoroutine(codeAnimCo);
+                codeAnimCo = StartCoroutine(CodeAnimateOpen(pivot, currentOpen));
+                Debug.Log($"[LockedDoor] '{name}' ToggleOpen: animacion por codigo (open={currentOpen}).");
+                if (currentOpen) onOpened?.Invoke();
+                return;
+            }
+
             if (animator == null)
+                Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: NO HAY Animator asignado ni en hijos, y useCodeAnimationFallback=false. La puerta no se abrira visualmente.");
+            else
+                Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: Animator no tiene Bool param '{animatorBoolParam}', y useCodeAnimationFallback=false.");
+        }
+
+        private System.Collections.IEnumerator CodeAnimateOpen(Transform pivot, bool opening)
+        {
+            Quaternion fromRot = pivot.localRotation;
+            Quaternion toRot = opening
+                ? fromRot * Quaternion.Euler(0f, codeOpenAngleY, 0f)
+                : fromRot * Quaternion.Euler(0f, -codeOpenAngleY, 0f);
+            // Si estamos cerrando, target es la rotacion base capturada al abrir.
+            // Para simplicidad asumimos que open/close empieza desde el estado actual.
+            float t = 0f;
+            while (t < codeAnimDuration)
             {
-                Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: NO HAY Animator asignado ni en hijos. La puerta no se abrira visualmente.");
-                return;
+                t += Time.deltaTime;
+                float p = Mathf.Clamp01(t / codeAnimDuration);
+                float eased = 1f - Mathf.Pow(1f - p, 3f); // ease-out cubic
+                pivot.localRotation = Quaternion.Slerp(fromRot, toRot, eased);
+                yield return null;
             }
-            if (!HasBoolParam(animator, animatorBoolParam))
-            {
-                Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: Animator '{animator.runtimeAnimatorController?.name}' no tiene Bool param '{animatorBoolParam}'. Configurar el Animator Controller o cambiar animatorBoolParam en Inspector.");
-                return;
-            }
-            currentOpen = !currentOpen;
-            animator.SetBool(animatorBoolParam, currentOpen);
-            Debug.Log($"[LockedDoor] '{name}' ToggleOpen: animator.SetBool('{animatorBoolParam}', {currentOpen}) OK.");
-            if (currentOpen) onOpened?.Invoke();
+            pivot.localRotation = toRot;
         }
 
         public void Unlock()
