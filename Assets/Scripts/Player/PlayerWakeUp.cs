@@ -59,7 +59,9 @@ namespace EstanDentro.Player
         [SerializeField, Range(0f, 1f), Tooltip("ChromaticAberration maximo. Da sensacion de vision desincronizada.")]
         private float chromaticAberrationMax = 0.55f;
         [SerializeField, Tooltip("Peso residual del Volume DURANTE el look around (0=vista clara, 1=full borroso). Bajo = sutil. Por default 0.4.")]
+        #pragma warning disable CS0414
         private float blurWeightDuringLook = 0.4f;
+        #pragma warning restore CS0414
 
         [Header("Fase 1 - Pestaneos")]
         [SerializeField] private float blackHoldSeconds = 1.5f;

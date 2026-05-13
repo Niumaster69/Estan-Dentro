@@ -23,9 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level-1/EsecenaUno-DuctosDeVentilacion.unity
     guid: c3cc493422faa854abeca2906b9f44c3
-  - enabled: 1
-    path: Assets/Scenes/Level-1/EscenaUno-salonSecundario.unity
-    guid: 9dfd5da566955724ea1bb99e14e488db
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 35845fe01580c41289b024647b1d1c53, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 198e6cec0d2198548adb102d459b147d, type: 2}
