@@ -2967,7 +2967,6 @@ MonoBehaviour:
   m_Script: {fileID: 1955260053}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.SceneObjectIDMapSceneAsset
-  m_Entries: []
 --- !u!4 &467624280
 Transform:
   m_ObjectHideFlags: 19
@@ -3125,6 +3124,10 @@ MonoBehaviour:
   isLocked: 1
   integratedLock: {fileID: 0}
   autoBindIntegratedLock: 1
+  useCodeAnimationFallback: 1
+  doorPivotTransform: {fileID: 0}
+  codeOpenAngleY: 90
+  codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: 0pen
   forceClosedOnAwake: 1
@@ -7510,6 +7513,10 @@ MonoBehaviour:
   isLocked: 1
   integratedLock: {fileID: 0}
   autoBindIntegratedLock: 1
+  useCodeAnimationFallback: 1
+  doorPivotTransform: {fileID: 0}
+  codeOpenAngleY: 90
+  codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: Open
   forceClosedOnAwake: 1
@@ -7552,6 +7559,10 @@ MonoBehaviour:
   isLocked: 1
   integratedLock: {fileID: 0}
   autoBindIntegratedLock: 1
+  useCodeAnimationFallback: 1
+  doorPivotTransform: {fileID: 0}
+  codeOpenAngleY: 90
+  codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: Open
   forceClosedOnAwake: 1
@@ -10955,6 +10966,10 @@ MonoBehaviour:
   isLocked: 1
   integratedLock: {fileID: 0}
   autoBindIntegratedLock: 1
+  useCodeAnimationFallback: 1
+  doorPivotTransform: {fileID: 0}
+  codeOpenAngleY: 90
+  codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: Open
   forceClosedOnAwake: 1

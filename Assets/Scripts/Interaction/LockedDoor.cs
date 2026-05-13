@@ -33,8 +33,10 @@ namespace EstanDentro.Interaction
         private bool useCodeAnimationFallback = true;
         [SerializeField, Tooltip("Transform que rota al abrir. Si null, se usa este transform. Si la puerta tiene un pivot hijo, asignalo aqui.")]
         private Transform doorPivotTransform;
-        [SerializeField, Tooltip("Angulo a abrir (grados sobre el eje Y local). 90 = puerta a 90 grados, -90 = otro lado.")]
-        private float codeOpenAngleY = 90f;
+        [SerializeField, Tooltip("Rotacion delta al abrir (grados en X, Y, Z LOCAL). Pon 90 en el eje correcto. Ej: (0,90,0) gira sobre Y, (90,0,0) sobre X, (0,0,90) sobre Z. Signo controla direccion.")]
+        private Vector3 codeOpenEulerDelta = new Vector3(0f, 90f, 0f);
+        [SerializeField, Tooltip("Si true, la rotacion se aplica en espacio MUNDO (no local). Util si el pivot tiene rotacion rara y quieres girar sobre el eje Y del mundo (vertical).")]
+        private bool codeRotateInWorldSpace = false;
         [SerializeField, Tooltip("Duracion de la animacion por codigo (segundos).")]
         private float codeAnimDuration = 0.9f;
 
@@ -272,22 +274,38 @@ namespace EstanDentro.Interaction
 
         private System.Collections.IEnumerator CodeAnimateOpen(Transform pivot, bool opening)
         {
-            Quaternion fromRot = pivot.localRotation;
-            Quaternion toRot = opening
-                ? fromRot * Quaternion.Euler(0f, codeOpenAngleY, 0f)
-                : fromRot * Quaternion.Euler(0f, -codeOpenAngleY, 0f);
-            // Si estamos cerrando, target es la rotacion base capturada al abrir.
-            // Para simplicidad asumimos que open/close empieza desde el estado actual.
-            float t = 0f;
-            while (t < codeAnimDuration)
+            Vector3 delta = opening ? codeOpenEulerDelta : -codeOpenEulerDelta;
+
+            if (codeRotateInWorldSpace)
             {
-                t += Time.deltaTime;
-                float p = Mathf.Clamp01(t / codeAnimDuration);
-                float eased = 1f - Mathf.Pow(1f - p, 3f); // ease-out cubic
-                pivot.localRotation = Quaternion.Slerp(fromRot, toRot, eased);
-                yield return null;
+                Quaternion fromRot = pivot.rotation;
+                Quaternion toRot = Quaternion.Euler(delta) * fromRot;
+                float t = 0f;
+                while (t < codeAnimDuration)
+                {
+                    t += Time.deltaTime;
+                    float p = Mathf.Clamp01(t / codeAnimDuration);
+                    float eased = 1f - Mathf.Pow(1f - p, 3f);
+                    pivot.rotation = Quaternion.Slerp(fromRot, toRot, eased);
+                    yield return null;
+                }
+                pivot.rotation = toRot;
             }
-            pivot.localRotation = toRot;
+            else
+            {
+                Quaternion fromRot = pivot.localRotation;
+                Quaternion toRot = fromRot * Quaternion.Euler(delta);
+                float t = 0f;
+                while (t < codeAnimDuration)
+                {
+                    t += Time.deltaTime;
+                    float p = Mathf.Clamp01(t / codeAnimDuration);
+                    float eased = 1f - Mathf.Pow(1f - p, 3f);
+                    pivot.localRotation = Quaternion.Slerp(fromRot, toRot, eased);
+                    yield return null;
+                }
+                pivot.localRotation = toRot;
+            }
         }
 
         public void Unlock()
