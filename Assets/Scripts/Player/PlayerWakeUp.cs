@@ -44,7 +44,10 @@ namespace EstanDentro.Player
         [SerializeField, Range(0f, 0.5f), Tooltip("Alpha del overlay residual sobre la pantalla. Deja en 0 si usas Volume HDRP (mas natural).")]
         private float blurRemainAlpha = 0f;
         [SerializeField] private Color blurTint = new Color(0f, 0f, 0f, 1f);
-        [SerializeField] private float blurFadeOutSeconds = 0.5f;
+        [SerializeField, Tooltip("Legacy — sin uso. Conservado para compat. de escenas serializadas.")]
+        #pragma warning disable CS0414
+        private float blurFadeOutSeconds = 0.5f;
+        #pragma warning restore CS0414
 
         [Header("Vision borrosa REAL via Volume HDRP")]
         [SerializeField, Tooltip("Si true, crea un Volume con DOF + Vignette + LensDistortion + ChromaticAberration que simula vision borrosa REAL sobre el mundo renderizado.")]

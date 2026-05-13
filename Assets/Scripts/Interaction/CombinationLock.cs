@@ -42,6 +42,8 @@ namespace EstanDentro.Interaction
 
         public override void Interact()
         {
+            // Defensa: ignorar interaccion si hay un overlay modal activo (ej. minijuego de respiracion).
+            if (EstanDentro.UI.OverlayBlocker.IsBlocking) return;
             if (oneShot && IsSolved) return;
 
             // Agregar mision contextual al primer intento (si esta configurada y aun no se agrego).

@@ -194,7 +194,9 @@ namespace EstanDentro.Breathing
         private Image buttonHintBgImg;
         private Text buttonHintText;
         private int currentNode;
-        private bool readyToClose;
+        #pragma warning disable CS0414
+        private bool readyToClose; // legacy state — flag de cierre listo, ahora gobernado por atLastNode
+        #pragma warning restore CS0414
         private float advanceCooldownTimer;
 
         // Silenciado de audio durante el espacio mental (se restaura al cerrar)
