@@ -6756,6 +6756,7 @@ MonoBehaviour:
   onFailed:
     m_PersistentCalls:
       m_Calls: []
+  disableOnSolved: []
 --- !u!65 &1215548405
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9848,6 +9849,8 @@ MonoBehaviour:
   onFailed:
     m_PersistentCalls:
       m_Calls: []
+  disableOnSolved:
+  - {fileID: 1310304885}
 --- !u!4 &1857096901
 Transform:
   m_ObjectHideFlags: 0
@@ -13590,6 +13593,7 @@ MonoBehaviour:
   onFailed:
     m_PersistentCalls:
       m_Calls: []
+  disableOnSolved: []
 --- !u!114 &6145464218408760272
 MonoBehaviour:
   m_ObjectHideFlags: 0

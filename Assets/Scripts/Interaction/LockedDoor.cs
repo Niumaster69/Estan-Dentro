@@ -22,6 +22,12 @@ namespace EstanDentro.Interaction
         [SerializeField, Tooltip("Si true, la puerta no se abre. Llama a Unlock() para desbloquear.")]
         private bool isLocked = true;
 
+        [Header("Cerradura integrada (estilo loquer/taquilla)")]
+        [SerializeField, Tooltip("Si se asigna, al intentar abrir la puerta locked se abre DIRECTAMENTE el UI de esta cerradura. Mas natural que tener el candado como GO separado. Si null, se autobusca en el mismo GO o hijos.")]
+        private CombinationLock integratedLock;
+        [SerializeField, Tooltip("Si true, en Awake se suscribe automaticamente al onSolved del integratedLock para llamar Unlock(). Asi no hay que wirear UnityEvent.")]
+        private bool autoBindIntegratedLock = true;
+
         [Header("Animator")]
         [SerializeField, Tooltip("Animator de la puerta. Si es null, se busca en este GO o en hijos.")]
         private Animator animator;
@@ -87,6 +93,16 @@ namespace EstanDentro.Interaction
             if (animator == null) animator = GetComponent<Animator>();
             if (animator == null) animator = GetComponentInChildren<Animator>();
 
+            // Autobuscar cerradura integrada en mismo GO o hijos
+            if (integratedLock == null) integratedLock = GetComponent<CombinationLock>();
+            if (integratedLock == null) integratedLock = GetComponentInChildren<CombinationLock>();
+            // Suscribir automaticamente para que al resolver el codigo se desbloquee la puerta
+            if (autoBindIntegratedLock && integratedLock != null)
+            {
+                integratedLock.onSolved.AddListener(Unlock);
+                Debug.Log($"[LockedDoor] '{name}' auto-bind a CombinationLock '{integratedLock.name}'. Al resolver el codigo se desbloquea esta puerta.");
+            }
+
             if (shakeTarget == null) shakeTarget = transform;
             shakeBaseLocalRotation = shakeTarget.localRotation;
             shakeBaseCaptured = true;
@@ -150,6 +166,13 @@ namespace EstanDentro.Interaction
 
             if (isLocked)
             {
+                // Patron loquer/taquilla: si hay una cerradura integrada NO resuelta, abrir directamente
+                // su UI sin necesidad de objeto separado para el candado.
+                if (integratedLock != null && !integratedLock.IsSolved)
+                {
+                    LockOverlay.Open(integratedLock);
+                    return;
+                }
                 TryFeedbackLocked();
                 onTriedWhileLocked?.Invoke();
                 return;
