@@ -144,6 +144,10 @@ namespace EstanDentro.Interaction
 
         public override void Interact()
         {
+            // Defensa: si hay un overlay modal activo (minijuego de respiracion, ajustes, notas...)
+            // ignorar la interaccion para que no se traslape con la UI activa.
+            if (EstanDentro.UI.OverlayBlocker.IsBlocking) return;
+
             if (isLocked)
             {
                 TryFeedbackLocked();

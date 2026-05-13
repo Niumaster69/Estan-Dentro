@@ -479,6 +479,58 @@ MonoBehaviour:
   scrapeVolume: 0.6
   scrapeCooldown: 0.4
   scrapeMinImpulse: 0.05
+--- !u!1 &48086153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 48086155}
+  - component: {fileID: 48086154}
+  m_Layer: 0
+  m_Name: HiddenMessage_Techo (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &48086154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48086153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8e6a9969f39ce4383f73cc97d1ff26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.HiddenMessage
+  messageText: Fue tu culpa
+  messageColor: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  fontSize: 30
+  characterSize: 0.05
+  fadeSpeed: 1.5
+  maxAlpha: 0.95
+  targetLight: {fileID: 0}
+  maxDistance: 0
+--- !u!4 &48086155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48086153}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: 9, y: 1, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -270, z: 0}
 --- !u!4 &62195845 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8106909970973386683, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
@@ -2013,126 +2065,6 @@ MonoBehaviour:
   scrapeVolume: 0.6
   scrapeCooldown: 0.4
   scrapeMinImpulse: 0.05
---- !u!1 &271359498
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 271359502}
-  - component: {fileID: 271359501}
-  - component: {fileID: 271359500}
-  - component: {fileID: 271359499}
-  m_Layer: 0
-  m_Name: _Breathing
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &271359499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271359498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73a8130cb9ed8bc4494c7130585efe00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Breathing.BreathingMinigame
-  showAtStressNormalized: 0.4
-  hideAtStressNormalized: 0.25
-  alwaysVisibleForDebug: 0
-  inhaleSeconds: 4
-  exhaleSeconds: 4
-  pauseSeconds: 2
-  exhaleMinSustainSeconds: 2.5
-  minInhaleHeldSeconds: 3
-  stressDownOnSuccess: 9
-  stressUpOnFail: 2
-  freeCyclesAtStart: 2
-  showTutorialFirstTime: 1
-  tutorialMessage: 'El miedo subio tu estres.
-
-
-    Manten ESPACIO (teclado) o TRIANGLE
-    (mando) mientras inhalas por la nariz.
-
-    Soltalo cuando exhalas suave por
-    la boca.
-
-
-    Respira con el ritmo del circulo, no con tu reloj interno.'
-  minVignetteAlpha: 0.18
-  maxVignetteAlpha: 0.85
-  fadeSeconds: 1
-  inhaleColor: {r: 0.4, g: 0.65, b: 0.85, a: 0.85}
-  exhaleColor: {r: 0.55, g: 0.85, b: 0.6, a: 0.85}
-  pauseColor: {r: 0.7, g: 0.7, b: 0.7, a: 0.55}
-  labelColor: {r: 0.95, g: 0.93, b: 0.85, a: 0.95}
-  freeCycleBadgeColor: {r: 0.4, g: 0.7, b: 0.45, a: 0.95}
---- !u!114 &271359500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271359498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50ce23d0257a25c46bf83949e97bb631, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Breathing.MicCalibration
-  noiseCaptureSeconds: 3
-  exhaleCaptureSeconds: 3
-  panelColor: {r: 0, g: 0, b: 0, a: 0.92}
-  textColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
-  levelColor: {r: 0.85, g: 0.71, b: 0.28, a: 1}
-  accentColor: {r: 0.96, g: 0.85, b: 0.42, a: 1}
-  labelColor: {r: 0.65, g: 0.6, b: 0.55, a: 0.85}
-  stepInactiveBg: {r: 0.1, g: 0.09, b: 0.09, a: 0.85}
-  stepActiveBg: {r: 0.85, g: 0.7, b: 0.28, a: 1}
-  buttonNormalColor: {r: 0.1, g: 0.1, b: 0.1, a: 0.9}
-  buttonHoverColor: {r: 0.85, g: 0.7, b: 0.28, a: 0.7}
-  buttonPressedColor: {r: 0.62, g: 0.12, b: 0.12, a: 0.9}
---- !u!114 &271359501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271359498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a82b2967769d3c047a1859364129d297, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Breathing.BreathingInputProvider
-  preferredDeviceName: Wireless Controller
-  desiredSampleRate: 44100
-  rmsWindow: 1024
-  minThresholdGap: 0.005
-  logDevicesOnStart: 1
-  logRmsPeriodically: 1
-  logRmsEverySeconds: 0.5
---- !u!4 &271359502
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271359498}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &290554886 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5374912725504428491, guid: 6c4d714266c35814b92882a65a059cf8, type: 3}
@@ -2695,7 +2627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8e6a9969f39ce4383f73cc97d1ff26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.HiddenMessage
-  messageText: Subi, hijo. Todavia estas abajo.
+  messageText: "\xBFEstas seguro de esto?"
   messageColor: {r: 0.85, g: 0.7, b: 0.28, a: 1}
   fontSize: 30
   characterSize: 0.05
@@ -2829,8 +2761,10 @@ MonoBehaviour:
   maxStress: 100
   startStress: 0
   passiveDecayPerSecond: 0
+  passiveRisePerSecond: 0
   debugKeysEnabled: 1
   debugStep: 10
+  logStressChanges: 0
 --- !u!4 &414779360
 Transform:
   m_ObjectHideFlags: 0
@@ -3315,6 +3249,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 628280852397861230, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1215548409}
+    - targetCorrespondingSourceObject: {fileID: 628280852397861230, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1215548411}
   m_SourcePrefab: {fileID: 100100000, guid: 809162380d7986e4ebb0d8a30ccc8962, type: 3}
 --- !u!1 &578008774
 GameObject:
@@ -6795,6 +6732,33 @@ MonoBehaviour:
   hudDisplayTime: 5
   triggerBlackoutOnOpen: 1
   oneShot: 1
+--- !u!114 &1215548411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215548403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111b6cdfb517cda4c801b0ce0fcde832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Stress.EnvironmentDarknessFear
+  roomLights: []
+  darknessIntensityThreshold: 0.05
+  startAfterSeconds: 1.5
+  stressRatePerSecond: 4
+  maxStressPerEvent: 60
+  forceBreathingOnStart: 0
+  darknessStingerClip: {fileID: 0}
+  darknessStingerVolume: 0.85
+  onDarknessBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  onDarknessEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  debugLog: 0
 --- !u!1 &1221085835
 GameObject:
   m_ObjectHideFlags: 0
@@ -8764,6 +8728,58 @@ MonoBehaviour:
   scrapeVolume: 0.6
   scrapeCooldown: 0.4
   scrapeMinImpulse: 0.05
+--- !u!1 &1755659824
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1755659826}
+  - component: {fileID: 1755659825}
+  m_Layer: 0
+  m_Name: HiddenMessage_Techo (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1755659825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755659824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8e6a9969f39ce4383f73cc97d1ff26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.HiddenMessage
+  messageText: Aun hay una salida
+  messageColor: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  fontSize: 30
+  characterSize: 0.05
+  fadeSpeed: 1.5
+  maxAlpha: 0.95
+  targetLight: {fileID: 0}
+  maxDistance: 0
+--- !u!4 &1755659826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755659824}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: 9, y: 3, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -270, z: 0}
 --- !u!1 &1767171740
 GameObject:
   m_ObjectHideFlags: 0
@@ -11128,6 +11144,58 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 437954542}
   m_SourcePrefab: {fileID: 100100000, guid: 53826b0a948a9984cafaef40a0937e71, type: 3}
+--- !u!1 &2076836369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2076836371}
+  - component: {fileID: 2076836370}
+  m_Layer: 0
+  m_Name: HiddenMessage_Techo (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2076836370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076836369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8e6a9969f39ce4383f73cc97d1ff26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Interaction.HiddenMessage
+  messageText: Revisa todo
+  messageColor: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  fontSize: 30
+  characterSize: 0.05
+  fadeSpeed: 1.5
+  maxAlpha: 0.95
+  targetLight: {fileID: 0}
+  maxDistance: 0
+--- !u!4 &2076836371
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076836369}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: 6.79, y: 2, z: -3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -270, z: 0}
 --- !u!1001 &2078257369
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13762,6 +13830,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97551392668723a44abde77d71c93c4b, type: 3}
+--- !u!1001 &9061709767829200735
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6300715510867187878, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_Name
+      value: _Breathing
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13773,7 +13898,7 @@ SceneRoots:
   - {fileID: 752747790}
   - {fileID: 1516512868}
   - {fileID: 1868423188}
-  - {fileID: 271359502}
+  - {fileID: 9061709767829200735}
   - {fileID: 414779360}
   - {fileID: 1934644751}
   - {fileID: 1898353433}
@@ -13791,6 +13916,9 @@ SceneRoots:
   - {fileID: 566164221}
   - {fileID: 1852829675}
   - {fileID: 401391966}
+  - {fileID: 2076836371}
+  - {fileID: 48086155}
+  - {fileID: 1755659826}
   - {fileID: 803249849}
   - {fileID: 965070374}
   - {fileID: 1939956475}

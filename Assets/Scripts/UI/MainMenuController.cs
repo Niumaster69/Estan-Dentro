@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using EstanDentro.Breathing;
 using EstanDentro.Network;
@@ -16,6 +17,32 @@ namespace EstanDentro.UI
         // Se setean en Awake() y persisten via static aunque MainMenu se descargue.
         public static Font SharedTitleFont { get; private set; }
         public static Font SharedBodyFont { get; private set; }
+
+        // Audio UI compartido para que SettingsOverlay (creado dinamicamente sin Inspector)
+        // pueda reproducir clicks/hovers usando los mismos clips del menu.
+        public static AudioClip SharedUIClickClip { get; private set; }
+        public static AudioClip SharedUIHoverClip { get; private set; }
+        public static AudioClip SharedUIBackClip { get; private set; }
+        public static float SharedUIClickVolume { get; private set; } = 0.85f;
+        public static float SharedUIHoverVolume { get; private set; } = 0.55f;
+
+        public static void PlaySharedUIClick()
+        {
+            if (SharedUIClickClip == null || AudioManager.Instance == null) return;
+            AudioManager.Instance.PlayUI(SharedUIClickClip, SharedUIClickVolume);
+        }
+
+        public static void PlaySharedUIHover()
+        {
+            if (SharedUIHoverClip == null || AudioManager.Instance == null) return;
+            AudioManager.Instance.PlayUI(SharedUIHoverClip, SharedUIHoverVolume);
+        }
+
+        public static void PlaySharedUIBack()
+        {
+            if (SharedUIBackClip == null || AudioManager.Instance == null) return;
+            AudioManager.Instance.PlayUI(SharedUIBackClip, SharedUIClickVolume);
+        }
 
         [Header("Audio UI (se tocan via AudioManager.PlayUI)")]
         [SerializeField] private AudioClip uiClickClip;
@@ -140,6 +167,11 @@ namespace EstanDentro.UI
             // (se mantiene aunque MainMenu se descargue — Font es un asset, sobrevive).
             SharedTitleFont = titleFont;
             SharedBodyFont = bodyFont;
+            SharedUIClickClip = uiClickClip;
+            SharedUIHoverClip = uiHoverClip;
+            SharedUIBackClip = uiBackClip;
+            SharedUIClickVolume = uiClickVolume;
+            SharedUIHoverVolume = uiHoverVolume;
 
             EnsureCamera();
             EnsureEventSystem();
@@ -249,6 +281,7 @@ namespace EstanDentro.UI
             UpdateTitleGlitch();
             UpdateIntenseGlitch();
             UpdateKenBurns();
+            AutoRestoreSelectionIfLost();
         }
 
         private void UpdateIntenseGlitch()
@@ -542,7 +575,55 @@ namespace EstanDentro.UI
             menuPanelGroup.alpha = 1f;
             menuPanelGroup.interactable = true;
             menuPanelGroup.blocksRaycasts = true;
-            EventSystem.current?.SetSelectedGameObject(settingsButton.gameObject);
+            // Necesitamos 1 frame de delay para que EventSystem y el InputSystemUIInputModule
+            // procesen el cambio de canvas antes de re-seleccionar. Sin el delay, el gamepad
+            // pierde el foco aunque SetSelectedGameObject se llame con un boton valido.
+            StartCoroutine(RestoreSelectionNextFrame());
+        }
+
+        private IEnumerator RestoreSelectionNextFrame()
+        {
+            yield return null; // un frame
+            if (EventSystem.current == null) yield break;
+            // Priorizar continueButton si esta interactuable, sino settingsButton
+            GameObject target = (continueButton != null && continueButton.interactable)
+                ? continueButton.gameObject
+                : (settingsButton != null ? settingsButton.gameObject : null);
+            if (target != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                yield return null;
+                EventSystem.current.SetSelectedGameObject(target);
+            }
+        }
+
+        // Auto-restaurar seleccion cuando el usuario presiona gamepad sin tener nada seleccionado.
+        // Esto pasa cuando el mouse hace click en zona vacia o un overlay se cierra y el
+        // EventSystem queda null. Permite que mouse y gamepad coexistan sin que el mando se
+        // "muera" despues de cualquier click de mouse. Llamado desde Update existente.
+        private void AutoRestoreSelectionIfLost()
+        {
+            if (EventSystem.current == null) return;
+            if (EventSystem.current.currentSelectedGameObject != null) return;
+            if (menuPanelGroup == null || !menuPanelGroup.interactable) return;
+
+            var gp = Gamepad.current;
+            var kb = Keyboard.current;
+            bool gamepadNav = gp != null && (
+                gp.dpad.up.wasPressedThisFrame || gp.dpad.down.wasPressedThisFrame ||
+                gp.dpad.left.wasPressedThisFrame || gp.dpad.right.wasPressedThisFrame ||
+                gp.leftStick.up.wasPressedThisFrame || gp.leftStick.down.wasPressedThisFrame ||
+                gp.buttonSouth.wasPressedThisFrame);
+            bool keyboardNav = kb != null && (
+                kb.upArrowKey.wasPressedThisFrame || kb.downArrowKey.wasPressedThisFrame ||
+                kb.wKey.wasPressedThisFrame || kb.sKey.wasPressedThisFrame ||
+                kb.tabKey.wasPressedThisFrame);
+            if (!gamepadNav && !keyboardNav) return;
+
+            GameObject target = (continueButton != null && continueButton.interactable)
+                ? continueButton.gameObject
+                : (settingsButton != null ? settingsButton.gameObject : null);
+            if (target != null) EventSystem.current.SetSelectedGameObject(target);
         }
 
         public void OnQuitClicked()

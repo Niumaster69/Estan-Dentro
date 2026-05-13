@@ -197,14 +197,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9b8e5a20564d240a4ade9f4fdbeb3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Audio.AmbientLoopWithRandomEvents
-  loopClip: {fileID: 8300000, guid: 47d2d092caa98ad44bfd3370db7d347b, type: 3}
+  loopClip: {fileID: 8300000, guid: d1d19b7dc055c174da543c79a797ab5a, type: 3}
   loopVolume: 0.005
   loopPitchJitter: 0.04
   randomEventClips:
-  - {fileID: 8300000, guid: 433dcbe8c0eb0e44a9fa2fc1287c1f45, type: 3}
-  - {fileID: 8300000, guid: 2fd25fd7d40993b4190229ebe27b6e47, type: 3}
-  - {fileID: 8300000, guid: a201f6d36c7c2f240ae2d83b7e130ffd, type: 3}
+  - {fileID: 8300000, guid: cb33081d7b1d07b4a8d8e4481837b77f, type: 3}
   - {fileID: 8300000, guid: d95f8e07ead92bf4783e742bd0aae529, type: 3}
+  - {fileID: 8300000, guid: d13e517f26f71cc4691a450dbbc54bf9, type: 3}
+  - {fileID: 8300000, guid: 604e51ad09f457c4dbff5c45bf2a7aff, type: 3}
   randomEventVolume: 0.7
   randomEventPauseRange: {x: 18, y: 45}
   randomEventPitchJitter: 0.008
@@ -226,6 +226,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &42419100
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.28782
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 8.32301
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184811894030726677, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2035673135537113686, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: mentalSpaceLoopClip
+      value: 
+      objectReference: {fileID: 8300000, guid: fc4927f5b7d28c044b9df895a76c3923, type: 3}
+    - target: {fileID: 6300715510867187878, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: m_Name
+      value: _Breathing
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
 --- !u!1 &581706343
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,8 +603,10 @@ MonoBehaviour:
   maxStress: 100
   startStress: 0
   passiveDecayPerSecond: 0
+  passiveRisePerSecond: 0
   debugKeysEnabled: 0
   debugStep: 10
+  logStressChanges: 0
 --- !u!4 &865949044
 Transform:
   m_ObjectHideFlags: 0
@@ -1211,6 +1274,64 @@ Transform:
   - {fileID: 983735874}
   m_Father: {fileID: 1984059888}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1655656407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1655656409}
+  - component: {fileID: 1655656408}
+  m_Layer: 0
+  m_Name: DuctThumps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1655656408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655656407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3195d9717a84b349badc76c1db344c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Audio.DuctThumps
+  thumpClips:
+  - {fileID: 8300000, guid: 604e51ad09f457c4dbff5c45bf2a7aff, type: 3}
+  - {fileID: 8300000, guid: d13e517f26f71cc4691a450dbbc54bf9, type: 3}
+  thumpVolume: 0.85
+  thumpPitchJitter: 0.08
+  intervalMin: 15
+  intervalMax: 40
+  initialDelay: 10
+  shakeAmplitude: 0.04
+  shakeDuration: 0.4
+  shakeFrequency: 22
+  stressOnThump: 6
+  autoStart: 1
+  debugLog: 0
+--- !u!4 &1655656409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655656407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.56003, y: -0.22991, z: 10.18275}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1665904776 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3490739614190103538, guid: 74ab21141c8b4a845a7ac3a5aa21eb66, type: 3}
@@ -1264,7 +1385,7 @@ MonoBehaviour:
   failDurationMax: 2.8
   preFlickerCycles: 3
   preFlickerDuration: 0.35
-  stressPerFailure: 5
+  stressPerFailure: 10
   autoStart: 1
   initialDelay: 8
   debugLog: 0
@@ -1568,7 +1689,7 @@ MonoBehaviour:
   sfxBaseVolume: 1
   uiBaseVolume: 0.85
   autoPlayMusicOnAwake: {fileID: 0}
-  autoPlayAmbientOnAwake: {fileID: 8300000, guid: 47d2d092caa98ad44bfd3370db7d347b, type: 3}
+  autoPlayAmbientOnAwake: {fileID: 8300000, guid: d1d19b7dc055c174da543c79a797ab5a, type: 3}
   autoPlayFadeIn: 1.2
   dontDestroyOnLoad: 0
 --- !u!4 &1955886329
@@ -1706,6 +1827,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1665904776}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7238908316989154282, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2025616311}
     - targetCorrespondingSourceObject: {fileID: 7330941784177861070, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1745328943}
@@ -1722,6 +1846,31 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1745328944}
   m_SourcePrefab: {fileID: 100100000, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+--- !u!1 &2025616310 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7238908316989154282, guid: 0f312ddaba316f945afe3bcb01bb2c37, type: 3}
+  m_PrefabInstance: {fileID: 2025616309}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2025616311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025616310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e23c365f5c5c73449c032f114d02253, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Audio.CrawlFootsteps
+  crawlClips: []
+  baseVolume: 0.45
+  pitchJitter: 0.12
+  baseStepInterval: 0.7
+  minSpeed: 0.15
+  referenceSpeed: 2.5
+  target: {fileID: 0}
+  debugLog: 0
 --- !u!1001 &7845979817804711823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1800,3 +1949,5 @@ SceneRoots:
   - {fileID: 1955886329}
   - {fileID: 865949044}
   - {fileID: 25665550}
+  - {fileID: 1655656409}
+  - {fileID: 42419100}

@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6300715510867187878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1184811894030726677}
+  - component: {fileID: 3991275287043926168}
+  - component: {fileID: 1118632473032887029}
+  - component: {fileID: 2035673135537113686}
+  m_Layer: 0
+  m_Name: _Breathing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1184811894030726677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6300715510867187878}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3991275287043926168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6300715510867187878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a82b2967769d3c047a1859364129d297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Breathing.BreathingInputProvider
+  preferredDeviceName: Wireless Controller
+  desiredSampleRate: 44100
+  rmsWindow: 1024
+  minThresholdGap: 0.005
+  logDevicesOnStart: 1
+  logRmsPeriodically: 1
+  logRmsEverySeconds: 0.5
+--- !u!114 &1118632473032887029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6300715510867187878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50ce23d0257a25c46bf83949e97bb631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Breathing.MicCalibration
+  noiseCaptureSeconds: 3
+  exhaleCaptureSeconds: 3
+  panelColor: {r: 0, g: 0, b: 0, a: 0.92}
+  textColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
+  levelColor: {r: 0.85, g: 0.71, b: 0.28, a: 1}
+  accentColor: {r: 0.96, g: 0.85, b: 0.42, a: 1}
+  labelColor: {r: 0.65, g: 0.6, b: 0.55, a: 0.85}
+  stepInactiveBg: {r: 0.1, g: 0.09, b: 0.09, a: 0.85}
+  stepActiveBg: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  buttonNormalColor: {r: 0.1, g: 0.1, b: 0.1, a: 0.9}
+  buttonHoverColor: {r: 0.85, g: 0.7, b: 0.28, a: 0.7}
+  buttonPressedColor: {r: 0.62, g: 0.12, b: 0.12, a: 0.9}
+--- !u!114 &2035673135537113686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6300715510867187878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a8130cb9ed8bc4494c7130585efe00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Breathing.BreathingMinigame
+  showAtStressNormalized: 0.4
+  hideAtStressNormalized: 0.25
+  alwaysVisibleForDebug: 0
+  inhaleSeconds: 3.5
+  exhaleSeconds: 3
+  pauseSeconds: 1
+  exhaleMinSustainSeconds: 1.5
+  minInhaleHeldSeconds: 2
+  stressDownOnSuccess: 9
+  stressUpOnFail: 1
+  freeCyclesAtStart: 2
+  showTutorialFirstTime: 0
+  tutorialMessage: 'El miedo subio tu estres.
+
+
+    Sigue al orbe. Cuando aparezca
+    el boton, pulsalo para avanzar.'
+  minVignetteAlpha: 0.15
+  maxVignetteAlpha: 0.7
+  fadeSeconds: 1
+  inhaleColor: {r: 0.03, g: 0.04, b: 0.06, a: 1}
+  exhaleColor: {r: 0.03, g: 0.04, b: 0.06, a: 1}
+  pauseColor: {r: 0.03, g: 0.04, b: 0.06, a: 1}
+  labelColor: {r: 0.95, g: 0.93, b: 0.85, a: 0.95}
+  freeCycleBadgeColor: {r: 0.4, g: 0.7, b: 0.45, a: 0.95}
+  useMentalSpace: 1
+  mentalSpaceBgColor: {r: 0, g: 0, b: 0, a: 0.92}
+  mentalSpacePanelColor: {r: 0, g: 0, b: 0, a: 0}
+  mentalSpacePanelBorderColor: {r: 0, g: 0, b: 0, a: 0}
+  amberAccent: {r: 0.93, g: 0.78, b: 0.4, a: 1}
+  amberSoft: {r: 0.85, g: 0.7, b: 0.45, a: 0.85}
+  mentalSpaceLoopClip: {fileID: 8300000, guid: 9f3963b2071e7f7468bbef5ed948cdd5, type: 3}
+  mentalSpaceLoopVolume: 0.6
+  mentalSpaceAudioFade: 1.2
+  nodeAdvanceClip: {fileID: 0}
+  nodeAdvanceVolume: 0.7
+  completedClip: {fileID: 0}
+  completedVolume: 0.85
+  useWorldBlur: 1
+  worldBlurVignette: 0.5
+  blurFadeSpeed: 3
+  mentalSpacePanelSize: {x: 960, y: 680}
+  totalNodes: 3
+  orbSize: 70
+  nodeSize: 28
+  pathAmplitudeX: 150
+  pathHeightY: 380
+  advanceCooldown: 3
+  reopenCooldownSeconds: 6
+  introPauseSeconds: 1.5
+  nodeInactiveColor: {r: 0.55, g: 0.5, b: 0.42, a: 0.55}
+  nodeCompletedColor: {r: 0.95, g: 0.78, b: 0.4, a: 1}
+  orbColor: {r: 1, g: 0.95, b: 0.82, a: 0.9}
+  breathBarColor: {r: 0.93, g: 0.78, b: 0.4, a: 0.9}
+  educationalText: 'Respira hondo siguiendo el orbe.
+
+    Cuando estes listo, pulsa
+    X / Cuadrado para avanzar.'
+  completePromptText: Pulsa X / Cuadrado para avanzar
+  waitPromptText: Respira... (espera)
+  lastNodePromptText: Pulsa X / Cuadrado para volver
+  showMinigameUI: 1
+  pacerMaxWidth: 500
+  pacerY: -440
+  pacerColorInhale: {r: 0.85, g: 0.7, b: 0.28, a: 1}
+  pacerColorExhale: {r: 0.5, g: 0.75, b: 0.92, a: 1}
+  pacerColorPause: {r: 0.55, g: 0.5, b: 0.45, a: 0.6}
+  responseBarColor: {r: 0.5, g: 0.92, b: 0.55, a: 0.95}
+  streakTextColor: {r: 0.92, g: 0.89, b: 0.83, a: 0.9}
+  successFlashColor: {r: 0.4, g: 0.85, b: 0.45, a: 0.4}
+  successFlashDuration: 0.6
+  logVisibilityState: 0

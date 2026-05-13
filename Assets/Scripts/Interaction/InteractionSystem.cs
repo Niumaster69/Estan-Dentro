@@ -38,6 +38,14 @@ namespace EstanDentro.Interaction
         {
             if (sourceCamera == null) sourceCamera = Camera.main;
             if (sourceCamera == null) return;
+            // Si hay un overlay modal activo (notas, ajustes, breathing minigame, etc),
+            // no resolver target ni procesar input para evitar interacciones de mundo.
+            if (EstanDentro.UI.OverlayBlocker.IsBlocking)
+            {
+                currentTarget = null;
+                if (reticleImage != null) reticleImage.color = reticleIdleColor;
+                return;
+            }
             currentTarget = ResolveTarget();
             UpdateReticleVisual();
             HandleInput();

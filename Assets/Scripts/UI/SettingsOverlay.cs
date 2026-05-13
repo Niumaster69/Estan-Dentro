@@ -170,6 +170,7 @@ namespace EstanDentro.UI
         public static void Close()
         {
             if (instance == null || !instance.canvas.gameObject.activeSelf) return;
+            MainMenuController.PlaySharedUIBack();
             instance.StopMicTest();
             instance.canvas.gameObject.SetActive(false);
             EventSystem.current?.SetSelectedGameObject(null);
@@ -205,6 +206,32 @@ namespace EstanDentro.UI
             if (canvas == null || !canvas.gameObject.activeSelf) return;
             UpdateSelectionHighlight();
             UpdateMicTestBar();
+
+            // Auto-restaurar seleccion si el mouse la perdio y el usuario navega con gamepad/teclado
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == null)
+            {
+                var kbAuto = Keyboard.current;
+                var gpAuto = Gamepad.current;
+                bool nav = (gpAuto != null && (
+                    gpAuto.dpad.up.wasPressedThisFrame || gpAuto.dpad.down.wasPressedThisFrame ||
+                    gpAuto.dpad.left.wasPressedThisFrame || gpAuto.dpad.right.wasPressedThisFrame ||
+                    gpAuto.leftStick.up.wasPressedThisFrame || gpAuto.leftStick.down.wasPressedThisFrame ||
+                    gpAuto.buttonSouth.wasPressedThisFrame))
+                    || (kbAuto != null && (
+                    kbAuto.upArrowKey.wasPressedThisFrame || kbAuto.downArrowKey.wasPressedThisFrame ||
+                    kbAuto.tabKey.wasPressedThisFrame));
+                if (nav && tabs.Count > 0)
+                {
+                    // Buscar la tab activa o caer en la primera
+                    GameObject target = null;
+                    foreach (var t in tabs)
+                    {
+                        if (t.tab == currentTab && t.button != null) { target = t.button.gameObject; break; }
+                    }
+                    if (target == null && tabs[0].button != null) target = tabs[0].button.gameObject;
+                    if (target != null) EventSystem.current.SetSelectedGameObject(target);
+                }
+            }
 
             if (consumeInputThisFrame) { consumeInputThisFrame = false; return; }
             // No cerrar con ESC mientras editas el nombre del perfil
@@ -747,6 +774,7 @@ namespace EstanDentro.UI
             var capturedTab = tab;
             var capturedOnClick = customOnClick;
             btn.onClick.AddListener(() => {
+                MainMenuController.PlaySharedUIClick();
                 if (capturedOnClick != null) capturedOnClick();
                 else SwitchTab(capturedTab);
             });

@@ -15,10 +15,14 @@ namespace EstanDentro.Stress
         [SerializeField, Range(0f, 200f)] private float startStress = 0f;
         [SerializeField, Tooltip("Puntos de estres que bajan por segundo de forma natural. 0 = no decay.")]
         private float passiveDecayPerSecond = 0f;
+        [SerializeField, Tooltip("Puntos de estres que SUBEN por segundo (tension ambiental constante). 0 = no rise. Ej: 0.5 = +5 cada 10s. Util en escenas tensas como ductos.")]
+        private float passiveRisePerSecond = 0f;
 
         [Header("Debug (quitar antes de entrega)")]
         [SerializeField] private bool debugKeysEnabled = true;
         [SerializeField] private float debugStep = 10f;
+        [SerializeField, Tooltip("Si true, loguea cada subida/bajada de estres significativa (≥0.5 puntos). Util para debug.")]
+        private bool logStressChanges = false;
 
         public float CurrentStress { get; private set; }
         public float MaxStress => maxStress;
@@ -54,6 +58,10 @@ namespace EstanDentro.Stress
             if (!IsCollapsed && passiveDecayPerSecond > 0f && CurrentStress > 0f)
                 Add(-passiveDecayPerSecond * Time.deltaTime, silent: false);
 
+            // Subida pasiva (tension ambiental): solo aplica si no estamos al maximo
+            if (!IsCollapsed && passiveRisePerSecond > 0f && CurrentStress < maxStress)
+                Add(passiveRisePerSecond * Time.deltaTime, silent: false);
+
             if (debugKeysEnabled) PollDebugKeys();
         }
 
@@ -76,6 +84,8 @@ namespace EstanDentro.Stress
             CurrentStress = Mathf.Clamp(CurrentStress + delta, 0f, maxStress);
             if (!Mathf.Approximately(prev, CurrentStress))
                 OnStressChanged?.Invoke(CurrentStress, maxStress);
+            if (logStressChanges && Mathf.Abs(delta) >= 0.5f)
+                Debug.Log($"[Stress] {(delta >= 0 ? "+" : "")}{delta:F1} -> {CurrentStress:F0}/{maxStress:F0} ({Normalized:P0})");
             if (CurrentStress >= maxStress && !IsCollapsed) Collapse();
         }
 
