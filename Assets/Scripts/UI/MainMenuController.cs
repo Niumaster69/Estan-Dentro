@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem.UI;
 using EstanDentro.Breathing;
 using EstanDentro.Network;
+using EstanDentro.Audio;
 
 namespace EstanDentro.UI
 {
@@ -15,6 +16,13 @@ namespace EstanDentro.UI
         // Se setean en Awake() y persisten via static aunque MainMenu se descargue.
         public static Font SharedTitleFont { get; private set; }
         public static Font SharedBodyFont { get; private set; }
+
+        [Header("Audio UI (se tocan via AudioManager.PlayUI)")]
+        [SerializeField] private AudioClip uiClickClip;
+        [SerializeField] private AudioClip uiHoverClip;
+        [SerializeField] private AudioClip uiBackClip;
+        [SerializeField, Range(0f, 1f)] private float uiClickVolume = 0.85f;
+        [SerializeField, Range(0f, 1f)] private float uiHoverVolume = 0.55f;
 
         [Header("Texto")]
         [SerializeField] private string gameTitle = "ESTAN DENTRO";
@@ -501,6 +509,15 @@ namespace EstanDentro.UI
             while (!finished && waited < 6f) { waited += Time.unscaledDeltaTime; yield return null; }
         }
 
+        /// <summary>Util publica para tocar SFX UI desde botones de back/cancel.</summary>
+        public void PlayBackSound() => PlayUiClip(uiBackClip, uiClickVolume);
+
+        private void PlayUiClip(AudioClip clip, float volume)
+        {
+            if (clip == null) return;
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayUI(clip, volume);
+        }
+
         public void OnSettingsClicked()
         {
             Debug.Log("[MainMenu] OnSettingsClicked - hide menu, open settings");
@@ -819,7 +836,13 @@ namespace EstanDentro.UI
             colors.disabledColor = new Color(0.2f, 0.2f, 0.2f, 0.4f);
             colors.fadeDuration = 0.12f;
             btn.colors = colors;
-            btn.onClick.AddListener(() => onClick?.Invoke());
+            btn.onClick.AddListener(() => { PlayUiClip(uiClickClip, uiClickVolume); onClick?.Invoke(); });
+
+            // Hover via EventTrigger
+            var trigger = go.AddComponent<EventTrigger>();
+            var hoverEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            hoverEntry.callback.AddListener(_ => PlayUiClip(uiHoverClip, uiHoverVolume));
+            trigger.triggers.Add(hoverEntry);
 
             var outline = go.AddComponent<Outline>();
             outline.effectColor = new Color(buttonHoverColor.r, buttonHoverColor.g, buttonHoverColor.b, 0.4f);

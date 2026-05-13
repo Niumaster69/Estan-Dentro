@@ -9,10 +9,21 @@ namespace EstanDentro.Breathing
     [DefaultExecutionOrder(-30)]
     public class BreathingMinigame : MonoBehaviour
     {
+        public static BreathingMinigame Instance { get; private set; }
+
+        // Eventos para que otros sistemas (SuffocationSystem) reaccionen al desempeno del jugador.
+        public event System.Action OnCycleSuccess;
+        public event System.Action OnCycleFail;
+
+
         [Header("Activacion")]
         [SerializeField, Range(0f, 1f)] private float showAtStressNormalized = 0.4f;
         [SerializeField, Range(0f, 1f)] private float hideAtStressNormalized = 0.25f;
         [SerializeField] private bool alwaysVisibleForDebug = false;
+
+        // Si !=0, el minijuego se mantiene visible por triggers narrativos / cinematicas
+        // ignorando el rango de stress. Llamar ForceShow() / ForceHide() desde otros sistemas.
+        private bool forcedVisible;
 
         [Header("Ciclo (segundos)")]
         [SerializeField] private float inhaleSeconds = 4f;
@@ -85,6 +96,9 @@ namespace EstanDentro.Breathing
 
         private void Awake()
         {
+            if (Instance != null && Instance != this) { Destroy(this); return; }
+            Instance = this;
+
             BuildUI();
             if (canvas != null) canvas.enabled = false;
             visible = false;
@@ -92,6 +106,11 @@ namespace EstanDentro.Breathing
             targetAlpha = 0f;
             if (canvasGroup != null) canvasGroup.alpha = 0f;
             remainingFreeCycles = freeCyclesAtStart;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
         }
 
         private void Update()
@@ -126,12 +145,26 @@ namespace EstanDentro.Breathing
 
         private void UpdateVisibility()
         {
-            if (alwaysVisibleForDebug) { TryShow(); return; }
+            if (alwaysVisibleForDebug || forcedVisible) { TryShow(); return; }
             if (StressSystem.Instance == null) { TryHide(); return; }
             float t = StressSystem.Instance.Normalized;
             if (!visible && t >= showAtStressNormalized) TryShow();
             else if (visible && t <= hideAtStressNormalized) TryHide();
         }
+
+        /// <summary>
+        /// Fuerza el minijuego visible ignorando el stress. Util para cinematicas (despertar,
+        /// aparicion del Observador) o triggers narrativos. Llamar ForceHide() para liberar.
+        /// </summary>
+        public void ForceShow() { forcedVisible = true; }
+
+        /// <summary>
+        /// Libera el forzado. Si el stress sigue alto el minijuego se mantiene; si bajo, se oculta.
+        /// </summary>
+        public void ForceHide() { forcedVisible = false; }
+
+        /// <summary>True si esta visible (por stress o por forzado).</summary>
+        public bool IsVisible => visible;
 
         private void TryShow()
         {
@@ -259,6 +292,7 @@ namespace EstanDentro.Breathing
             if (StressSystem.Instance == null) return;
             StressSystem.Instance.Add(-stressDownOnSuccess);
             Debug.Log($"[Breathing] Ciclo OK -{stressDownOnSuccess}. Estres={StressSystem.Instance.CurrentStress:F0}");
+            OnCycleSuccess?.Invoke();
         }
 
         private void ScoreFail()
@@ -269,6 +303,7 @@ namespace EstanDentro.Breathing
             // de aprendizaje "free"). El logro requiere terminar el capitulo sin fallar
             // ningun ciclo, por lo que cualquier fallo cuenta.
             GameSession.BreathingFailedCycles++;
+            OnCycleFail?.Invoke();
 
             if (remainingFreeCycles > 0)
             {

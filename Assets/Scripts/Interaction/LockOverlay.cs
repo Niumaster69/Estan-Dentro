@@ -121,6 +121,7 @@ namespace EstanDentro.Interaction
         {
             if (digitTexts == null || digitTexts.Length == 0) return;
             selectedIndex = (selectedIndex + delta + digitTexts.Length) % digitTexts.Length;
+            if (target != null) target.PlayDigitClick();
             Refresh();
         }
 
@@ -128,6 +129,7 @@ namespace EstanDentro.Interaction
         {
             if (currentValues == null || currentValues.Length == 0) return;
             currentValues[selectedIndex] = (currentValues[selectedIndex] + delta + 10) % 10;
+            if (target != null) target.PlayDigitClick();
             Refresh();
         }
 

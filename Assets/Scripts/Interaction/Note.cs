@@ -21,6 +21,11 @@ namespace EstanDentro.Interaction
         [SerializeField, Tooltip("Si true, el GameObject se destruye al cerrar el NoteOverlay. La nota queda registrada en el Inventory para releer con I.")]
         private bool disappearAfterRead = true;
 
+        [Header("Audio (recoger nota / item)")]
+        [SerializeField, Tooltip("SFX al recoger la nota. Se reproduce por AudioManager.PlaySFX.")]
+        private AudioClip pickupClip;
+        [SerializeField, Range(0f, 1f)] private float pickupVolume = 0.85f;
+
         public override void Interact()
         {
             Debug.Log($"[Note] Interact en '{name}'. title='{noteTitle}'");
@@ -28,6 +33,13 @@ namespace EstanDentro.Interaction
                 Inventory.Inventory.Instance.RegisterNote(noteTitle, noteText);
             else
                 Debug.LogWarning("[Note] Inventory.Instance es null! La nota no se registra.");
+
+            if (pickupClip != null)
+            {
+                var am = EstanDentro.Audio.AudioManager.Instance;
+                if (am != null) am.PlaySFX(pickupClip, pickupVolume);
+                else AudioSource.PlayClipAtPoint(pickupClip, transform.position, pickupVolume);
+            }
 
             if (disappearAfterRead)
                 NoteOverlay.Show(noteTitle, noteText, onClose: () => { if (this != null) Destroy(gameObject); });

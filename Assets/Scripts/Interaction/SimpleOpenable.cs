@@ -24,6 +24,13 @@ namespace EstanDentro.Interaction
         [SerializeField, Tooltip("Mensaje opcional al abrir (ej. 'Casillero vacio').")]
         private string hudMessageOnOpen;
 
+        [Header("Audio")]
+        [SerializeField, Tooltip("Sonido al abrir (chirrido de bisagra / puerta metalica). Wireado por AudioWireTool con clave 'openClip'.")]
+        private AudioClip openClip;
+        [SerializeField, Tooltip("Sonido al cerrar. Si esta vacio y openClip esta, se usa openClip tambien para cerrar.")]
+        private AudioClip closeClip;
+        [SerializeField, Range(0f, 1f)] private float audioVolume = 0.85f;
+
         private bool opened;
 
         private void Awake()
@@ -62,6 +69,15 @@ namespace EstanDentro.Interaction
             // El HUD solo se muestra al ABRIR, no al cerrar.
             if (newState && !string.IsNullOrEmpty(hudMessageOnOpen))
                 EstanDentro.UI.ObjectiveHUD.Show(hudMessageOnOpen, 2f);
+
+            // Audio: openClip al abrir, closeClip al cerrar (fallback a openClip si closeClip vacio)
+            AudioClip toPlay = newState ? openClip : (closeClip != null ? closeClip : openClip);
+            if (toPlay != null)
+            {
+                var am = EstanDentro.Audio.AudioManager.Instance;
+                if (am != null) am.PlaySFX(toPlay, audioVolume);
+                else AudioSource.PlayClipAtPoint(toPlay, transform.position, audioVolume);
+            }
         }
 
         private static bool HasParam(Animator a, string paramName)

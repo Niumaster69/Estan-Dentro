@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 241222747}
-  - component: {fileID: 241222746}
   m_Layer: 0
   m_Name: _Cinematic
   m_TagString: Untagged
@@ -136,48 +135,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &241222746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 241222745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f171b3be268198c4da8f6d17b0ab8c9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.CinematicController
-  slides:
-  - text: No recuerdo como llegue aqui.
-    charsPerSecond: 22
-    holdSeconds: 2.8
-    fadeOutSeconds: 0.6
-  - text: 'El aula esta vacia.
-
-      Solo yo. Y lo que sea
-
-      que este dentro
-      de mi.'
-    charsPerSecond: 24
-    holdSeconds: 3
-    fadeOutSeconds: 0.6
-  - text: Algo no esta bien.
-    charsPerSecond: 18
-    holdSeconds: 2.2
-    fadeOutSeconds: 0.6
-  - text: Antes de entrar... respira.
-    charsPerSecond: 22
-    holdSeconds: 3
-    fadeOutSeconds: 1
-  nextSceneName: EscenaUno-salonPrincipal
-  loadingTip: Cuando entres, sosten el mando cerca de tu boca.
-  bgColor: {r: 0, g: 0, b: 0, a: 1}
-  textColor: {r: 0.92, g: 0.89, b: 0.83, a: 1}
-  skipHintColor: {r: 0.92, g: 0.89, b: 0.83, a: 0.4}
-  textSize: 38
-  skipHint: '[Pulsa cualquier tecla para saltar / siguiente]'
-  textFont: {fileID: 0}
 --- !u!4 &241222747
 Transform:
   m_ObjectHideFlags: 0
@@ -190,9 +147,67 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 321356152}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &321356151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 321356152}
+  - component: {fileID: 321356153}
+  m_Layer: 0
+  m_Name: VideoPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &321356152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321356151}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 241222747}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &321356153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321356151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a17917a13b47ece42ab6cb4725070a81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.VideoCinematicPlayer
+  clip: {fileID: 32900000, guid: e14677a8a8a38114f8ceb25d2ee2b7a9, type: 3}
+  playOnStart: 1
+  audioVolume: 1
+  bgColor: {r: 0, g: 0, b: 0, a: 1}
+  skipHint: '[Cualquier tecla para saltar]'
+  allowSkip: 1
+  nextSceneName: EscenaUno-salonPrincipal
+  loadingTip: 
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  destroyOnComplete: 0
+  deactivateOnComplete: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

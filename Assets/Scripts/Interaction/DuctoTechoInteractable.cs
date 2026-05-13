@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using UnityEngine.InputSystem;
 using EstanDentro.UI;
 using EstanDentro.Player;
@@ -134,7 +135,12 @@ namespace EstanDentro.Interaction
         [SerializeField] private float waitBeforeDestornillador = 0.6f;
         [SerializeField] private float fadeToBlackDuration = 1.0f;
 
-        [Header("Slides en negro")]
+        [Header("Video cinematica (opcional - reemplaza slides)")]
+        [SerializeField, Tooltip("Si asignado, reproduce este video como overlay despues del fade a negro en lugar de los slides. Recomendado: '2.mov' (flashback del accidente al entrar al ducto).")]
+        private VideoClip overrideVideoClip;
+        [SerializeField, Range(0f, 1f)] private float videoVolume = 1f;
+
+        [Header("Slides en negro (fallback si no hay video)")]
         [SerializeField] private CinematicSlide[] slides = new CinematicSlide[] {
             new CinematicSlide { text = "Subi.", durationSeconds = 2.2f },
             new CinematicSlide { text = "Mas arriba.", durationSeconds = 2.0f },
@@ -396,15 +402,30 @@ namespace EstanDentro.Interaction
             BuildCinematicOverlay();
             yield return FadeCanvasGroup(cinematicCanvasGroup, 0f, 1f, fadeToBlackDuration);
 
-            // 9. Slides
-            slideTextGroup.alpha = 0f;
-            foreach (var slide in slides)
+            // 9. Video del accidente (si esta asignado) o slides en negro
+            if (overrideVideoClip != null)
             {
-                slideTextUI.text = slide.text;
-                if (slide.audio != null) PlayClip(slide.audio);
-                yield return FadeCanvasGroup(slideTextGroup, 0f, 1f, slideFadeIn);
-                yield return new WaitForSecondsRealtime(slide.durationSeconds);
-                yield return FadeCanvasGroup(slideTextGroup, 1f, 0f, slideFadeOut);
+                var videoGo = new GameObject("Ducto_Video");
+                var vcp = videoGo.AddComponent<VideoCinematicPlayer>();
+                vcp.SetClip(overrideVideoClip, videoVolume);
+                bool videoDone = false;
+                vcp.onComplete = new UnityEngine.Events.UnityEvent();
+                vcp.onComplete.AddListener(() => videoDone = true);
+                vcp.Play();
+                yield return new WaitUntil(() => videoDone);
+                Destroy(videoGo);
+            }
+            else
+            {
+                slideTextGroup.alpha = 0f;
+                foreach (var slide in slides)
+                {
+                    slideTextUI.text = slide.text;
+                    if (slide.audio != null) PlayClip(slide.audio);
+                    yield return FadeCanvasGroup(slideTextGroup, 0f, 1f, slideFadeIn);
+                    yield return new WaitForSecondsRealtime(slide.durationSeconds);
+                    yield return FadeCanvasGroup(slideTextGroup, 1f, 0f, slideFadeOut);
+                }
             }
 
             // 10. Completar mision principal del Acto 1

@@ -133,3 +133,7 @@ InitTestScene*.unity*
 # Claude Code local settings
 /.claude/settings.local.json
 /[Aa]ssets/_[Rr]ecovery.meta
+
+# Cinematicas pesadas (.mov ~4.6 GB) — se distribuyen aparte (Drive/Onedrive), NO en git
+/[Aa]ssets/[Aa]rt/cinematics/[Ee]senas/
+/[Aa]ssets/[Aa]rt/cinematics/[Ee]senas.meta

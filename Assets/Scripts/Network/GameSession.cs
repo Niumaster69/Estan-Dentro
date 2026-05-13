@@ -31,6 +31,11 @@ namespace EstanDentro.Network
         public static bool ObserverTriggeredAtLeastOnce;
         public static bool StressCollapsed;
 
+        // Id del PlayerSpawnPoint donde debe aparecer el player al cargar la siguiente escena.
+        // Lo setea quien dispara un cambio de escena (ej. ExitDuctsTrigger) y lo consume PlayerSpawner.Start().
+        // Vacio = usar el SpawnPoint marcado como default. Se limpia tras consumirse.
+        public static string NextSpawnPointId = "";
+
         // Modo offline = no se pudo crear/recuperar el jugador en BD
         public static bool IsOnline => CurrentJugadorId != 0;
         public static bool HasActivePartida => CurrentPartidaId != 0;

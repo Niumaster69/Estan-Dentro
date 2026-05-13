@@ -13,6 +13,17 @@ namespace EstanDentro.Interaction
         [SerializeField, Tooltip("Si esta seteado, la linterna se desbloquea automaticamente cuando este item este en Inventory. Vacio = ignorar (solo desbloquea con Unlock()).")]
         private string requireInventoryItem = "linterna";
 
+        [Header("Visibilidad del modelo")]
+        [SerializeField, Tooltip("Si true, esconde los meshes hijos mientras unlocked=false (la linterna aparece en la mano del player solo al recogerla). Asignar manualmente en hideWhileLocked si los meshes no son hijos directos.")]
+        private bool hideMeshWhileLocked = true;
+        [SerializeField, Tooltip("MeshRenderers a ocultar mientras la linterna no este desbloqueada. Si esta vacio, se buscan automaticamente en hijos.")]
+        private Renderer[] hideWhileLocked;
+
+        [Header("Audio")]
+        [SerializeField, Tooltip("Click mecanico al prender/apagar. Se reproduce por AudioManager si esta disponible, si no por AudioSource.PlayClipAtPoint.")]
+        private AudioClip toggleClip;
+        [SerializeField, Range(0f, 1f)] private float toggleVolume = 0.85f;
+
         [Header("Apariencia (se aplica al Light al iniciar)")]
         [SerializeField] private bool applyDefaultLook = true;
         [SerializeField, Tooltip("HDRP usa lumenes. 1500-3500 es razonable para una linterna.")]
@@ -26,12 +37,26 @@ namespace EstanDentro.Interaction
         [SerializeField] private bool softShadows = true;
 
         private Light spotLight;
+        private bool wasUnlocked;
 
         private void Awake()
         {
             spotLight = GetComponent<Light>();
             if (applyDefaultLook) ApplyLook();
             spotLight.enabled = startEnabled;
+
+            if (hideMeshWhileLocked && (hideWhileLocked == null || hideWhileLocked.Length == 0))
+                hideWhileLocked = GetComponentsInChildren<Renderer>(true);
+
+            ApplyMeshVisibility();
+            wasUnlocked = unlocked;
+        }
+
+        private void ApplyMeshVisibility()
+        {
+            if (!hideMeshWhileLocked || hideWhileLocked == null) return;
+            foreach (var r in hideWhileLocked)
+                if (r != null) r.enabled = unlocked;
         }
 
         private void ApplyLook()
@@ -55,6 +80,12 @@ namespace EstanDentro.Interaction
                 unlocked = true;
             }
 
+            if (unlocked != wasUnlocked)
+            {
+                ApplyMeshVisibility();
+                wasUnlocked = unlocked;
+            }
+
             if (!unlocked) return;
             var kb = Keyboard.current;
             var gp = Gamepad.current;
@@ -63,10 +94,27 @@ namespace EstanDentro.Interaction
             if (toggle) Toggle();
         }
 
-        public void Toggle() => spotLight.enabled = !spotLight.enabled;
-        public void SetEnabled(bool e) => spotLight.enabled = e;
-        public void Unlock() => unlocked = true;
-        public void Lock() => unlocked = false;
+        public void Toggle()
+        {
+            spotLight.enabled = !spotLight.enabled;
+            PlayToggleClip();
+        }
+        public void SetEnabled(bool e)
+        {
+            if (spotLight.enabled != e) { spotLight.enabled = e; PlayToggleClip(); }
+            else spotLight.enabled = e;
+        }
+        public void Unlock() { unlocked = true; ApplyMeshVisibility(); wasUnlocked = true; }
+        public void Lock() { unlocked = false; if (spotLight.enabled) { spotLight.enabled = false; PlayToggleClip(); } ApplyMeshVisibility(); wasUnlocked = false; }
+
+        private void PlayToggleClip()
+        {
+            if (toggleClip == null) return;
+            var am = EstanDentro.Audio.AudioManager.Instance;
+            if (am != null) am.PlaySFX(toggleClip, toggleVolume);
+            else AudioSource.PlayClipAtPoint(toggleClip, transform.position, toggleVolume);
+        }
+
         public bool IsUnlocked => unlocked;
         public bool IsOn => spotLight.enabled;
     }

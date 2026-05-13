@@ -148,6 +148,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8c17e3fa0ca474ca103fed032a0f68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.UI.MainMenuController
+  uiClickClip: {fileID: 8300000, guid: 9e051f9531fdbbc489f91ec42162ad31, type: 3}
+  uiHoverClip: {fileID: 8300000, guid: 28a8631517189ef4ab91ff3f9e0b8f18, type: 3}
+  uiBackClip: {fileID: 8300000, guid: 9e051f9531fdbbc489f91ec42162ad31, type: 3}
+  uiClickVolume: 0.85
+  uiHoverVolume: 0.55
   gameTitle: ESTAN DENTRO
   gameSubtitle: Lo que no puedo ver
   versionLabel: Capitulo 1 - prototipo
@@ -212,8 +217,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1951652851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1951652853}
+  - component: {fileID: 1951652852}
+  m_Layer: 0
+  m_Name: _AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1951652852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951652851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 918d98e3598ceeb448258ff964ddb7c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Audio.AudioManager
+  musicGroup: {fileID: 0}
+  ambientGroup: {fileID: 0}
+  sfxGroup: {fileID: 0}
+  uiGroup: {fileID: 0}
+  sfxBaseVolume: 1
+  uiBaseVolume: 0.85
+  autoPlayMusicOnAwake: {fileID: 8300000, guid: 4cc2ce647a3cdc4408e0703f18e163d2, type: 3}
+  autoPlayAmbientOnAwake: {fileID: 0}
+  autoPlayFadeIn: 1.2
+  dontDestroyOnLoad: 0
+--- !u!4 &1951652853
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951652851}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1331835643}
+  - {fileID: 1951652853}

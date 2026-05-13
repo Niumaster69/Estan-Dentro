@@ -24,6 +24,14 @@ namespace EstanDentro.Interaction
         [SerializeField, Tooltip("Si true, al resolver SIN equivocarse desbloquea el logro 'cerradura_primera' (Maestro de cerraduras).")]
         private bool grantsCerraduraPrimera = true;
 
+        [Header("Audio")]
+        [SerializeField, Tooltip("Click cuando se cambia un digito de la rueda. Llamado desde LockOverlay via PlayDigitClick().")]
+        private AudioClip digitClickClip;
+        [SerializeField, Range(0f, 1f)] private float digitClickVolume = 0.7f;
+        [SerializeField, Tooltip("Sonido al resolver la combinacion correctamente.")]
+        private AudioClip solvedClip;
+        [SerializeField, Range(0f, 1f)] private float solvedVolume = 0.9f;
+
         [Header("Eventos")]
         public UnityEvent onSolved;
         public UnityEvent onFailed;
@@ -69,6 +77,13 @@ namespace EstanDentro.Interaction
                 if (grantsCerraduraPrimera && FailsCount == 0)
                     GameSession.TryUnlockLogro("cerradura_primera");
 
+                if (solvedClip != null)
+                {
+                    var am = EstanDentro.Audio.AudioManager.Instance;
+                    if (am != null) am.PlaySFX(solvedClip, solvedVolume);
+                    else AudioSource.PlayClipAtPoint(solvedClip, transform.position, solvedVolume);
+                }
+
                 onSolved?.Invoke();
                 if (autoCloseOnSolved) LockOverlay.Close();
             }
@@ -78,6 +93,15 @@ namespace EstanDentro.Interaction
                 Debug.Log($"[Lock] Fallo en '{name}'. Intento: {string.Join("", attempt)} (totalFallos={FailsCount})");
                 onFailed?.Invoke();
             }
+        }
+
+        /// <summary>Llamado por LockOverlay cada vez que el usuario rota un digito.</summary>
+        public void PlayDigitClick()
+        {
+            if (digitClickClip == null) return;
+            var am = EstanDentro.Audio.AudioManager.Instance;
+            if (am != null) am.PlayUI(digitClickClip, digitClickVolume);
+            else AudioSource.PlayClipAtPoint(digitClickClip, transform.position, digitClickVolume);
         }
 
         private bool CodeMatches(int[] attempt)

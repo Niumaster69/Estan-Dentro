@@ -1703,6 +1703,9 @@ namespace EstanDentro.UI
 
         private void BuildPerfilHistoryRow(int index, PartidaDto p, int logrosCount)
         {
+            if (p == null) { Debug.LogWarning($"[Perfil] BuildPerfilHistoryRow: PartidaDto null en index {index}, skip."); return; }
+            if (perfilHistoryContent == null) { Debug.LogWarning("[Perfil] BuildPerfilHistoryRow: perfilHistoryContent null."); return; }
+
             var rowGo = new GameObject("Row_" + index, typeof(RectTransform));
             var rt = rowGo.GetComponent<RectTransform>();
             rt.SetParent(perfilHistoryContent, false);
@@ -1719,7 +1722,9 @@ namespace EstanDentro.UI
             string line = $"<b>#{p.idPartida:D3}</b>   {fecha}   <color=#{ColorUtility.ToHtmlStringRGB(estadoCol)}>{estado,-12}</color>   {tiempo}   {logrosCount} logros";
 
             var t = rowGo.AddComponent<Text>();
-            t.font = GetDefaultFont();
+            if (t == null) { Debug.LogWarning("[Perfil] BuildPerfilHistoryRow: AddComponent<Text> retorno null."); Destroy(rowGo); return; }
+            var font = GetDefaultFont();
+            if (font != null) t.font = font;
             t.fontSize = 14;
             t.color = textColor;
             t.alignment = TextAnchor.MiddleLeft;
