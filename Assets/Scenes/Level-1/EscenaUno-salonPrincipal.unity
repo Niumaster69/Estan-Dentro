@@ -3126,7 +3126,8 @@ MonoBehaviour:
   autoBindIntegratedLock: 1
   useCodeAnimationFallback: 1
   doorPivotTransform: {fileID: 0}
-  codeOpenAngleY: 90
+  codeOpenEulerDelta: {x: 0, y: 90, z: 0}
+  codeRotateInWorldSpace: 0
   codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: 0pen
@@ -7515,7 +7516,8 @@ MonoBehaviour:
   autoBindIntegratedLock: 1
   useCodeAnimationFallback: 1
   doorPivotTransform: {fileID: 0}
-  codeOpenAngleY: 90
+  codeOpenEulerDelta: {x: 0, y: 90, z: 0}
+  codeRotateInWorldSpace: 0
   codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: Open
@@ -7561,7 +7563,8 @@ MonoBehaviour:
   autoBindIntegratedLock: 1
   useCodeAnimationFallback: 1
   doorPivotTransform: {fileID: 0}
-  codeOpenAngleY: 90
+  codeOpenEulerDelta: {x: 0, y: 90, z: 0}
+  codeRotateInWorldSpace: 1
   codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: Open
@@ -10968,7 +10971,8 @@ MonoBehaviour:
   autoBindIntegratedLock: 1
   useCodeAnimationFallback: 1
   doorPivotTransform: {fileID: 0}
-  codeOpenAngleY: 90
+  codeOpenEulerDelta: {x: 0, y: 90, z: 0}
+  codeRotateInWorldSpace: 0
   codeAnimDuration: 0.9
   animator: {fileID: 0}
   animatorBoolParam: Open
