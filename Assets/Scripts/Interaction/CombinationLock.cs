@@ -36,6 +36,10 @@ namespace EstanDentro.Interaction
         public UnityEvent onSolved;
         public UnityEvent onFailed;
 
+        [Header("Quick wire — GOs a desactivar al resolver (alternativa al UnityEvent)")]
+        [SerializeField, Tooltip("Arrastra aqui las puertas/objetos a desactivar al resolver el codigo. El jugador puede atravesar el espacio donde estaban. Mas simple que wirear UnityEvent.")]
+        private GameObject[] disableOnSolved;
+
         public bool IsSolved { get; private set; }
         public int FailsCount { get; private set; }
         public int[] CorrectCode => correctCode;
@@ -87,6 +91,20 @@ namespace EstanDentro.Interaction
                 }
 
                 onSolved?.Invoke();
+
+                // Quick wire: desactivar puertas asignadas
+                if (disableOnSolved != null)
+                {
+                    foreach (var go in disableOnSolved)
+                    {
+                        if (go != null)
+                        {
+                            go.SetActive(false);
+                            Debug.Log($"[Lock] '{name}' desactivo '{go.name}' al resolver.");
+                        }
+                    }
+                }
+
                 if (autoCloseOnSolved) LockOverlay.Close();
             }
             else

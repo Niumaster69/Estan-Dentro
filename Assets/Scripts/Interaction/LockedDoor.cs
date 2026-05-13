@@ -206,9 +206,19 @@ namespace EstanDentro.Interaction
 
         private void ToggleOpen()
         {
-            if (animator == null || !HasBoolParam(animator, animatorBoolParam)) return;
+            if (animator == null)
+            {
+                Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: NO HAY Animator asignado ni en hijos. La puerta no se abrira visualmente.");
+                return;
+            }
+            if (!HasBoolParam(animator, animatorBoolParam))
+            {
+                Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: Animator '{animator.runtimeAnimatorController?.name}' no tiene Bool param '{animatorBoolParam}'. Configurar el Animator Controller o cambiar animatorBoolParam en Inspector.");
+                return;
+            }
             currentOpen = !currentOpen;
             animator.SetBool(animatorBoolParam, currentOpen);
+            Debug.Log($"[LockedDoor] '{name}' ToggleOpen: animator.SetBool('{animatorBoolParam}', {currentOpen}) OK.");
             if (currentOpen) onOpened?.Invoke();
         }
 

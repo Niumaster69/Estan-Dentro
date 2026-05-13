@@ -2967,6 +2967,7 @@ MonoBehaviour:
   m_Script: {fileID: 1955260053}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.SceneObjectIDMapSceneAsset
+  m_Entries: []
 --- !u!4 &467624280
 Transform:
   m_ObjectHideFlags: 19
@@ -9805,7 +9806,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 4, z: 0.08}
+  m_Size: {x: 4, y: 4, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1857096900
 MonoBehaviour:
@@ -9856,7 +9857,7 @@ Transform:
   m_GameObject: {fileID: 1857096898}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: 1.4617856, z: 8.653334}
+  m_LocalPosition: {x: 9, y: 1.6, z: 8.653334}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
