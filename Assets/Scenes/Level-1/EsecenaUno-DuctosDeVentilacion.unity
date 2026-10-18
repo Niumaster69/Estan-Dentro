@@ -275,6 +275,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2035673135537113686, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
+      propertyPath: nodeAdvanceClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2035673135537113686, guid: b5b00eb948e0430458026334b31ac0fa, type: 3}
       propertyPath: mentalSpaceLoopClip
       value: 
       objectReference: {fileID: 8300000, guid: fc4927f5b7d28c044b9df895a76c3923, type: 3}
@@ -1911,7 +1915,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e23c365f5c5c73449c032f114d02253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Audio.CrawlFootsteps
-  crawlClips: []
+  crawlClips:
+  - {fileID: 8300000, guid: 8d020314a503f57408e1d1f83a572b60, type: 3}
   baseVolume: 0.45
   pitchJitter: 0.12
   baseStepInterval: 0.7

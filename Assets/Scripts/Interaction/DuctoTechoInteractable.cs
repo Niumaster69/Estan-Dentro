@@ -126,6 +126,10 @@ namespace EstanDentro.Interaction
 
         [Header("Audio (Carlos los asigna despues)")]
         [SerializeField] private AudioClip mesaRodandoClip;
+        [SerializeField] private AudioClip mesaRodandoClip2;
+        [SerializeField] private AudioClip mesaRodandoClip3;
+        [SerializeField] private AudioClip mesaRodandoClip4;
+        [SerializeField] private AudioClip mesaRodandoClip5;
         [SerializeField] private AudioClip destornilladorClip;
         [SerializeField] private AudioClip ductoCayendoClip;
         [SerializeField] private float volumeScale = 0.85f;
@@ -361,6 +365,7 @@ namespace EstanDentro.Interaction
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
+            PlayClip(destornilladorClip);
             // Capturar el pitch inicial (el player esta mirando arriba al ducto)
             float initialPitch = cameraPivot != null ? NormalizePitch(cameraPivot.localEulerAngles.x) : 0f;
 
@@ -368,7 +373,7 @@ namespace EstanDentro.Interaction
             yield return BreathWait(0.4f, initialPitch);
 
             // 3. Audio destornillador + respiracion (player aflojando la rejilla)
-            PlayClip(destornilladorClip);
+            
             yield return BreathWait(waitBeforeDestornillador, initialPitch);
 
             // 4. CAE LA REJILLA + flinch hacia atras (camara retrocede, mira la caida, vuelve)
@@ -379,6 +384,10 @@ namespace EstanDentro.Interaction
             // 5. AHORA suena la mesa rodando + la cabeza se endereza + yaw hacia escritorio
             yield return new WaitForSeconds(waitBeforeMesa);
             PlayClip(mesaRodandoClip);
+            PlayClip(mesaRodandoClip2);
+            PlayClip(mesaRodandoClip3);
+            PlayClip(mesaRodandoClip4);
+            PlayClip(mesaRodandoClip5);
             Coroutine moveDeskCo = StartCoroutine(MoveEscritorio());
             if (autoOrientToDesk && escritorio != null)
                 StartCoroutine(OrientPlayerYawTowards(escritorio.position, orientToDeskDuration));
