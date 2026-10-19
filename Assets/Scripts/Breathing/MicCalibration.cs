@@ -93,8 +93,7 @@ namespace EstanDentro.Breathing
 
         public void BeginCalibration()
         {
-            prevTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
+            EstanDentro.UI.Pausa.Pedir(this);
             canvas.enabled = true;
             OverlayBlocker.Register();
 
@@ -216,7 +215,7 @@ namespace EstanDentro.Breathing
             phase = Phase.Done;
             if (useFallback && BreathingInputProvider.Instance != null)
                 BreathingInputProvider.Instance.ForceFallback("usuario o calibracion fallida");
-            Time.timeScale = prevTimeScale;
+            EstanDentro.UI.Pausa.Soltar(this);
             if (canvas != null) canvas.enabled = false;
             if (wasShowingPanel) OverlayBlocker.Unregister();
             OnCalibrationDone?.Invoke(useFallback);

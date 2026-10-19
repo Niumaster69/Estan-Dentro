@@ -50,6 +50,24 @@ namespace EstanDentro.Interaction
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>El objeto de adentro que todavía no cupo (manos llenas). Se toma volviendo a interactuar.</summary>
+        public bool TienePendiente => IsOpen && !itemTomado && !string.IsNullOrEmpty(itemToGiveId);
+        private bool itemTomado;
+
+        public void TomarPendiente(bool mostrarAviso = true)
+        {
+            if (itemTomado || string.IsNullOrEmpty(itemToGiveId)) return;
+            var inv = Inventory.Inventory.Instance;
+            if (inv != null && !inv.RegisterItem(itemToGiveId, itemToGiveDisplayName))
+            {
+                ObjectiveHUD.Show($"Adentro hay {itemToGiveDisplayName.ToLower()}. {inv.MotivoLleno()}", 3.5f);
+                hudMessage = "";   // el aviso de "has encontrado" no aplica todavía
+                return;
+            }
+            itemTomado = true;
+            if (mostrarAviso) ObjectiveHUD.Show($"Tomaste: {itemToGiveDisplayName}", 2f);
+        }
+
         private void Awake()
         {
             // Auto-find si no se asigno en Inspector
@@ -76,15 +94,10 @@ namespace EstanDentro.Interaction
                 if (hasParam) animator.SetBool(animatorBoolParam, true);
                 else Debug.LogError($"[LockedContainer] '{name}': Animator '{animator.name}' no tiene Bool '{animatorBoolParam}'.");
             }
-            else
-            {
-                Debug.LogError($"[LockedContainer] '{name}': no hay Animator. Asigna uno en Inspector.");
-            }
+            // sin Animator (objetos del colegio nuevo): la apertura se ve porque su CandadoVisual se cae
 
-            if (!string.IsNullOrEmpty(itemToGiveId))
-            {
-                Inventory.Inventory.Instance?.RegisterItem(itemToGiveId, itemToGiveDisplayName);
-            }
+            EstanDentro.Colegio.Casillero.AbrirPuertas(gameObject);
+            TomarPendiente(mostrarAviso: false);
 
             if (!string.IsNullOrEmpty(interiorNoteTitle))
             {
@@ -93,7 +106,8 @@ namespace EstanDentro.Interaction
                     NoteOverlay.Show(interiorNoteTitle, interiorNoteBody);
             }
 
-            if (!string.IsNullOrEmpty(hudMessage))
+            // si se entregó un objeto, la tarjeta de objeto ya lo explica (qué es, para qué sirve, su tecla)
+            if (!string.IsNullOrEmpty(hudMessage) && !itemTomado)
                 ObjectiveHUD.Show(hudMessage, hudDisplayTime);
 
             // Dispara el BlackoutEvent (apaga las luces) si la flag esta activa.

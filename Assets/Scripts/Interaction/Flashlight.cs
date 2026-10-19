@@ -39,10 +39,19 @@ namespace EstanDentro.Interaction
         private Light spotLight;
         private bool wasUnlocked;
 
+        [Header("Pilas")]
+        [SerializeField, Tooltip("Segundos encendida con un juego de pilas nuevo.")]
+        private float duracionPilas = 240f;
+        private float carga = 1f;
+        private float intensidadBase;
+        /// <summary>0..1 cuánto le queda a las pilas.</summary>
+        public float Carga => carga;
+
         private void Awake()
         {
             spotLight = GetComponent<Light>();
             if (applyDefaultLook) ApplyLook();
+            intensidadBase = spotLight.intensity;
             spotLight.enabled = startEnabled;
 
             if (hideMeshWhileLocked && (hideWhileLocked == null || hideWhileLocked.Length == 0))
@@ -87,6 +96,10 @@ namespace EstanDentro.Interaction
             }
 
             if (!unlocked) return;
+            GastarPilas();
+            // si la guardaron en la mochila mientras alumbraba, se apaga
+            var invL = Inventory.Inventory.Instance;
+            if (spotLight.enabled && invL != null && invL.HasItem("linterna") && !invL.EstaEnMano("linterna")) SetEnabled(false);
             var kb = Keyboard.current;
             var gp = Gamepad.current;
             bool toggle = (kb != null && kb.fKey.wasPressedThisFrame)
@@ -94,8 +107,47 @@ namespace EstanDentro.Interaction
             if (toggle) Toggle();
         }
 
+        // Se gastan mientras alumbra; al final titila. Si se acaban y hay pilas en el inventario, Mateo las cambia solo.
+        private void GastarPilas()
+        {
+            if (!spotLight.enabled) return;
+            carga -= Time.deltaTime / Mathf.Max(1f, duracionPilas);
+            if (carga > 0.15f) { spotLight.intensity = intensidadBase; return; }
+            if (carga > 0f)
+            {
+                float t = Time.time * 13f;
+                spotLight.intensity = intensidadBase * (0.35f + 0.65f * carga / 0.15f) * (Mathf.PerlinNoise(t, 0.3f) > 0.18f ? 1f : 0.15f);
+                return;
+            }
+            if (!CambiarPilas())
+            {
+                carga = 0f;
+                spotLight.enabled = false; PlayToggleClip();
+                EstanDentro.UI.ObjectiveHUD.Notify("Se acabaron las pilas. Necesito otras.", 3f);
+            }
+        }
+
+        private bool CambiarPilas()
+        {
+            var inv = Inventory.Inventory.Instance;
+            if (inv == null || !inv.HasItem("baterias")) return false;
+            inv.RemoveItem("baterias");
+            carga = 1f; spotLight.intensity = intensidadBase;
+            var it = inv.Buscar("baterias");
+            EstanDentro.UI.ObjectiveHUD.Notify("Cambias las pilas de la linterna." + (it != null ? $" Te quedan {it.cantidad}." : " Eran las últimas."), 3f);
+            return true;
+        }
+
         public void Toggle()
         {
+            if (!spotLight.enabled && carga <= 0f && !CambiarPilas())
+            {
+                EstanDentro.UI.ObjectiveHUD.Notify("No tiene pilas.", 2f);
+                return;
+            }
+            // para prender la linterna tiene que estar en la mano: si está en la mochila, Mateo la saca sola
+            var inv = Inventory.Inventory.Instance;
+            if (!spotLight.enabled && inv != null && inv.HasItem("linterna") && !inv.Usar("linterna")) return;
             spotLight.enabled = !spotLight.enabled;
             PlayToggleClip();
         }

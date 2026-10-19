@@ -1,0 +1,2048 @@
+{
+ "items": [
+  {
+   "nombre": "ED_acero",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.550000011920929,
+    0.5600000023841858,
+    0.5699999928474426
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.30000001192092896,
+   "metalico": 1.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_agua",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.550000011920929,
+    0.6000000238418579,
+    0.6499999761581421
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8500000238418579,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_anden",
+   "tipo": "pbr",
+   "textura": "concrete_floor_worn_001",
+   "color_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_color.png",
+   "normal_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_normal.png",
+   "rug_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_rugosidad.png",
+   "tinte": [
+    0.85,
+    0.84,
+    0.8
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.7,
+    0.7,
+    0.66
+   ]
+  },
+  {
+   "nombre": "ED_asfalto",
+   "tipo": "pbr",
+   "textura": "asphalt_02",
+   "color_tex": "asphalt_02\\asphalt_02_color_2k.jpg",
+   "normal_tex": "asphalt_02\\asphalt_02_normal_2k.jpg",
+   "rug_tex": "asphalt_02\\asphalt_02_rugosidad_2k.jpg",
+   "tinte": [
+    0.75,
+    0.75,
+    0.75
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "asphalt_02",
+   "tinte_pesadilla": [
+    0.5,
+    0.52,
+    0.5
+   ]
+  },
+  {
+   "nombre": "ED_azotea",
+   "tipo": "pbr",
+   "textura": "dirty_concrete",
+   "color_tex": "dirty_concrete/dirty_concrete_antirep_color.png",
+   "normal_tex": "dirty_concrete/dirty_concrete_antirep_normal.png",
+   "rug_tex": "dirty_concrete/dirty_concrete_antirep_rugosidad.png",
+   "tinte": [
+    0.85,
+    0.84,
+    0.8
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.7,
+    0.72,
+    0.66
+   ]
+  },
+  {
+   "nombre": "ED_azulejo_blanco",
+   "tipo": "pbr",
+   "textura": "interior_tiles",
+   "color_tex": "interior_tiles\\interior_tiles_color_2k.jpg",
+   "normal_tex": "interior_tiles\\interior_tiles_normal_2k.jpg",
+   "rug_tex": "interior_tiles\\interior_tiles_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    0.97
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "interior_tiles",
+   "tinte_pesadilla": [
+    0.7,
+    0.8,
+    0.74
+   ]
+  },
+  {
+   "nombre": "ED_azulejo_teal",
+   "tipo": "pbr",
+   "textura": "long_white_tiles",
+   "color_tex": "long_white_tiles\\long_white_tiles_color_2k.jpg",
+   "normal_tex": "long_white_tiles\\long_white_tiles_normal_2k.jpg",
+   "rug_tex": "long_white_tiles\\long_white_tiles_rugosidad_2k.jpg",
+   "tinte": [
+    0.42,
+    0.78,
+    0.72
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "long_white_tiles",
+   "tinte_pesadilla": [
+    0.3,
+    0.55,
+    0.5
+   ]
+  },
+  {
+   "nombre": "ED_bronce",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.6200000047683716,
+    0.4399999976158142,
+    0.18000000715255737
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.3499999940395355,
+   "metalico": 1.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_cal",
+   "tipo": "pbr",
+   "textura": "white_stucco",
+   "color_tex": "white_stucco/white_stucco_antirep_color.png",
+   "normal_tex": "white_stucco/white_stucco_antirep_normal.png",
+   "rug_tex": "white_stucco/white_stucco_antirep_rugosidad.png",
+   "tinte": [
+    1.0,
+    0.96,
+    0.88
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_plaster",
+   "tinte_pesadilla": [
+    0.85,
+    0.85,
+    0.8
+   ]
+  },
+  {
+   "nombre": "ED_carton",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.44999998807907104,
+    0.3199999928474426,
+    0.18000000715255737
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8500000238418579,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_casa_azul",
+   "tipo": "pbr",
+   "textura": "blue_plaster_wall",
+   "color_tex": "blue_plaster_wall\\blue_plaster_wall_color_2k.jpg",
+   "normal_tex": "blue_plaster_wall\\blue_plaster_wall_normal_2k.jpg",
+   "rug_tex": "blue_plaster_wall\\blue_plaster_wall_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "blue_plaster_wall",
+   "tinte_pesadilla": [
+    0.55,
+    0.6,
+    0.6
+   ]
+  },
+  {
+   "nombre": "ED_casa_beige",
+   "tipo": "pbr",
+   "textura": "beige_wall_001",
+   "color_tex": "beige_wall_001\\beige_wall_001_color_2k.jpg",
+   "normal_tex": "beige_wall_001\\beige_wall_001_normal_2k.jpg",
+   "rug_tex": "beige_wall_001\\beige_wall_001_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    0.95,
+    0.85
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "beige_wall_001",
+   "tinte_pesadilla": [
+    0.6,
+    0.6,
+    0.55
+   ]
+  },
+  {
+   "nombre": "ED_casa_ladrillo",
+   "tipo": "pbr",
+   "textura": "red_brick_plaster_patch_02",
+   "color_tex": "red_brick_plaster_patch_02\\red_brick_plaster_patch_02_color_2k.jpg",
+   "normal_tex": "red_brick_plaster_patch_02\\red_brick_plaster_patch_02_normal_2k.jpg",
+   "rug_tex": "red_brick_plaster_patch_02\\red_brick_plaster_patch_02_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "red_brick_plaster_patch_02",
+   "tinte_pesadilla": [
+    0.6,
+    0.6,
+    0.58
+   ]
+  },
+  {
+   "nombre": "ED_casa_salmon",
+   "tipo": "pbr",
+   "textura": "painted_plaster_wall",
+   "color_tex": "painted_plaster_wall/painted_plaster_wall_antirep_color.png",
+   "normal_tex": "painted_plaster_wall/painted_plaster_wall_antirep_normal.png",
+   "rug_tex": "painted_plaster_wall/painted_plaster_wall_antirep_rugosidad.png",
+   "tinte": [
+    1.0,
+    0.72,
+    0.6
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "peeling_painted_wall",
+   "tinte_pesadilla": [
+    0.7,
+    0.55,
+    0.5
+   ]
+  },
+  {
+   "nombre": "ED_casa_verde",
+   "tipo": "pbr",
+   "textura": "painted_plaster_wall",
+   "color_tex": "painted_plaster_wall/painted_plaster_wall_antirep_color.png",
+   "normal_tex": "painted_plaster_wall/painted_plaster_wall_antirep_normal.png",
+   "rug_tex": "painted_plaster_wall/painted_plaster_wall_antirep_rugosidad.png",
+   "tinte": [
+    0.7,
+    0.9,
+    0.7
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "peeling_painted_wall",
+   "tinte_pesadilla": [
+    0.5,
+    0.65,
+    0.55
+   ]
+  },
+  {
+   "nombre": "ED_cera_vela",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.8500000238418579,
+    0.800000011920929,
+    0.6499999761581421
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_ceramica",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.8600000143051147,
+    0.8600000143051147,
+    0.8299999833106995
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.07999999821186066,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_cerros",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.36000001430511475,
+    0.44999998807907104,
+    0.5
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 1.0,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_concreto",
+   "tipo": "pbr",
+   "textura": "concrete_wall_008",
+   "color_tex": "concrete_wall_008/concrete_wall_008_antirep_color.png",
+   "normal_tex": "concrete_wall_008/concrete_wall_008_antirep_normal.png",
+   "rug_tex": "concrete_wall_008/concrete_wall_008_antirep_rugosidad.png",
+   "tinte": [
+    0.95,
+    0.95,
+    0.95
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "worn_mossy_plasterwall",
+   "tinte_pesadilla": [
+    0.8,
+    0.85,
+    0.8
+   ]
+  },
+  {
+   "nombre": "ED_corcho",
+   "tipo": "pbr",
+   "textura": "white_stucco",
+   "color_tex": "white_stucco/white_stucco_antirep_color.png",
+   "normal_tex": "white_stucco/white_stucco_antirep_normal.png",
+   "rug_tex": "white_stucco/white_stucco_antirep_rugosidad.png",
+   "tinte": [
+    0.55,
+    0.36,
+    0.2
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_plaster",
+   "tinte_pesadilla": [
+    0.4,
+    0.28,
+    0.16
+   ]
+  },
+  {
+   "nombre": "ED_cromo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.11999999731779099,
+   "metalico": 1.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_espejo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.8999999761581421,
+    0.8999999761581421,
+    0.8999999761581421
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.019999999552965164,
+   "metalico": 1.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_fluorescente",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.30000001192092896,
+   "metalico": 0.0,
+   "emision": [
+    0.8999999761581421,
+    0.9700000286102295,
+    1.0
+   ],
+   "emision_fuerza": 6.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_goma_negra",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.019999999552965164,
+    0.019999999552965164,
+    0.019999999552965164
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.800000011920929,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_ladrillo",
+   "tipo": "pbr",
+   "textura": "large_red_bricks",
+   "color_tex": "large_red_bricks\\large_red_bricks_color_2k.jpg",
+   "normal_tex": "large_red_bricks\\large_red_bricks_normal_2k.jpg",
+   "rug_tex": "large_red_bricks\\large_red_bricks_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "painted_worn_brick",
+   "tinte_pesadilla": [
+    0.75,
+    0.72,
+    0.65
+   ]
+  },
+  {
+   "nombre": "ED_laton",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.7799999713897705,
+    0.5799999833106995,
+    0.2199999988079071
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.2800000011920929,
+   "metalico": 1.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_lejano_beige",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.800000011920929,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_lejano_gris",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.800000011920929,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_lejano_ladrillo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.800000011920929,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_letrero_salida",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.05000000074505806,
+    0.6000000238418579,
+    0.20000000298023224
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.4000000059604645,
+   "metalico": 0.0,
+   "emision": [
+    0.10000000149011612,
+    1.0,
+    0.3499999940395355
+   ],
+   "emision_fuerza": 4.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_libro_azul",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.05999999865889549,
+    0.11999999731779099,
+    0.30000001192092896
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.699999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_libro_cafe",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.30000001192092896,
+    0.18000000715255737,
+    0.07999999821186066
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.699999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_libro_crema",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.699999988079071,
+    0.6200000047683716,
+    0.44999998807907104
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.699999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_libro_rojo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.3499999940395355,
+    0.05999999865889549,
+    0.05000000074505806
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.699999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_libro_verde",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.07000000029802322,
+    0.2199999988079071,
+    0.10000000149011612
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.699999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_madera_marco",
+   "tipo": "pbr",
+   "textura": "wood_cabinet_worn_long",
+   "color_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_color_2k.jpg",
+   "normal_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_normal_2k.jpg",
+   "rug_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_rugosidad_2k.jpg",
+   "tinte": [
+    0.75,
+    0.6,
+    0.45
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "wood_cabinet_worn_long",
+   "tinte_pesadilla": [
+    0.45,
+    0.4,
+    0.35
+   ]
+  },
+  {
+   "nombre": "ED_madera_mueble",
+   "tipo": "pbr",
+   "textura": "wood_cabinet_worn_long",
+   "color_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_color_2k.jpg",
+   "normal_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_normal_2k.jpg",
+   "rug_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    0.86,
+    0.68
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "wood_cabinet_worn_long",
+   "tinte_pesadilla": [
+    0.6,
+    0.55,
+    0.48
+   ]
+  },
+  {
+   "nombre": "ED_madera_panel",
+   "tipo": "pbr",
+   "textura": "wood_cabinet_worn_long",
+   "color_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_color_2k.jpg",
+   "normal_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_normal_2k.jpg",
+   "rug_tex": "wood_cabinet_worn_long\\wood_cabinet_worn_long_rugosidad_2k.jpg",
+   "tinte": [
+    0.9,
+    0.8,
+    0.7
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "wood_cabinet_worn_long",
+   "tinte_pesadilla": [
+    0.55,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "nombre": "ED_metal_azul",
+   "tipo": "pbr",
+   "textura": "green_metal_rust",
+   "color_tex": "green_metal_rust\\green_metal_rust_color_2k.jpg",
+   "normal_tex": "green_metal_rust\\green_metal_rust_normal_2k.jpg",
+   "rug_tex": "green_metal_rust\\green_metal_rust_rugosidad_2k.jpg",
+   "tinte": [
+    0.35,
+    0.55,
+    0.85
+   ],
+   "rugosidad_mult": 0.9,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "green_metal_rust",
+   "tinte_pesadilla": [
+    0.3,
+    0.4,
+    0.5
+   ]
+  },
+  {
+   "nombre": "ED_metal_gris",
+   "tipo": "pbr",
+   "textura": "green_metal_rust",
+   "color_tex": "green_metal_rust\\green_metal_rust_color_2k.jpg",
+   "normal_tex": "green_metal_rust\\green_metal_rust_normal_2k.jpg",
+   "rug_tex": "green_metal_rust\\green_metal_rust_rugosidad_2k.jpg",
+   "tinte": [
+    0.62,
+    0.7,
+    0.66
+   ],
+   "rugosidad_mult": 0.9,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "green_metal_rust",
+   "tinte_pesadilla": [
+    0.5,
+    0.52,
+    0.48
+   ]
+  },
+  {
+   "nombre": "ED_metal_tubo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.10000000149011612,
+    0.11999999731779099,
+    0.11999999731779099
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.4000000059604645,
+   "metalico": 0.699999988079071,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_metal_verde",
+   "tipo": "pbr",
+   "textura": "green_metal_rust",
+   "color_tex": "green_metal_rust\\green_metal_rust_color_2k.jpg",
+   "normal_tex": "green_metal_rust\\green_metal_rust_normal_2k.jpg",
+   "rug_tex": "green_metal_rust\\green_metal_rust_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "green_metal_rust",
+   "tinte_pesadilla": [
+    0.7,
+    0.7,
+    0.65
+   ]
+  },
+  {
+   "nombre": "ED_pantalla_crt",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.019999999552965164,
+    0.03999999910593033,
+    0.029999999329447746
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.10000000149011612,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_papel",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.8500000238418579,
+    0.8299999833106995,
+    0.7599999904632568
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8999999761581421,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_papel_amarillo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.8500000238418579,
+    0.75,
+    0.3499999940395355
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8999999761581421,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_papel_azul",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.44999998807907104,
+    0.6000000238418579,
+    0.800000011920929
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8999999761581421,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_papel_rosa",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.8500000238418579,
+    0.550000011920929,
+    0.6000000238418579
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8999999761581421,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_patio",
+   "tipo": "pbr",
+   "textura": "concrete_floor_worn_001",
+   "color_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_color.png",
+   "normal_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_normal.png",
+   "rug_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_rugosidad.png",
+   "tinte": [
+    0.9,
+    0.88,
+    0.84
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.7,
+    0.75,
+    0.65
+   ]
+  },
+  {
+   "nombre": "ED_peldano",
+   "tipo": "pbr",
+   "textura": "granite_tile",
+   "color_tex": "granite_tile\\granite_tile_color_2k.jpg",
+   "normal_tex": "granite_tile\\granite_tile_normal_2k.jpg",
+   "rug_tex": "granite_tile\\granite_tile_rugosidad_2k.jpg",
+   "tinte": [
+    0.9,
+    0.88,
+    0.84
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.8,
+    0.8,
+    0.75
+   ]
+  },
+  {
+   "nombre": "ED_pintura_crema",
+   "tipo": "pbr",
+   "textura": "painted_plaster_wall",
+   "color_tex": "painted_plaster_wall/painted_plaster_wall_antirep_color.png",
+   "normal_tex": "painted_plaster_wall/painted_plaster_wall_antirep_normal.png",
+   "rug_tex": "painted_plaster_wall/painted_plaster_wall_antirep_rugosidad.png",
+   "tinte": [
+    1.0,
+    0.9,
+    0.72
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "peeling_painted_wall",
+   "tinte_pesadilla": [
+    0.62,
+    0.78,
+    0.72
+   ]
+  },
+  {
+   "nombre": "ED_pintura_verde",
+   "tipo": "pbr",
+   "textura": "painted_plaster_wall",
+   "color_tex": "painted_plaster_wall/painted_plaster_wall_antirep_color.png",
+   "normal_tex": "painted_plaster_wall/painted_plaster_wall_antirep_normal.png",
+   "rug_tex": "painted_plaster_wall/painted_plaster_wall_antirep_rugosidad.png",
+   "tinte": [
+    0.3,
+    0.58,
+    0.44
+   ],
+   "rugosidad_mult": 0.6,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "peeling_painted_wall",
+   "tinte_pesadilla": [
+    0.3,
+    0.55,
+    0.48
+   ]
+  },
+  {
+   "nombre": "ED_piso_ajedrez",
+   "tipo": "pbr",
+   "textura": "floor_tiles_06",
+   "color_tex": "floor_tiles_06\\floor_tiles_06_color_2k.jpg",
+   "normal_tex": "floor_tiles_06\\floor_tiles_06_normal_2k.jpg",
+   "rug_tex": "floor_tiles_06\\floor_tiles_06_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    0.88,
+    0.74
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "worn_tile_floor",
+   "tinte_pesadilla": [
+    0.85,
+    0.9,
+    0.85
+   ]
+  },
+  {
+   "nombre": "ED_piso_bano",
+   "tipo": "pbr",
+   "textura": "floor_tiles_08",
+   "color_tex": "floor_tiles_08\\floor_tiles_08_color_2k.jpg",
+   "normal_tex": "floor_tiles_08\\floor_tiles_08_normal_2k.jpg",
+   "rug_tex": "floor_tiles_08\\floor_tiles_08_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "worn_tile_floor",
+   "tinte_pesadilla": [
+    0.8,
+    0.85,
+    0.8
+   ]
+  },
+  {
+   "nombre": "ED_piso_barro",
+   "tipo": "pbr",
+   "textura": "dirty_tiles",
+   "color_tex": "dirty_tiles\\dirty_tiles_color_2k.jpg",
+   "normal_tex": "dirty_tiles\\dirty_tiles_normal_2k.jpg",
+   "rug_tex": "dirty_tiles\\dirty_tiles_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "dirty_tiles",
+   "tinte_pesadilla": [
+    0.7,
+    0.7,
+    0.65
+   ]
+  },
+  {
+   "nombre": "ED_piso_concreto",
+   "tipo": "pbr",
+   "textura": "concrete_floor_worn_001",
+   "color_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_color.png",
+   "normal_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_normal.png",
+   "rug_tex": "concrete_floor_worn_001/concrete_floor_worn_001_antirep_rugosidad.png",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.8,
+    0.8,
+    0.8
+   ]
+  },
+  {
+   "nombre": "ED_piso_granito",
+   "tipo": "pbr",
+   "textura": "granite_tile",
+   "color_tex": "granite_tile\\granite_tile_color_2k.jpg",
+   "normal_tex": "granite_tile\\granite_tile_normal_2k.jpg",
+   "rug_tex": "granite_tile\\granite_tile_rugosidad_2k.jpg",
+   "tinte": [
+    0.98,
+    0.96,
+    0.9
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.85,
+    0.9,
+    0.85
+   ]
+  },
+  {
+   "nombre": "ED_piso_madera",
+   "tipo": "pbr",
+   "textura": "wood_floor_worn",
+   "color_tex": "wood_floor_worn\\wood_floor_worn_color_2k.jpg",
+   "normal_tex": "wood_floor_worn\\wood_floor_worn_normal_2k.jpg",
+   "rug_tex": "wood_floor_worn\\wood_floor_worn_rugosidad_2k.jpg",
+   "tinte": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "wood_floor_worn",
+   "tinte_pesadilla": [
+    0.55,
+    0.55,
+    0.5
+   ]
+  },
+  {
+   "nombre": "ED_piso_sotano",
+   "tipo": "pbr",
+   "textura": "dirty_concrete",
+   "color_tex": "dirty_concrete/dirty_concrete_antirep_color.png",
+   "normal_tex": "dirty_concrete/dirty_concrete_antirep_normal.png",
+   "rug_tex": "dirty_concrete/dirty_concrete_antirep_rugosidad.png",
+   "tinte": [
+    0.8,
+    0.8,
+    0.78
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_concrete_floor",
+   "tinte_pesadilla": [
+    0.6,
+    0.65,
+    0.6
+   ]
+  },
+  {
+   "nombre": "ED_pizarra",
+   "tipo": "pbr",
+   "textura": "painted_plaster_wall",
+   "color_tex": "painted_plaster_wall/painted_plaster_wall_antirep_color.png",
+   "normal_tex": "painted_plaster_wall/painted_plaster_wall_antirep_normal.png",
+   "rug_tex": "painted_plaster_wall/painted_plaster_wall_antirep_rugosidad.png",
+   "tinte": [
+    0.1,
+    0.24,
+    0.16
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "peeling_painted_wall",
+   "tinte_pesadilla": [
+    0.1,
+    0.22,
+    0.16
+   ]
+  },
+  {
+   "nombre": "ED_plastico_azul",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.05000000074505806,
+    0.15000000596046448,
+    0.4000000059604645
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.4000000059604645,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_plastico_beige",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.6200000047683716,
+    0.5799999833106995,
+    0.47999998927116394
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.4000000059604645,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_plastico_negro",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.029999999329447746,
+    0.029999999329447746,
+    0.029999999329447746
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.44999998807907104,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_plastico_rojo",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.44999998807907104,
+    0.03999999910593033,
+    0.029999999329447746
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.3499999940395355,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_salida",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.800000011920929,
+    0.15000000596046448,
+    0.15000000596046448
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8500000238418579,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_techo",
+   "tipo": "pbr",
+   "textura": "white_plaster_02",
+   "color_tex": "white_plaster_02/white_plaster_02_antirep_color.png",
+   "normal_tex": "white_plaster_02/white_plaster_02_antirep_normal.png",
+   "rug_tex": "white_plaster_02/white_plaster_02_antirep_rugosidad.png",
+   "tinte": [
+    0.96,
+    0.94,
+    0.88
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "worn_mossy_plasterwall",
+   "tinte_pesadilla": [
+    0.75,
+    0.8,
+    0.75
+   ]
+  },
+  {
+   "nombre": "ED_tela_blanca",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.75,
+    0.75,
+    0.7200000286102295
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8999999761581421,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_tela_roja",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.30000001192092896,
+    0.03999999910593033,
+    0.03999999910593033
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8999999761581421,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_tela_verde",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.11999999731779099,
+    0.25,
+    0.18000000715255737
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.949999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_terracota",
+   "tipo": "pbr",
+   "textura": "white_stucco",
+   "color_tex": "white_stucco/white_stucco_antirep_color.png",
+   "normal_tex": "white_stucco/white_stucco_antirep_normal.png",
+   "rug_tex": "white_stucco/white_stucco_antirep_rugosidad.png",
+   "tinte": [
+    0.55,
+    0.2,
+    0.12
+   ],
+   "rugosidad_mult": 0.9,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "damaged_plaster",
+   "tinte_pesadilla": [
+    0.45,
+    0.2,
+    0.14
+   ]
+  },
+  {
+   "nombre": "ED_terreno",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.25,
+    0.30000001192092896,
+    0.2199999988079071
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8500000238418579,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_texto",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.8500000238418579,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_tiza",
+   "tipo": "liso",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    0.949999988079071,
+    0.949999988079071,
+    0.9200000166893005
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.949999988079071,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "nombre": "ED_vidrio",
+   "tipo": "vidrio",
+   "textura": "",
+   "color_tex": "",
+   "normal_tex": "",
+   "rug_tex": "",
+   "tinte": [
+    1,
+    1,
+    1
+   ],
+   "rugosidad_mult": 1.0,
+   "rugosidad": 0.5,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "emision_fuerza": 0.0,
+   "textura_pesadilla": "",
+   "tinte_pesadilla": [
+    1,
+    1,
+    1
+   ]
+  }
+ ]
+}

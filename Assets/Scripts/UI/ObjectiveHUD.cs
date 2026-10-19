@@ -129,6 +129,12 @@ namespace EstanDentro.UI
             if (toastGroup != null) toastGroup.alpha = 0f;
         }
 
+        // con una nota o un candado abierto, el aviso en curso se oculta (no se superpone)
+        private void LateUpdate()
+        {
+            if (toastGroup != null && OverlayBlocker.IsBlocking) toastGroup.alpha = 0f;
+        }
+
         // ---------- circulo ----------
 
         private void OnCircleClicked()
@@ -172,8 +178,26 @@ namespace EstanDentro.UI
         {
             if (string.IsNullOrEmpty(text)) return;
             if (displayTime < 0f) displayTime = toastDefaultDisplayTime;
-            if (toastRoutine != null) StopCoroutine(toastRoutine);
-            toastRoutine = StartCoroutine(ToastRoutine(text, displayTime));
+            displayTime = Mathf.Max(5f, displayTime);
+            // en fila: nunca se pisan, y esperan a que se cierre la nota/candado que esté abierto
+            if (filaAvisos.Count > 0 && filaAvisos.ToArray()[filaAvisos.Count - 1].Item1 == text) return;
+            filaAvisos.Enqueue((text, displayTime));
+            if (filaRoutine == null) filaRoutine = StartCoroutine(ProcesarFila());
+        }
+
+        private readonly System.Collections.Generic.Queue<(string, float)> filaAvisos = new System.Collections.Generic.Queue<(string, float)>();
+        private Coroutine filaRoutine;
+
+        private IEnumerator ProcesarFila()
+        {
+            while (filaAvisos.Count > 0)
+            {
+                while (OverlayBlocker.IsBlocking) yield return null;
+                var (texto, tiempo) = filaAvisos.Dequeue();
+                toastRoutine = StartCoroutine(ToastRoutine(texto, tiempo));
+                while (toastRoutine != null) yield return null;
+            }
+            filaRoutine = null;
         }
 
         private IEnumerator ToastRoutine(string text, float displayTime)
@@ -430,10 +454,7 @@ namespace EstanDentro.UI
 
         private static Font GetBodyFont()
         {
-            if (MainMenuController.SharedBodyFont != null) return MainMenuController.SharedBodyFont;
-            Font f = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (f == null) f = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            return f;
+            return Fuentes.Maquina;
         }
     }
 }

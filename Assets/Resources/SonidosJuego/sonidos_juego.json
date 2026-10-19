@@ -1,0 +1,310 @@
+[
+ {
+  "archivo": "pasos/baldosa_0.wav",
+  "de": "impact-sounds/footstep_concrete_000.ogg",
+  "segundos": 0.1,
+  "bucle": false,
+  "por_que": "Pasos en baldosa de colegio: zapato de suela dura sobre piso duro"
+ },
+ {
+  "archivo": "pasos/baldosa_1.wav",
+  "de": "impact-sounds/footstep_concrete_001.ogg",
+  "segundos": 0.1,
+  "bucle": false,
+  "por_que": "Pasos en baldosa de colegio: zapato de suela dura sobre piso duro"
+ },
+ {
+  "archivo": "pasos/baldosa_2.wav",
+  "de": "impact-sounds/footstep_concrete_002.ogg",
+  "segundos": 0.11,
+  "bucle": false,
+  "por_que": "Pasos en baldosa de colegio: zapato de suela dura sobre piso duro"
+ },
+ {
+  "archivo": "pasos/baldosa_3.wav",
+  "de": "impact-sounds/footstep_concrete_003.ogg",
+  "segundos": 0.11,
+  "bucle": false,
+  "por_que": "Pasos en baldosa de colegio: zapato de suela dura sobre piso duro"
+ },
+ {
+  "archivo": "pasos/baldosa_4.wav",
+  "de": "impact-sounds/footstep_concrete_004.ogg",
+  "segundos": 0.11,
+  "bucle": false,
+  "por_que": "Pasos en baldosa de colegio: zapato de suela dura sobre piso duro"
+ },
+ {
+  "archivo": "pasos/madera_0.wav",
+  "de": "impact-sounds/footstep_wood_000.ogg",
+  "segundos": 0.27,
+  "bucle": false,
+  "por_que": "Pasos sobre tarima/madera (salón, escenario)"
+ },
+ {
+  "archivo": "pasos/madera_1.wav",
+  "de": "impact-sounds/footstep_wood_001.ogg",
+  "segundos": 0.25,
+  "bucle": false,
+  "por_que": "Pasos sobre tarima/madera (salón, escenario)"
+ },
+ {
+  "archivo": "pasos/madera_2.wav",
+  "de": "impact-sounds/footstep_wood_002.ogg",
+  "segundos": 0.25,
+  "bucle": false,
+  "por_que": "Pasos sobre tarima/madera (salón, escenario)"
+ },
+ {
+  "archivo": "pasos/madera_3.wav",
+  "de": "impact-sounds/footstep_wood_003.ogg",
+  "segundos": 0.25,
+  "bucle": false,
+  "por_que": "Pasos sobre tarima/madera (salón, escenario)"
+ },
+ {
+  "archivo": "pasos/madera_4.wav",
+  "de": "impact-sounds/footstep_wood_004.ogg",
+  "segundos": 0.25,
+  "bucle": false,
+  "por_que": "Pasos sobre tarima/madera (salón, escenario)"
+ },
+ {
+  "archivo": "cuerpo/respiracion_miedo.wav",
+  "de": "respiracion_miedo/2_112557.ogg",
+  "segundos": 12.5,
+  "bucle": true,
+  "por_que": "Respiración agitada cuando el estrés sube: el cuerpo avisa antes que la vista"
+ },
+ {
+  "archivo": "cuerpo/tinnitus.wav",
+  "de": "tinnitus/1_450620.ogg",
+  "segundos": 8.0,
+  "bucle": false,
+  "por_que": "Pitido en el oído al despertar: Mateo viene de un golpe (el choque)"
+ },
+ {
+  "archivo": "cuerpo/ropa_0.wav",
+  "de": "rpg-audio/cloth1.ogg",
+  "segundos": 0.61,
+  "bucle": false,
+  "por_que": "Ropa al agacharse / guardar en la mochila"
+ },
+ {
+  "archivo": "cuerpo/ropa_1.wav",
+  "de": "rpg-audio/cloth2.ogg",
+  "segundos": 0.39,
+  "bucle": false,
+  "por_que": "Ropa al agacharse / guardar en la mochila"
+ },
+ {
+  "archivo": "cuerpo/ropa_2.wav",
+  "de": "rpg-audio/cloth3.ogg",
+  "segundos": 0.48,
+  "bucle": false,
+  "por_que": "Ropa al agacharse / guardar en la mochila"
+ },
+ {
+  "archivo": "cuerpo/ropa_3.wav",
+  "de": "rpg-audio/cloth4.ogg",
+  "segundos": 0.38,
+  "bucle": false,
+  "por_que": "Ropa al agacharse / guardar en la mochila"
+ },
+ {
+  "archivo": "objetos/papel_tomar.wav",
+  "de": "papel_tomar/2_353125.ogg",
+  "segundos": 1.06,
+  "bucle": false,
+  "por_que": "Tomar una nota o un recuerdo: suena a papel, no a \"pickup\" de videojuego"
+ },
+ {
+  "archivo": "objetos/papel_abrir.wav",
+  "de": "papel_desdoblar/2_447931.ogg",
+  "segundos": 1.42,
+  "bucle": false,
+  "por_que": "Desdoblar la nota al leerla"
+ },
+ {
+  "archivo": "objetos/monedas.wav",
+  "de": "rpg-audio/handleCoins.ogg",
+  "segundos": 0.75,
+  "bucle": false,
+  "por_que": "Monedas en la mano"
+ },
+ {
+  "archivo": "objetos/objeto_tomar.wav",
+  "de": "rpg-audio/handleSmallLeather.ogg",
+  "segundos": 0.27,
+  "bucle": false,
+  "por_que": "Tomar un objeto chico (pilas, tiza, destornillador): roce de mano, discreto"
+ },
+ {
+  "archivo": "objetos/mochila.wav",
+  "de": "rpg-audio/clothBelt.ogg",
+  "segundos": 0.72,
+  "bucle": false,
+  "por_que": "Ponerse la mochila: correa y tela"
+ },
+ {
+  "archivo": "objetos/cuaderno_abrir.wav",
+  "de": "rpg-audio/bookOpen.ogg",
+  "segundos": 0.15,
+  "bucle": false,
+  "por_que": "Abrir el Cuaderno de Mateo"
+ },
+ {
+  "archivo": "objetos/cuaderno_pagina.wav",
+  "de": "rpg-audio/bookFlip2.ogg",
+  "segundos": 0.43,
+  "bucle": false,
+  "por_que": "Cambiar de pestaña en el cuaderno"
+ },
+ {
+  "archivo": "objetos/cuaderno_cerrar.wav",
+  "de": "rpg-audio/bookClose.ogg",
+  "segundos": 0.23,
+  "bucle": false,
+  "por_que": "Cerrar el cuaderno"
+ },
+ {
+  "archivo": "objetos/tiza.wav",
+  "de": "tiza_pared/2_231454.ogg",
+  "segundos": 1.4,
+  "bucle": false,
+  "por_que": "Marcar una X con tiza en la pared"
+ },
+ {
+  "archivo": "objetos/linterna.wav",
+  "de": "interface-sounds/switch_002.ogg",
+  "segundos": 0.18,
+  "bucle": false,
+  "por_que": "Interruptor de la linterna (ya no es el mismo clic del menú)"
+ },
+ {
+  "archivo": "casillero/pestillo.wav",
+  "de": "rpg-audio/metalLatch.ogg",
+  "segundos": 0.23,
+  "bucle": false,
+  "por_que": "Pestillo del casillero al abrir: clac metálico corto"
+ },
+ {
+  "archivo": "casillero/portazo.wav",
+  "de": "portazo_casillero/1_393659.ogg",
+  "segundos": 2.0,
+  "bucle": false,
+  "por_que": "Susto: casillero de lata que se cierra de golpe"
+ },
+ {
+  "archivo": "casillero/lata_rueda.wav",
+  "de": "lata_rueda/3_500024.ogg",
+  "segundos": 1.48,
+  "bucle": false,
+  "por_que": "Susto: una lata cae del casillero y rueda"
+ },
+ {
+  "archivo": "candado/no_abre.wav",
+  "de": "candado_no_abre/1_164670.ogg",
+  "segundos": 1.0,
+  "bucle": false,
+  "por_que": "Clave equivocada: el gancho se sacude y no cede"
+ },
+ {
+  "archivo": "candado/forzar.wav",
+  "de": "palanca_forzar/3_171995.ogg",
+  "segundos": 1.79,
+  "bucle": false,
+  "por_que": "Forzar con la pata de cabra: fuerte a propósito, el monstruo lo oye"
+ },
+ {
+  "archivo": "candado/cae.wav",
+  "de": "impact-sounds/impactMetal_light_002.ogg",
+  "segundos": 0.21,
+  "bucle": false,
+  "por_que": "El candado forzado cae a la baldosa"
+ },
+ {
+  "archivo": "sustos/celular_vibra.wav",
+  "de": "celular_vibra/1_349483.ogg",
+  "segundos": 4.1,
+  "bucle": false,
+  "por_que": "Susto: un celular vibra dentro del casillero (mensaje de Pa)"
+ },
+ {
+  "archivo": "sustos/susurro.wav",
+  "de": "susurro/1_234044.ogg",
+  "segundos": 3.52,
+  "bucle": false,
+  "por_que": "Susto: un susurro de verdad (el de antes era un grito)"
+ },
+ {
+  "archivo": "ambiente/fluorescente.wav",
+  "de": "fluorescente/2_119910.ogg",
+  "segundos": 28.5,
+  "bucle": true,
+  "por_que": "Zumbido de tubos fluorescentes: el \"silencio\" de un colegio de noche"
+ },
+ {
+  "archivo": "ambiente/lluvia_ventana.wav",
+  "de": "lluvia_ventana/2_243781.ogg",
+  "segundos": 58.5,
+  "bucle": true,
+  "por_que": "Lluvia en las ventanas: llueve desde el prólogo, une las dos escenas"
+ },
+ {
+  "archivo": "ambiente/timbre.wav",
+  "de": "timbre_colegio/1_378394.ogg",
+  "segundos": 3.36,
+  "bucle": false,
+  "por_que": "Timbre del colegio: pasa del monitor del hospital al despertar en 4°B"
+ },
+ {
+  "archivo": "prologo/carro_dentro.wav",
+  "de": "carro_dentro/2_237374.ogg",
+  "segundos": 58.5,
+  "bucle": true,
+  "por_que": "Motor y rodadura desde adentro de un carro andando"
+ },
+ {
+  "archivo": "prologo/lluvia_techo.wav",
+  "de": "lluvia_techo_carro/3_339489.ogg",
+  "segundos": 58.5,
+  "bucle": true,
+  "por_que": "Lluvia fuerte sobre el techo del carro"
+ },
+ {
+  "archivo": "prologo/limpiabrisas.wav",
+  "de": "limpiabrisas/2_134964.ogg",
+  "segundos": 2.57,
+  "bucle": false,
+  "por_que": "Una pasada del limpiabrisas (se repite al ritmo de la animación)"
+ },
+ {
+  "archivo": "prologo/radio_sintonia.wav",
+  "de": "radio_am/2_261873.ogg",
+  "segundos": 5.73,
+  "bucle": false,
+  "por_que": "Mateo mueve la radio: estática y sintonía AM"
+ },
+ {
+  "archivo": "prologo/choque.wav",
+  "de": "choque_carro/3_426021.ogg",
+  "segundos": 3.4,
+  "bucle": false,
+  "por_que": "El choque: frenazo y golpe (lo más fuerte del juego)"
+ },
+ {
+  "archivo": "prologo/monitor.wav",
+  "de": "monitor_hospital/1_148897.ogg",
+  "segundos": 18.5,
+  "bucle": true,
+  "por_que": "Monitor del hospital tras el choque: el hilo con el final"
+ },
+ {
+  "archivo": "prologo/cinturon.wav",
+  "de": "Ambient/seat_belt.wav",
+  "segundos": 3.0,
+  "bucle": false,
+  "por_que": "Cinturón de seguridad (ya estaba en el proyecto sin usar)"
+ }
+]

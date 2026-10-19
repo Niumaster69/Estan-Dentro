@@ -61,8 +61,7 @@ namespace EstanDentro.Stress
         {
             if (active) return;
             active = true;
-            prevTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
+            EstanDentro.UI.Pausa.Pedir(this);
             canvas.enabled = true;
             showStartedAt = Time.unscaledTime;
             titleLabel.text = titleText;
@@ -76,7 +75,7 @@ namespace EstanDentro.Stress
             if (!active) return;
             active = false;
             canvas.enabled = false;
-            Time.timeScale = prevTimeScale > 0f ? prevTimeScale : 1f;
+            EstanDentro.UI.Pausa.Soltar(this);
             OverlayBlocker.Unregister();
         }
 
@@ -116,7 +115,8 @@ namespace EstanDentro.Stress
 
         private void RestartScene()
         {
-            Time.timeScale = 1f;
+            EstanDentro.UI.Pausa.Reiniciar();
+            Inventory.Inventory.NuevaPartida();
             EstanDentro.UI.SceneTransition.Reload(tip: "Respira. Empieza otra vez.");
         }
 

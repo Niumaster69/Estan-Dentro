@@ -6,12 +6,49 @@ using UnityEngine.Networking;
 
 namespace EstanDentro.Network
 {
-    // Cliente HTTP a la API de EstanDentro hospedada en somee.
+    // Cliente de datos del juego: guarda LOCAL (AlmacenLocal) o en una API en la nube si StreamingAssets/nube.json tiene URL.
     // Patron: coroutine + callbacks (consistente con BreathingMinigame, PlayerWakeUp, etc.).
     // Politica: best-effort. Errores logean warning, NO bloquean el juego.
     public class ApiClient : MonoBehaviour
     {
-        public const string BaseUrl = "http://estandentro.somee.com";
+        // ---------- ¿local o nube? ----------
+        // Por defecto todo se guarda LOCAL (AlmacenLocal, un JSON en la carpeta de datos del juego).
+        // Para usar un servidor: poner su URL en StreamingAssets/nube.json  ->  { "url": "https://mi-api.com" }
+        [Serializable] private class ConfigNube { public string url = ""; }
+        private static string baseUrl;
+        public static string BaseUrl
+        {
+            get
+            {
+                if (baseUrl != null) return baseUrl;
+                baseUrl = "";
+                try
+                {
+                    string ruta = System.IO.Path.Combine(Application.streamingAssetsPath, "nube.json");
+                    if (System.IO.File.Exists(ruta)) baseUrl = (JsonUtility.FromJson<ConfigNube>(System.IO.File.ReadAllText(ruta))?.url ?? "").TrimEnd('/');
+                }
+                catch (Exception e) { Debug.LogWarning("[ApiClient] nube.json ilegible, uso guardado local: " + e.Message); }
+                Debug.Log(string.IsNullOrEmpty(baseUrl) ? "[ApiClient] Guardado LOCAL en " + AlmacenLocal.Ruta : "[ApiClient] Guardado en la NUBE: " + baseUrl);
+                return baseUrl;
+            }
+        }
+        public static bool EnNube => !string.IsNullOrEmpty(BaseUrl);
+
+        /// <summary>Respuesta local con la misma forma asíncrona que la red (callback en el siguiente frame).</summary>
+        private Coroutine Local<T>(Func<T> op, Action<T> ok, Action<string> error, string que)
+            => StartCoroutine(LocalRutina(op, ok, error, que));
+        private IEnumerator LocalRutina<T>(Func<T> op, Action<T> ok, Action<string> error, string que)
+        {
+            yield return null;
+            T r;
+            try { r = op(); }
+            catch (Exception e) { error?.Invoke($"{que} (local) fallo: {e.Message}"); yield break; }
+            if (r == null) { error?.Invoke($"{que} (local): no existe"); yield break; }
+            ok?.Invoke(r);
+        }
+        private Coroutine Local(Func<bool> op, Action ok, Action<string> error, string que)
+            => Local(() => op() ? "ok" : null, _ => ok?.Invoke(), error, que);
+
         private const int TimeoutSeconds = 5;
 
         private static ApiClient _instance;
@@ -39,49 +76,50 @@ namespace EstanDentro.Network
         // ---------- Jugador ----------
 
         public Coroutine CreateJugador(JugadorCreateDto data, Action<JugadorDto> onSuccess, Action<string> onError)
-            => StartCoroutine(PostJson<JugadorCreateDto, JugadorDto>("/api/Jugadores", data, onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.CrearJugador(data), onSuccess, onError, "CrearJugador") : StartCoroutine(PostJson<JugadorCreateDto, JugadorDto>("/api/Jugadores", data, onSuccess, onError));
 
         public Coroutine GetJugador(int id, Action<JugadorDto> onSuccess, Action<string> onError)
-            => StartCoroutine(GetJson<JugadorDto>($"/api/Jugadores/{id}", onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.Jugador(id), onSuccess, onError, "GetJugador") : StartCoroutine(GetJson<JugadorDto>($"/api/Jugadores/{id}", onSuccess, onError));
 
         public Coroutine UpdateJugador(JugadorDto data, Action onSuccess, Action<string> onError)
-            => StartCoroutine(PutJson($"/api/Jugadores/{data.idJugador}", data, onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.ActualizarJugador(data), onSuccess, onError, "UpdateJugador") : StartCoroutine(PutJson($"/api/Jugadores/{data.idJugador}", data, onSuccess, onError));
 
         public Coroutine GetAllJugadores(Action<JugadorDto[]> onSuccess, Action<string> onError)
-            => StartCoroutine(GetArray<JugadorDto, JugadorListWrapper>("/api/Jugadores", w => w.items, onSuccess, onError));
+            => !EnNube ? Local(AlmacenLocal.Jugadores, onSuccess, onError, "GetAllJugadores") : StartCoroutine(GetArray<JugadorDto, JugadorListWrapper>("/api/Jugadores", w => w.items, onSuccess, onError));
 
         // ---------- Partida ----------
 
         public Coroutine CreatePartida(PartidaCreateDto data, Action<PartidaDto> onSuccess, Action<string> onError)
-            => StartCoroutine(PostJson<PartidaCreateDto, PartidaDto>("/api/Partidas", data, onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.CrearPartida(data), onSuccess, onError, "CreatePartida") : StartCoroutine(PostJson<PartidaCreateDto, PartidaDto>("/api/Partidas", data, onSuccess, onError));
 
         public Coroutine UpdatePartida(PartidaDto data, Action onSuccess, Action<string> onError)
-            => StartCoroutine(PutJson($"/api/Partidas/{data.idPartida}", data, onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.ActualizarPartida(data), onSuccess, onError, "UpdatePartida") : StartCoroutine(PutJson($"/api/Partidas/{data.idPartida}", data, onSuccess, onError));
 
         public Coroutine GetAllPartidas(Action<PartidaDto[]> onSuccess, Action<string> onError)
-            => StartCoroutine(GetArray<PartidaDto, PartidaListWrapper>("/api/Partidas", w => w.items, onSuccess, onError));
+            => !EnNube ? Local(AlmacenLocal.Partidas, onSuccess, onError, "GetAllPartidas") : StartCoroutine(GetArray<PartidaDto, PartidaListWrapper>("/api/Partidas", w => w.items, onSuccess, onError));
 
         public Coroutine GetPartida(int id, Action<PartidaDto> onSuccess, Action<string> onError)
-            => StartCoroutine(GetJson<PartidaDto>($"/api/Partidas/{id}", onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.Partida(id), onSuccess, onError, "GetPartida") : StartCoroutine(GetJson<PartidaDto>($"/api/Partidas/{id}", onSuccess, onError));
 
         public Coroutine DeletePartida(int id, Action onSuccess, Action<string> onError)
-            => StartCoroutine(Delete($"/api/Partidas/{id}", onSuccess, onError));
+            => !EnNube ? Local(() => AlmacenLocal.BorrarPartida(id), onSuccess, onError, "DeletePartida") : StartCoroutine(Delete($"/api/Partidas/{id}", onSuccess, onError));
 
         // ---------- Logro ----------
 
         public Coroutine GetAllLogros(Action<LogroDto[]> onSuccess, Action<string> onError)
-            => StartCoroutine(GetArray<LogroDto, LogroListWrapper>("/api/Logros", w => w.items, onSuccess, onError));
+            => !EnNube ? Local(AlmacenLocal.Logros, onSuccess, onError, "GetAllLogros") : StartCoroutine(GetArray<LogroDto, LogroListWrapper>("/api/Logros", w => w.items, onSuccess, onError));
 
         // ---------- LogroXPartida ----------
 
         public Coroutine UnlockLogro(int idPartida, int idLogro, Action onSuccess, Action<string> onError)
         {
             var data = new LogroXPartidaCreateDto { idPartida = idPartida, idLogro = idLogro };
+            if (!EnNube) return Local(() => { AlmacenLocal.DesbloquearLogro(idPartida, idLogro); return true; }, onSuccess, onError, "UnlockLogro");
             return StartCoroutine(PostJsonNoResponse("/api/LogroXPartida", data, onSuccess, onError, treatDuplicateAsSuccess: true));
         }
 
         public Coroutine GetAllLogroXPartida(Action<LogroXPartidaDto[]> onSuccess, Action<string> onError)
-            => StartCoroutine(GetArray<LogroXPartidaDto, LogroXPartidaListWrapper>("/api/LogroXPartida", w => w.items, onSuccess, onError));
+            => !EnNube ? Local(AlmacenLocal.LogrosXPartida, onSuccess, onError, "GetAllLogroXPartida") : StartCoroutine(GetArray<LogroXPartidaDto, LogroXPartidaListWrapper>("/api/LogroXPartida", w => w.items, onSuccess, onError));
 
         // ---------- Internals ----------
 

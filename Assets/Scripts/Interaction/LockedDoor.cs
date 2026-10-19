@@ -272,9 +272,33 @@ namespace EstanDentro.Interaction
                 Debug.LogWarning($"[LockedDoor] '{name}' ToggleOpen: Animator no tiene Bool param '{animatorBoolParam}', y useCodeAnimationFallback=false.");
         }
 
+        [SerializeField, Tooltip("Si true, al abrir gira hacia el lado contrario a quien la empuja (nunca contra el jugador).")]
+        private bool abrirLejosDelJugador = true;
+        private Vector3 deltaUsado;
+
+        /// <summary>Elige el sentido de giro que aleja la hoja de la puerta del jugador (cámara principal).</summary>
+        private Vector3 DeltaLejosDelJugador(Transform pivot)
+        {
+            var cam = Camera.main;
+            var r = GetComponentInChildren<Renderer>();
+            if (cam == null || r == null) return codeOpenEulerDelta;
+            Vector3 centro = r.bounds.center, eje = pivot.position;
+            Vector3 jugador = cam.transform.position;
+            Vector3 a = Quaternion.Euler(codeOpenEulerDelta) * (centro - eje) + eje;
+            Vector3 b = Quaternion.Euler(-codeOpenEulerDelta) * (centro - eje) + eje;
+            float da = Vector2.Distance(new Vector2(a.x, a.z), new Vector2(jugador.x, jugador.z));
+            float db = Vector2.Distance(new Vector2(b.x, b.z), new Vector2(jugador.x, jugador.z));
+            return da >= db ? codeOpenEulerDelta : -codeOpenEulerDelta;
+        }
+
         private System.Collections.IEnumerator CodeAnimateOpen(Transform pivot, bool opening)
         {
             Vector3 delta = opening ? codeOpenEulerDelta : -codeOpenEulerDelta;
+            if (codeRotateInWorldSpace && abrirLejosDelJugador)
+            {
+                if (opening) deltaUsado = DeltaLejosDelJugador(pivot);
+                delta = opening ? deltaUsado : -deltaUsado;
+            }
 
             if (codeRotateInWorldSpace)
             {

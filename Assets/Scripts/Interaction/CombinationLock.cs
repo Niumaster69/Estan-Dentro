@@ -4,8 +4,18 @@ using EstanDentro.Network;
 
 namespace EstanDentro.Interaction
 {
+    /// <summary>Cada candado se ve distinto (en el mundo, en su pantalla y en las fotos) para reconocerlo de un vistazo.</summary>
+    public enum EstiloCandado { Generico, Laton3, Maleta3, Cadena4 }
+
     public class CombinationLock : Interactable
     {
+        [Header("Aspecto")]
+        [SerializeField] private EstiloCandado estilo = EstiloCandado.Generico;
+        [SerializeField, Tooltip("Cómo lo llama Mateo. Ej: 'Candado del casillero'.")]
+        private string nombreVisible = "";
+        public EstiloCandado Estilo { get => estilo; set => estilo = value; }
+        public string NombreVisible { get => string.IsNullOrEmpty(nombreVisible) ? "Candado" : nombreVisible; set => nombreVisible = value; }
+
         [Header("Combinacion")]
         [SerializeField, Tooltip("Codigo correcto. Cantidad de digitos = cantidad de ruedas.")]
         private int[] correctCode = new int[] { 1, 7, 0, 5 };
@@ -48,7 +58,15 @@ namespace EstanDentro.Interaction
         {
             // Defensa: ignorar interaccion si hay un overlay modal activo (ej. minijuego de respiracion).
             if (EstanDentro.UI.OverlayBlocker.IsBlocking) return;
-            if (oneShot && IsSolved) return;
+            if (oneShot && IsSolved)
+            {
+                // ya abierto: si adentro quedó algo que no cabía, tomarlo ahora
+                var lc = GetComponent<LockedContainer>();
+                if (lc != null && lc.TienePendiente) lc.TomarPendiente();
+                var cas = GetComponent<EstanDentro.Colegio.Casillero>();
+                if (cas != null) cas.Interact();                       // casillero ya abierto: tomar lo que quedó
+                return;
+            }
 
             // Agregar mision contextual al primer intento (si esta configurada y aun no se agrego).
             if (!string.IsNullOrEmpty(contextualMissionId)
@@ -59,10 +77,24 @@ namespace EstanDentro.Interaction
                     contextualMissionText,
                     Inventory.Inventory.MissionCategory.Secundaria);
                 EstanDentro.UI.ObjectiveHUD.PulseCircle();
-                EstanDentro.UI.ObjectiveHUD.Notify("Nueva pista: " + contextualMissionText, 4f);
             }
 
-            LockOverlay.Open(this);
+            // con candado 3D en el mundo: la cámara se acerca a él (InspeccionCandado); si no, la pantalla clásica
+            var visual = EstanDentro.Colegio.CandadoVisual.De(this);
+            if (visual != null) EstanDentro.Colegio.InspeccionCandado.Abrir(this, visual);
+            else LockOverlay.Open(this);
+        }
+
+        /// <summary>Abrir sin la clave (pata de cabra). No da el logro de cerradura.</summary>
+        public void Forzar()
+        {
+            if (IsSolved) return;
+            IsSolved = true;
+            Debug.Log($"[Lock] '{name}' forzado.");
+            if (!string.IsNullOrEmpty(contextualMissionId) && Inventory.Inventory.Instance != null)
+                Inventory.Inventory.Instance.CompleteMission(contextualMissionId);
+            if (autoCloseOnSolved) LockOverlay.Close();
+            onSolved?.Invoke();
         }
 
         public void NotifyAttempt(int[] attempt)
@@ -90,6 +122,8 @@ namespace EstanDentro.Interaction
                     else AudioSource.PlayClipAtPoint(solvedClip, transform.position, solvedVolume);
                 }
 
+                // cerrar el candado ANTES de abrir lo de adentro (si no, la nota del interior queda tapada)
+                if (autoCloseOnSolved) LockOverlay.Close();
                 onSolved?.Invoke();
 
                 // Quick wire: desactivar puertas asignadas
@@ -105,7 +139,6 @@ namespace EstanDentro.Interaction
                     }
                 }
 
-                if (autoCloseOnSolved) LockOverlay.Close();
             }
             else
             {

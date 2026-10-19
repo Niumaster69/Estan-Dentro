@@ -184,7 +184,7 @@ namespace EstanDentro.UI
             // Selecciona el primer boton para navegacion con teclado/gamepad
             EventSystem.current?.SetSelectedGameObject(playButton.gameObject);
             // Asegura tiempo normal y mouse visible en el menu
-            Time.timeScale = 1f;
+            EstanDentro.UI.Pausa.Reiniciar();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
@@ -461,7 +461,8 @@ namespace EstanDentro.UI
             //    cuando haya Cap 2/3 mapear capituloAlcanzado a la escena correspondiente.
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            Time.timeScale = 1f;
+            EstanDentro.UI.Pausa.Reiniciar();
+            Inventory.Inventory.NuevaPartida();
             SceneManager.LoadScene(playSceneName);
         }
 
@@ -493,7 +494,8 @@ namespace EstanDentro.UI
             // 4. Continuar al cinematica DIRECTAMENTE (sin loading screen).
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            Time.timeScale = 1f; // por si vinimos de un Time.timeScale=0 de la calibracion
+            EstanDentro.UI.Pausa.Reiniciar(); // por si vinimos de un Time.timeScale=0 de la calibracion
+            Inventory.Inventory.NuevaPartida();
             SceneManager.LoadScene(playSceneName);
         }
 

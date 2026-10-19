@@ -180,6 +180,7 @@ namespace EstanDentro.Interaction
             }
 
             Time.timeScale = 1f;
+            Inventory.Inventory.NuevaPartida();   // el capítulo terminó: la próxima partida empieza con las manos vacías
             SceneTransition.LoadScene(nextSceneName, tip: loadingTip);
         }
 

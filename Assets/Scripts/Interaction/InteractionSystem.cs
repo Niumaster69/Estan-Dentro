@@ -24,6 +24,7 @@ namespace EstanDentro.Interaction
 
         private Canvas canvas;
         private Image reticleImage;
+        private EstanDentro.Player.PlayerController jugador;
         private RectTransform reticleRT;
         private Interactable currentTarget;
 
@@ -40,10 +41,13 @@ namespace EstanDentro.Interaction
             if (sourceCamera == null) return;
             // Si hay un overlay modal activo (notas, ajustes, breathing minigame, etc),
             // no resolver target ni procesar input para evitar interacciones de mundo.
-            if (EstanDentro.UI.OverlayBlocker.IsBlocking)
+            // el puntero solo existe cuando el jugador manda: no en menús, pausa, despertar, cinemáticas ni mirando un candado
+            if (jugador == null) jugador = sourceCamera.GetComponentInParent<EstanDentro.Player.PlayerController>();
+            bool jugable = !EstanDentro.UI.OverlayBlocker.IsBlocking && Time.timeScale > 0f && (jugador == null || jugador.InputEnabled);
+            if (reticleImage != null) reticleImage.enabled = jugable;
+            if (!jugable)
             {
                 currentTarget = null;
-                if (reticleImage != null) reticleImage.color = reticleIdleColor;
                 return;
             }
             currentTarget = ResolveTarget();
@@ -56,7 +60,7 @@ namespace EstanDentro.Interaction
             Vector3 origin = sourceCamera.transform.position + sourceCamera.transform.forward * originForwardOffset;
             Ray ray = new Ray(origin, sourceCamera.transform.forward);
             Debug.DrawRay(ray.origin, ray.direction * maxDistance, Color.cyan);
-            if (Physics.Raycast(ray, out var hit, maxDistance, hitLayers, QueryTriggerInteraction.Collide))
+            if (PrimerImpacto(ray, out var hit))
             {
                 if (debugLogTargets && hit.collider.gameObject != lastLoggedTarget)
                 {
@@ -73,6 +77,27 @@ namespace EstanDentro.Interaction
             }
             return null;
         }
+
+        // El primer impacto que cuenta: se salta el cuerpo del propio jugador (antes la mira "veía" al Player a 0 m)
+        // y los volúmenes invisibles (triggers) que no son interactuables.
+        private readonly RaycastHit[] impactos = new RaycastHit[16];
+        private bool PrimerImpacto(Ray ray, out RaycastHit mejor)
+        {
+            mejor = default;
+            int n = Physics.RaycastNonAlloc(ray, impactos, maxDistance, hitLayers, QueryTriggerInteraction.Collide);
+            float dMin = float.MaxValue;
+            Transform jugador = sourceCamera.transform.root;
+            for (int i = 0; i < n; i++)
+            {
+                var h = impactos[i];
+                if (h.collider.transform.root == jugador) continue;
+                if (h.collider.isTrigger && h.collider.GetComponentInParent<Interactable>() == null) continue;
+                if (h.distance < dMin) { dMin = h.distance; mejor = h; }
+            }
+            return dMin < float.MaxValue;
+        }
+
+        public Interactable Objetivo => currentTarget;
 
         private void UpdateReticleVisual()
         {

@@ -1,0 +1,388 @@
+{
+ "items": [
+  {
+   "nombre": "ED_tela_negra",
+   "color": [
+    0.03500000014901161,
+    0.03500000014901161,
+    0.03999999910593033
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_tapiz",
+   "color": [
+    0.30000001192092896,
+    0.27000001072883606,
+    0.23000000417232513
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_plastico_negro",
+   "color": [
+    0.029999999329447746,
+    0.029999999329447746,
+    0.029999999329447746
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_cromo",
+   "color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_papel",
+   "color": [
+    0.8500000238418579,
+    0.8299999833106995,
+    0.7599999904632568
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_tela_verde",
+   "color": [
+    0.11999999731779099,
+    0.25,
+    0.18000000715255737
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_metal_tubo",
+   "color": [
+    0.10000000149011612,
+    0.11999999731779099,
+    0.11999999731779099
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_vidrio",
+   "color": [
+    0.6000000238418579,
+    0.6499999761581421,
+    0.699999988079071
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_metal_azul",
+   "color": [
+    0.3499999940395355,
+    0.550000011920929,
+    0.8500000238418579
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_tela_azul",
+   "color": [
+    0.07999999821186066,
+    0.10000000149011612,
+    0.1599999964237213
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_tela_cafe",
+   "color": [
+    0.18000000715255737,
+    0.10999999940395355,
+    0.07000000029802322
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_piel",
+   "color": [
+    0.5199999809265137,
+    0.36000001430511475,
+    0.27000001072883606
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_pelo",
+   "color": [
+    0.029999999329447746,
+    0.02500000037252903,
+    0.019999999552965164
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_papel_azul",
+   "color": [
+    0.44999998807907104,
+    0.6000000238418579,
+    0.800000011920929
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_metal_verde",
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_pantalla_crt",
+   "color": [
+    0.019999999552965164,
+    0.03999999910593033,
+    0.029999999329447746
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_asfalto",
+   "color": [
+    0.75,
+    0.75,
+    0.75
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_pintura_blanca",
+   "color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.7799999713897705
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_concreto",
+   "color": [
+    0.949999988079071,
+    0.949999988079071,
+    0.949999988079071
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_metal_gris",
+   "color": [
+    0.6200000047683716,
+    0.699999988079071,
+    0.6600000262260437
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_pintura_crema",
+   "color": [
+    1.0,
+    0.8999999761581421,
+    0.7200000286102295
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_vidrio_oscuro",
+   "color": [
+    0.05000000074505806,
+    0.05999999865889549,
+    0.07000000029802322
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_pintura_verde",
+   "color": [
+    0.30000001192092896,
+    0.5799999833106995,
+    0.4399999976158142
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  },
+  {
+   "nombre": "ED_ladrillo",
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rugosidad": 0.6,
+   "metalico": 0.0,
+   "emision": [
+    0,
+    0,
+    0
+   ],
+   "vidrio": false
+  }
+ ]
+}

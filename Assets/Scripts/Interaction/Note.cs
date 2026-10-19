@@ -64,13 +64,13 @@ namespace EstanDentro.Interaction
             Debug.Log($"[NoteOverlay] Show llamado. title='{title}'. canvas.enabled antes={instance.canvas.enabled}");
             if (instance.canvas.enabled)
             {
-                Debug.LogWarning($"[NoteOverlay] BLOQUEADO: canvas ya esta enabled. Title nuevo='{title}' fue ignorado.");
+                // en fila: se muestra al cerrar la actual (antes se perdía, p. ej. la carta dentro del casillero)
+                instance.fila.Enqueue((title, body, onClose));
                 return;
             }
             instance.titleTxt.text = title;
             instance.bodyTxt.text = body;
-            instance.prevTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
+            EstanDentro.UI.Pausa.Pedir(instance);
             instance.canvas.enabled = true;
             instance.consumeInputThisFrame = true;
             instance.onCloseCallback = onClose;
@@ -83,12 +83,22 @@ namespace EstanDentro.Interaction
             if (instance == null || !instance.canvas.enabled) return;
             Debug.Log("[NoteOverlay] Hide llamado.");
             instance.canvas.enabled = false;
-            Time.timeScale = instance.prevTimeScale > 0f ? instance.prevTimeScale : 1f;
+            EstanDentro.UI.Pausa.Soltar(instance);
             OverlayBlocker.Unregister();
             var cb = instance.onCloseCallback;
             instance.onCloseCallback = null;
             cb?.Invoke();
+            if (instance.fila.Count > 0)
+            {
+                var (t, b, c) = instance.fila.Dequeue();
+                Show(t, b, c);
+            }
         }
+
+        private readonly System.Collections.Generic.Queue<(string, string, System.Action)> fila =
+            new System.Collections.Generic.Queue<(string, string, System.Action)>();
+
+        public static bool Abierta => instance != null && instance.canvas != null && instance.canvas.enabled;
 
         private void OnDestroy()
         {
@@ -145,22 +155,40 @@ namespace EstanDentro.Interaction
             pRT.anchorMin = new Vector2(0.5f, 0.5f);
             pRT.anchorMax = new Vector2(0.5f, 0.5f);
             pRT.pivot = new Vector2(0.5f, 0.5f);
-            pRT.sizeDelta = new Vector2(900f, 500f);
-            panelGo.AddComponent<Image>().color = new Color(0.08f, 0.07f, 0.05f, 0.97f);
+            pRT.sizeDelta = new Vector2(820f, 620f);
+            pRT.localRotation = Quaternion.Euler(0f, 0f, -1.2f);
+            panelGo.AddComponent<Image>().color = new Color(0.90f, 0.86f, 0.76f, 1f);   // papel
+            // renglones y margen rojo de cuaderno
+            for (int r = 0; r < 15; r++)
+            {
+                var ln = new GameObject("Renglon", typeof(RectTransform)).GetComponent<RectTransform>();
+                ln.SetParent(panelGo.transform, false);
+                ln.anchorMin = ln.anchorMax = ln.pivot = new Vector2(0.5f, 0.5f);
+                ln.sizeDelta = new Vector2(820f, 2f); ln.anchoredPosition = new Vector2(0f, 230f - r * 34f);
+                ln.gameObject.AddComponent<Image>().color = new Color(0.27f, 0.43f, 0.63f, 0.25f);
+            }
+            var mg = new GameObject("Margen", typeof(RectTransform)).GetComponent<RectTransform>();
+            mg.SetParent(panelGo.transform, false);
+            mg.anchorMin = mg.anchorMax = mg.pivot = new Vector2(0.5f, 0.5f);
+            mg.sizeDelta = new Vector2(2f, 620f); mg.anchoredPosition = new Vector2(-330f, 0f);
+            mg.gameObject.AddComponent<Image>().color = new Color(0.72f, 0.16f, 0.12f, 0.5f);
 
-            titleTxt = MakeText(panelGo.transform, "Title", "Nota", 30, FontStyle.Bold,
-                new Vector2(0, 200), new Vector2(820, 60));
+            titleTxt = MakeText(panelGo.transform, "Title", "Nota", 32, FontStyle.Normal,
+                new Vector2(30, 250), new Vector2(680, 60));
+            titleTxt.color = new Color(0.62f, 0.12f, 0.12f, 1f);
             titleTxt.alignment = TextAnchor.MiddleCenter;
 
-            bodyTxt = MakeText(panelGo.transform, "Body", "", 22, FontStyle.Italic,
-                new Vector2(0, 0), new Vector2(820, 280));
-            bodyTxt.alignment = TextAnchor.MiddleCenter;
+            bodyTxt = MakeText(panelGo.transform, "Body", "", 26, FontStyle.Normal,
+                new Vector2(30, -10), new Vector2(660, 440));
+            bodyTxt.alignment = TextAnchor.MiddleLeft;
+            bodyTxt.lineSpacing = 1.15f;
+            bodyTxt.color = new Color(0.16f, 0.14f, 0.12f, 1f);
 
             var hint = MakeText(panelGo.transform, "Hint", "(E / Cross / Esc para cerrar)",
                 14, FontStyle.Normal,
-                new Vector2(0, -210), new Vector2(820, 30));
+                new Vector2(30, -282), new Vector2(680, 30));
             hint.alignment = TextAnchor.MiddleCenter;
-            hint.color = new Color(0.92f, 0.89f, 0.83f, 0.55f);
+            hint.color = new Color(0.16f, 0.14f, 0.12f, 0.45f);
 
             // CRITICAL: arrancar oculto. Si no, la guarda 'if (canvas.enabled) return' en Show()
             // hace que la primera llamada a NoteOverlay.Show salga inmediatamente sin mostrar nada.
@@ -179,8 +207,7 @@ namespace EstanDentro.Interaction
             rt.sizeDelta = sizeDelta;
             rt.anchoredPosition = anchoredPos;
             var t = go.AddComponent<Text>();
-            t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (t.font == null) t.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            t.font = EstanDentro.UI.Fuentes.Maquina;
             t.text = content;
             t.fontSize = size;
             t.fontStyle = style;

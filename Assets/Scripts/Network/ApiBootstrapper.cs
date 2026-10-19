@@ -31,6 +31,13 @@ namespace EstanDentro.Network
             // Forzamos creacion del singleton del cliente (DontDestroyOnLoad se aplica en su Awake).
             _ = ApiClient.Instance;
 
+            // guardado local: el perfil de PlayerPrefs puede ser del servidor viejo (somee) y no existir aquí
+            if (!ApiClient.EnNube && GameSession.CurrentJugadorId != 0 && AlmacenLocal.Jugador(GameSession.CurrentJugadorId) == null)
+            {
+                Debug.Log($"[ApiBootstrapper] El perfil id={GameSession.CurrentJugadorId} era del servidor viejo; creo uno local.");
+                GameSession.CurrentJugadorId = 0;
+            }
+
             if (GameSession.CurrentJugadorId == 0)
             {
                 CreateAutoProfile();
@@ -41,6 +48,32 @@ namespace EstanDentro.Network
             }
 
             PreloadLogrosCatalog();
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += (esc, _) => AsegurarPartida(esc.name);
+        }
+
+        /// <summary>
+        /// Si se entra a jugar sin pasar por el menú (el ejecutable del colegio arranca directo), se crea la partida
+        /// para que tiempo y logros queden guardados.
+        /// </summary>
+        private void AsegurarPartida(string escena)
+        {
+            if (escena == "MainMenu" || escena == "Cinematic_Intro" || GameSession.HasActivePartida) return;
+            StartCoroutine(CrearPartidaCuandoHayaPerfil());
+        }
+
+        private System.Collections.IEnumerator CrearPartidaCuandoHayaPerfil()
+        {
+            float t = 0f;
+            while (GameSession.CurrentJugadorId == 0 && t < 6f) { t += Time.unscaledDeltaTime; yield return null; }
+            if (GameSession.CurrentJugadorId == 0 || GameSession.HasActivePartida) yield break;
+            var ahora = DateTime.UtcNow;
+            GameSession.ResetForNewPartida();
+            ApiClient.Instance.CreatePartida(
+                new PartidaCreateDto { idJugador = GameSession.CurrentJugadorId, nombrePartida = "Partida " + ahora.ToLocalTime().ToString("yyyy-MM-dd HH:mm"),
+                                       fechaInicio = ahora.ToString("o"), estado = 0, capituloAlcanzado = 1, tiempoSegundos = 0 },
+                r => { GameSession.CurrentPartidaId = r.idPartida; GameSession.PartidaStartTime = ahora;
+                       Debug.Log($"[ApiBootstrapper] Partida creada sin menú: id={r.idPartida}"); },
+                e => Debug.LogWarning("[ApiBootstrapper] No se pudo crear la partida: " + e));
         }
 
         private void CreateAutoProfile()

@@ -531,8 +531,7 @@ namespace EstanDentro.Breathing
         {
             tutorialActive = true;
             consumeTutorialInputThisFrame = true;
-            prevTimeScaleBeforeTutorial = Time.timeScale;
-            Time.timeScale = 0f;
+            EstanDentro.UI.Pausa.Pedir(this);
 
             tutorialPanel.SetActive(true);
             tutorialText.text = tutorialMessage + "\n\n[Pulsa cualquier tecla / boton para empezar]";
@@ -560,7 +559,7 @@ namespace EstanDentro.Breathing
             tutorialActive = false;
             tutorialPresentedThisSession = true;
             tutorialPanel.SetActive(false);
-            Time.timeScale = prevTimeScaleBeforeTutorial > 0f ? prevTimeScaleBeforeTutorial : 1f;
+            EstanDentro.UI.Pausa.Soltar(this);
             BeginCycleNow();
         }
 

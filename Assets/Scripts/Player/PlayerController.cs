@@ -17,6 +17,8 @@ namespace EstanDentro.Player
         [SerializeField] private Transform cameraPivot;
         public Transform CameraPivot => cameraPivot;
         public bool InputEnabled { get; set; } = true;
+        public bool Agachado => crouchHeld;
+        public bool Corriendo => sprintHeld && !crouchHeld;
         public void SetPitch(float p) { pitch = Mathf.Clamp(p, minPitch, maxPitch); }
         [SerializeField, Tooltip("Grados por pixel de delta del mouse. Subir = mas rapido. Tipico 0.1 - 0.4.")]
         private float mouseSensitivity = 0.25f;

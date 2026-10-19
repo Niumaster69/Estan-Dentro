@@ -86,8 +86,7 @@ namespace EstanDentro.UI
         {
             if (active) return;
             active = true;
-            prevTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
+            EstanDentro.UI.Pausa.Pedir(this);
             prevCursorLock = Cursor.lockState;
             prevCursorVisible = Cursor.visible;
             Cursor.lockState = CursorLockMode.None;
@@ -102,7 +101,7 @@ namespace EstanDentro.UI
             active = false;
             canvas.gameObject.SetActive(false);
             EventSystem.current?.SetSelectedGameObject(null);
-            Time.timeScale = prevTimeScale > 0f ? prevTimeScale : 1f;
+            EstanDentro.UI.Pausa.Soltar(this);
             Cursor.lockState = prevCursorLock;
             Cursor.visible = prevCursorVisible;
         }
@@ -125,7 +124,7 @@ namespace EstanDentro.UI
 
         public void OnMainMenuClicked()
         {
-            Time.timeScale = 1f;
+            EstanDentro.UI.Pausa.Reiniciar();
             ClosePause();
             SceneTransition.LoadScene(mainMenuSceneName, tip: "Volviendo al inicio.");
         }

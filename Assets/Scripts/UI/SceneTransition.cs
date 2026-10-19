@@ -15,7 +15,7 @@ namespace EstanDentro.UI
         public static void LoadScene(string sceneName, float minDisplay = DEFAULT_MIN_DISPLAY, string tip = null)
         {
             // Asegurar que el tiempo este en 1 (por si veniamos de un overlay pausado)
-            Time.timeScale = 1f;
+            EstanDentro.UI.Pausa.Reiniciar();
 
             var loader = LoadingScreenController.GetOrCreate();
             loader.StartCoroutine(loader.LoadSceneRoutine(sceneName, minDisplay, tip));

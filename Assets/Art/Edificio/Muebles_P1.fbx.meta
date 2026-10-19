@@ -1,0 +1,261 @@
+fileFormatVersion: 2
+guid: e550bb93c43ccc34fb7a724f650e4e1f
+ModelImporter:
+  serializedVersion: 24300
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_acero
+    second: {fileID: 2100000, guid: 1a4a6082d7edf5a43acbfcfdbd960842, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_bronce
+    second: {fileID: 2100000, guid: 036852d2f4690ec44b084387cbbff2f7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_cera_vela
+    second: {fileID: 2100000, guid: 6407e264bfd50f34f9fd5d963d20b30d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_ceramica
+    second: {fileID: 2100000, guid: 69d97ae7ad8582241bd56a78cd7aee97, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_corcho
+    second: {fileID: 2100000, guid: cccf044d5ee02284f95c6407c525589f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_cromo
+    second: {fileID: 2100000, guid: 903522de6157ee24e9c2abf32df95487, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_espejo
+    second: {fileID: 2100000, guid: cd1360c1de5efea46abc91f4b3dc2926, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_fluorescente
+    second: {fileID: 2100000, guid: e67f50eff18438940a7bd8a1e30b5dc9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_goma_negra
+    second: {fileID: 2100000, guid: 806731314c315134e97dfa07dfc91327, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_laton
+    second: {fileID: 2100000, guid: 5b6a321fb49d73640be073b5438d74ee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_letrero_salida
+    second: {fileID: 2100000, guid: c741c9a1c6bfb8d449b8424a6f2e0468, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_madera_marco
+    second: {fileID: 2100000, guid: ee01122e520bea84ca451755be7ded62, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_madera_mueble
+    second: {fileID: 2100000, guid: b3852d07f05ebeb4eb5045ee3713f1d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_metal_azul
+    second: {fileID: 2100000, guid: c7752e054c616244d854efb137c2bd87, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_metal_gris
+    second: {fileID: 2100000, guid: b5f100e2b0cc0464ca0ec515f8d030f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_metal_tubo
+    second: {fileID: 2100000, guid: dba0ef677b932d04baae03f0400a5c8c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_metal_verde
+    second: {fileID: 2100000, guid: 8160ccf1e9544504c90fecd157ad0b1a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_pantalla_crt
+    second: {fileID: 2100000, guid: 17caba3218d16c940ba7d7596bbdab20, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_papel
+    second: {fileID: 2100000, guid: 5308e81a0217ca84fa2a95786b9a910c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_papel_amarillo
+    second: {fileID: 2100000, guid: 36b37cc1e234d3e4d9be5b79e02680f2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_papel_azul
+    second: {fileID: 2100000, guid: 065aec330cd5782488f0a6dbeef8b44d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_papel_rosa
+    second: {fileID: 2100000, guid: a81489f78e52dd146b8c35773b5c2470, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_plastico_azul
+    second: {fileID: 2100000, guid: 39285afbcb3d68b43934489b8e4bcb04, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_plastico_beige
+    second: {fileID: 2100000, guid: 4e599bebbe2fb8944a7062443ae75b5d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_plastico_negro
+    second: {fileID: 2100000, guid: 51305c00c7df07347bc50686f00c52f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_plastico_rojo
+    second: {fileID: 2100000, guid: 40c3ce2cb043ce34cbcc7af485694a66, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_tela_blanca
+    second: {fileID: 2100000, guid: 61411f4ca8436414dbe34a5a8735206b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_tela_roja
+    second: {fileID: 2100000, guid: bea5c083fb4d29a458ffd4ec77fbce44, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_tela_verde
+    second: {fileID: 2100000, guid: 1dd07614287841d439abec4720de6c0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ED_vidrio
+    second: {fileID: 2100000, guid: 287d9bb4a150ecc4481772142e604bc1, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 1
+    materialSearch: 0
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

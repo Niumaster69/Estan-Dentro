@@ -57,8 +57,7 @@ namespace EstanDentro.UI
             EnsureInstance();
             if (instance.canvas.gameObject.activeSelf) return;
 
-            instance.prevTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
+            EstanDentro.UI.Pausa.Pedir(instance);
             instance.prevCursorLock = Cursor.lockState;
             instance.prevCursorVisible = Cursor.visible;
             Cursor.lockState = CursorLockMode.None;
@@ -78,7 +77,7 @@ namespace EstanDentro.UI
             if (instance == null || !instance.canvas.gameObject.activeSelf) return;
             instance.canvas.gameObject.SetActive(false);
             EventSystem.current?.SetSelectedGameObject(null);
-            Time.timeScale = instance.prevTimeScale > 0f ? instance.prevTimeScale : 1f;
+            EstanDentro.UI.Pausa.Soltar(instance);
             Cursor.lockState = instance.prevCursorLock;
             Cursor.visible = instance.prevCursorVisible;
             OverlayBlocker.Unregister();

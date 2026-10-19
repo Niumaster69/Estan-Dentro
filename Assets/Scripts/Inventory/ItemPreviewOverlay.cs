@@ -1,320 +1,204 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using EstanDentro.UI;
 
 namespace EstanDentro.Inventory
 {
     /// <summary>
-    /// Overlay para visualizar un item recogido como preview 3D.
-    /// Renderiza un cubo (placeholder) rotando, o un modelo si se asigna por item.
-    ///
-    /// Uso: ItemPreviewOverlay.Show(itemId, displayName, onClose);
-    ///
-    /// Notas tecnicas:
-    ///   - Singleton DontDestroyOnLoad.
-    ///   - El "preview 3D" se renderiza con una camara separada que apunta a un cubo
-    ///     ubicado MUY lejos del origen (-10000, -10000, -10000) para no chocar con la
-    ///     escena del juego. El resultado va a una RenderTexture y se muestra en una
-    ///     RawImage del canvas.
+    /// Dos trabajos detrás del CUADERNO DE MATEO (InventoryOverlay):
+    ///   1) La fila de "objeto nuevo": la primera vez que se recoge algo, abre el cuaderno en la hoja de ese objeto
+    ///      con el sello NUEVO, cuando no haya otra nota o candado abiertos.
+    ///   2) El visor 3D: pinta el objeto real girando en una RenderTexture, con su propia luz y exposición,
+    ///      lejos de la escena (y = -10000) para que no lo afecte la noche del colegio.
     /// </summary>
     public class ItemPreviewOverlay : MonoBehaviour
     {
         private static ItemPreviewOverlay instance;
+        const int CAPA_PREVIEW = 31;
+        public static readonly Color FondoPapel = new Color(0.90f, 0.86f, 0.76f);
 
-        [Header("Visual")]
-        [SerializeField] private Color bgColor = new Color(0f, 0f, 0f, 0.92f);
-        [SerializeField] private Color titleColor = new Color(0.96f, 0.85f, 0.42f, 1f);
-        [SerializeField] private Color descColor = new Color(0.95f, 0.93f, 0.85f, 0.95f);
-        [SerializeField] private Color cubeColor = new Color(0.85f, 0.7f, 0.28f, 1f);
-        [SerializeField] private float rotationSpeed = 35f;
+        private RenderTexture rt;
+        private Transform mundo, pivote;
+        private readonly Queue<(string id, string nombre)> fila = new Queue<(string, string)>();
+        private Inventory suscrito;
+        private string modeloActual;
 
-        private Canvas canvas;
-        private CanvasGroup canvasGroup;
-        private Text titleText;
-        private Text descText;
-        private RawImage previewImg;
+        // ------------------------------------------------------------------ API
+        public static RenderTexture Vista { get { Asegurar(); return instance.rt; } }
 
-        // 3D preview infrastructure
-        private Transform previewWorldRoot;
-        private Camera previewCamera;
-        private GameObject previewCube;
-        private RenderTexture renderTexture;
+        /// <summary>Mostrar un objeto ya conocido (desde otros menús).</summary>
+        public static void Show(string itemId, string displayName, Action onClose = null) => InventoryOverlay.AbrirObjeto(itemId, false, onClose);
 
-        private float prevTimeScale;
-        private CursorLockMode prevCursorLock;
-        private bool prevCursorVisible;
-        private bool consumeInputThisFrame;
-        private Action onCloseCallback;
+        /// <summary>Objeto recién recogido: espera su turno y abre el cuaderno con el sello NUEVO.</summary>
+        public static void Nuevo(string itemId, string displayName) { Asegurar(); instance.fila.Enqueue((itemId, displayName)); }
 
-        // ---------- API publica ----------
+        public static void Close() => InventoryOverlay.Close();
 
-        public static void Show(string itemId, string displayName, Action onClose = null)
+        /// <summary>Pone el modelo del objeto en el visor (o lo apaga con id vacío). Devuelve false si no hay modelo.</summary>
+        public static bool MostrarModelo(string id)
         {
-            EnsureInstance();
-            if (instance.canvas.gameObject.activeSelf) return;
-
-            instance.titleText.text = displayName ?? itemId;
-            instance.descText.text = GetDescription(itemId);
-
-            instance.prevTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
-            instance.prevCursorLock = Cursor.lockState;
-            instance.prevCursorVisible = Cursor.visible;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-
-            instance.canvas.gameObject.SetActive(true);
-            instance.consumeInputThisFrame = true;
-            instance.onCloseCallback = onClose;
-            OverlayBlocker.Register();
-
-            // Activar la camara y el cubo solo cuando se muestra para no gastar GPU.
-            if (instance.previewWorldRoot != null) instance.previewWorldRoot.gameObject.SetActive(true);
+            Asegurar();
+            if (string.IsNullOrEmpty(id)) { instance.mundo.gameObject.SetActive(false); instance.modeloActual = null; return false; }
+            instance.mundo.gameObject.SetActive(true);
+            if (instance.modeloActual == id) return instance.pivote.childCount > 0;
+            instance.modeloActual = id;
+            return instance.PonerModelo(id);
         }
 
-        public static void Close()
-        {
-            if (instance == null || !instance.canvas.gameObject.activeSelf) return;
-            instance.canvas.gameObject.SetActive(false);
-            if (instance.previewWorldRoot != null) instance.previewWorldRoot.gameObject.SetActive(false);
-            Time.timeScale = instance.prevTimeScale > 0f ? instance.prevTimeScale : 1f;
-            Cursor.lockState = instance.prevCursorLock;
-            Cursor.visible = instance.prevCursorVisible;
-            OverlayBlocker.Unregister();
-            var cb = instance.onCloseCallback;
-            instance.onCloseCallback = null;
-            cb?.Invoke();
-        }
-
-        // ---------- lifecycle ----------
-
-        private static void EnsureInstance()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void Asegurar()
         {
             if (instance != null) return;
-            var go = new GameObject("__ItemPreviewOverlay");
-            instance = go.AddComponent<ItemPreviewOverlay>();
+            instance = new GameObject("__CuadernoVisor").AddComponent<ItemPreviewOverlay>();
         }
 
+        // ------------------------------------------------------------------ ciclo
         private void Awake()
         {
             if (instance != null && instance != this) { Destroy(gameObject); return; }
             instance = this;
             DontDestroyOnLoad(gameObject);
-            Build();
-            BuildPreviewWorld();
-            canvas.gameObject.SetActive(false);
-            if (previewWorldRoot != null) previewWorldRoot.gameObject.SetActive(false);
+            rt = new RenderTexture(768, 768, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+            rt.Create();
+            ConstruirMundo();
+            mundo.gameObject.SetActive(false);
         }
 
         private void Update()
         {
-            if (canvas == null || !canvas.gameObject.activeSelf) return;
-
-            // Rotar el cubo continuamente
-            if (previewCube != null)
-                previewCube.transform.Rotate(new Vector3(0.3f, 1f, 0.2f).normalized,
-                                             rotationSpeed * Time.unscaledDeltaTime, Space.Self);
-
-            if (consumeInputThisFrame) { consumeInputThisFrame = false; return; }
-
-            var kb = Keyboard.current;
-            var gp = Gamepad.current;
-            bool dismiss = (kb != null && (kb.escapeKey.wasPressedThisFrame
-                                          || kb.eKey.wasPressedThisFrame
-                                          || kb.spaceKey.wasPressedThisFrame))
-                        || (gp != null && (gp.buttonEast.wasPressedThisFrame
-                                          || gp.buttonSouth.wasPressedThisFrame));
-            if (dismiss) Close();
-        }
-
-        // ---------- descripcion por item ----------
-
-        private static string GetDescription(string itemId)
-        {
-            switch (itemId)
+            var inv = Inventory.Instance;
+            if (inv != suscrito)
             {
-                case "linterna":
-                    return "Una linterna vieja del padre.\nLa luz tiembla un poco.\nUtil cuando se apagan las luces.";
-                case "destornillador":
-                    return "Un destornillador de cabeza plana.\nSirve para forzar tornillos\nde rejillas y ductos.";
-                default:
-                    return "(Sin descripcion disponible)";
+                if (suscrito != null) suscrito.OnObjetoNuevo -= Nuevo;
+                suscrito = inv;
+                if (suscrito != null) suscrito.OnObjetoNuevo += Nuevo;
             }
-        }
-
-        // ---------- build UI ----------
-
-        private void Build()
-        {
-            var canvasGo = new GameObject("ItemPreview_Canvas", typeof(RectTransform));
-            canvasGo.transform.SetParent(transform, false);
-            canvas = canvasGo.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 200;
-
-            var scaler = canvasGo.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
-
-            canvasGo.AddComponent<GraphicRaycaster>();
-            canvasGroup = canvasGo.AddComponent<CanvasGroup>();
-            canvasGroup.blocksRaycasts = true;
-
-            // Backdrop
-            var bgGo = new GameObject("BG", typeof(RectTransform));
-            var bgRT = bgGo.GetComponent<RectTransform>();
-            bgRT.SetParent(canvas.transform, false);
-            bgRT.anchorMin = Vector2.zero; bgRT.anchorMax = Vector2.one;
-            bgRT.offsetMin = Vector2.zero; bgRT.offsetMax = Vector2.zero;
-            bgGo.AddComponent<Image>().color = bgColor;
-
-            // Title arriba
-            titleText = MakeText(canvas.transform, "Title", "ITEM", 56, FontStyle.Bold, titleColor,
-                new Vector2(0f, 380f), new Vector2(1200f, 80f), useTitleFont: true);
-            var titleShadow = titleText.gameObject.AddComponent<Shadow>();
-            titleShadow.effectColor = new Color(0f, 0f, 0f, 0.85f);
-            titleShadow.effectDistance = new Vector2(2f, -3f);
-
-            // Linea decorativa
-            var lineGo = new GameObject("TitleLine", typeof(RectTransform));
-            var lineRT = lineGo.GetComponent<RectTransform>();
-            lineRT.SetParent(canvas.transform, false);
-            lineRT.anchorMin = lineRT.anchorMax = new Vector2(0.5f, 0.5f);
-            lineRT.pivot = new Vector2(0.5f, 0.5f);
-            lineRT.sizeDelta = new Vector2(220f, 2f);
-            lineRT.anchoredPosition = new Vector2(0f, 330f);
-            lineGo.AddComponent<Image>().color = new Color(titleColor.r, titleColor.g, titleColor.b, 0.6f);
-
-            // RawImage central — donde se va a renderizar el cubo 3D
-            renderTexture = new RenderTexture(512, 512, 16, RenderTextureFormat.ARGB32);
-            renderTexture.antiAliasing = 2;
-            renderTexture.Create();
-
-            var imgGo = new GameObject("Preview", typeof(RectTransform));
-            var imgRT = imgGo.GetComponent<RectTransform>();
-            imgRT.SetParent(canvas.transform, false);
-            imgRT.anchorMin = imgRT.anchorMax = new Vector2(0.5f, 0.5f);
-            imgRT.pivot = new Vector2(0.5f, 0.5f);
-            imgRT.sizeDelta = new Vector2(420f, 420f);
-            imgRT.anchoredPosition = new Vector2(0f, 60f);
-            previewImg = imgGo.AddComponent<RawImage>();
-            previewImg.texture = renderTexture;
-            previewImg.raycastTarget = false;
-
-            // Description text abajo
-            descText = MakeText(canvas.transform, "Description", "", 22, FontStyle.Italic, descColor,
-                new Vector2(0f, -240f), new Vector2(900f, 130f), useTitleFont: false);
-
-            // Close hint footer
-            MakeText(canvas.transform, "Hint",
-                "Esc / Circle / E para cerrar",
-                14, FontStyle.Normal,
-                new Color(descColor.r, descColor.g, descColor.b, 0.55f),
-                new Vector2(0f, -420f), new Vector2(900f, 26f), useTitleFont: false);
-        }
-
-        // ---------- build 3D preview world ----------
-
-        private void BuildPreviewWorld()
-        {
-            // Coloca el cubo + camara MUY lejos del origen para no aparecer en la escena.
-            var rootGo = new GameObject("ItemPreview_3DWorld");
-            previewWorldRoot = rootGo.transform;
-            previewWorldRoot.position = new Vector3(0f, -10000f, 0f);
-
-            // Camara
-            var camGo = new GameObject("PreviewCamera");
-            camGo.transform.SetParent(previewWorldRoot, false);
-            camGo.transform.localPosition = new Vector3(0f, 0f, -3f);
-            camGo.transform.localRotation = Quaternion.identity;
-            previewCamera = camGo.AddComponent<Camera>();
-            previewCamera.targetTexture = renderTexture;
-            previewCamera.clearFlags = CameraClearFlags.SolidColor;
-            previewCamera.backgroundColor = new Color(0.03f, 0.025f, 0.02f, 1f); // marron muy oscuro
-            previewCamera.fieldOfView = 35f;
-            previewCamera.nearClipPlane = 0.1f;
-            previewCamera.farClipPlane = 50f;
-            // No queremos que esta camara afecte audio
-            var listener = camGo.GetComponent<AudioListener>();
-            if (listener != null) DestroyImmediate(listener);
-
-            // Luz direccional para que el cubo tenga sombras suaves
-            var lightGo = new GameObject("PreviewLight");
-            lightGo.transform.SetParent(previewWorldRoot, false);
-            lightGo.transform.localPosition = new Vector3(2f, 3f, -2f);
-            lightGo.transform.localRotation = Quaternion.Euler(45f, -25f, 0f);
-            var light = lightGo.AddComponent<Light>();
-            light.type = LightType.Directional;
-            light.color = new Color(1f, 0.95f, 0.85f, 1f);
-            light.intensity = 1.2f;
-
-            // Luz de relleno suave del otro lado
-            var fillGo = new GameObject("PreviewFillLight");
-            fillGo.transform.SetParent(previewWorldRoot, false);
-            fillGo.transform.localPosition = new Vector3(-2f, -1f, -2f);
-            fillGo.transform.localRotation = Quaternion.Euler(-15f, 30f, 0f);
-            var fillLight = fillGo.AddComponent<Light>();
-            fillLight.type = LightType.Directional;
-            fillLight.color = new Color(0.4f, 0.45f, 0.55f, 1f);
-            fillLight.intensity = 0.4f;
-
-            // Cubo placeholder
-            previewCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            previewCube.name = "PreviewCube";
-            previewCube.transform.SetParent(previewWorldRoot, false);
-            previewCube.transform.localPosition = Vector3.zero;
-            previewCube.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-            // Material color
-            var renderer = previewCube.GetComponent<Renderer>();
-            if (renderer != null && renderer.sharedMaterial != null)
+            if (fila.Count > 0 && !OverlayBlocker.IsBlocking && !InventoryOverlay.EstaAbierto)
             {
-                var mat = new Material(renderer.sharedMaterial);
-                mat.color = cubeColor;
-                renderer.sharedMaterial = mat;
+                var (id, _) = fila.Dequeue();
+                InventoryOverlay.AbrirObjeto(id, true, null);
             }
-            // Sin Collider (no lo necesitamos)
-            var col = previewCube.GetComponent<Collider>();
-            if (col != null) DestroyImmediate(col);
+            if (pivote && mundo.gameObject.activeSelf) pivote.Rotate(Vector3.up, 35f * Time.unscaledDeltaTime, Space.World);
         }
 
-        // ---------- helpers ----------
-
-        private Text MakeText(Transform parent, string name, string content, int size, FontStyle style, Color color,
-            Vector2 anchoredPos, Vector2 sizeDelta, bool useTitleFont = false)
+        // ------------------------------------------------------------------ modelo
+        bool PonerModelo(string id)
         {
-            var go = new GameObject(name, typeof(RectTransform));
-            var rt = go.GetComponent<RectTransform>();
-            rt.SetParent(parent, false);
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = sizeDelta;
-            rt.anchoredPosition = anchoredPos;
-            var t = go.AddComponent<Text>();
-            t.font = useTitleFont ? GetTitleFont() : GetDefaultFont();
-            t.text = content;
-            t.alignment = TextAnchor.MiddleCenter;
-            t.fontSize = size;
-            t.fontStyle = style;
-            t.color = color;
-            t.raycastTarget = false;
-            return t;
+            foreach (Transform h in pivote) Destroy(h.gameObject);
+            pivote.localRotation = Quaternion.Euler(-16f, 0f, 0f);
+            GameObject modelo = null;
+            foreach (var d in FindObjectsByType<Colegio.DatosBlender>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (d.Get("prop_tipo") != id) continue;
+                var mf = d.GetComponent<MeshFilter>(); var mr = d.GetComponent<MeshRenderer>();
+                if (!mf || !mr || !mf.sharedMesh) continue;
+                modelo = new GameObject("Modelo");
+                modelo.AddComponent<MeshFilter>().sharedMesh = mf.sharedMesh;
+                modelo.AddComponent<MeshRenderer>().sharedMaterials = mr.sharedMaterials;
+                modelo.transform.rotation = d.transform.rotation * Quaternion.Inverse(Quaternion.Euler(0f, d.transform.eulerAngles.y, 0f));
+                break;
+            }
+            if (modelo == null && id == "destornillador") modelo = Destornillador();
+            if (modelo == null) return false;
+
+            foreach (Transform t in modelo.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = CAPA_PREVIEW;
+            modelo.transform.SetParent(pivote, false);
+            var rs = modelo.GetComponentsInChildren<Renderer>();
+            Bounds b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds);
+            float tam = Mathf.Max(b.size.x, b.size.y, b.size.z);
+            modelo.transform.localScale *= tam > 1e-4f ? 1.0f / tam : 1f;
+            b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds);
+            modelo.transform.position += pivote.position - b.center;
+            return true;
         }
 
-        private static Font GetTitleFont()
+        GameObject Destornillador()
         {
-            if (MainMenuController.SharedTitleFont != null) return MainMenuController.SharedTitleFont;
-            return GetDefaultFont();
+            var raiz = new GameObject("Destornillador");
+            GameObject Parte(PrimitiveType t, Vector3 pos, Vector3 esc, Color c, bool metal)
+            {
+                var g = GameObject.CreatePrimitive(t);
+                Destroy(g.GetComponent<Collider>());
+                g.transform.SetParent(raiz.transform, false);
+                g.transform.localPosition = pos; g.transform.localScale = esc;
+                g.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+                // el material por defecto de las primitivas no existe en el ejecutable (sale fucsia): se copia uno HDRP/Lit del colegio
+                var r = g.GetComponent<Renderer>(); var m = new Material(MaterialBase() ?? r.sharedMaterial);
+                foreach (var mapa in new[] { "_BaseColorMap", "_NormalMap", "_MaskMap", "_EmissiveColorMap" })
+                    if (m.HasProperty(mapa)) m.SetTexture(mapa, null);
+                if (m.HasProperty("_EmissiveColor")) m.SetColor("_EmissiveColor", Color.black);
+                if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c); else m.color = c;
+                if (m.HasProperty("_Smoothness")) m.SetFloat("_Smoothness", metal ? 0.75f : 0.45f);
+                if (m.HasProperty("_Metallic")) m.SetFloat("_Metallic", metal ? 1f : 0f);
+                r.sharedMaterial = m;
+                return g;
+            }
+            Parte(PrimitiveType.Cylinder, new Vector3(-0.32f, 0, 0), new Vector3(0.13f, 0.2f, 0.13f), new Color(0.55f, 0.07f, 0.05f), false);
+            Parte(PrimitiveType.Cylinder, new Vector3(0.13f, 0, 0), new Vector3(0.035f, 0.26f, 0.035f), new Color(0.72f, 0.72f, 0.74f), true);
+            var punta = Parte(PrimitiveType.Cube, new Vector3(0.41f, 0, 0), new Vector3(0.03f, 0.06f, 0.012f), new Color(0.72f, 0.72f, 0.74f), true);
+            punta.transform.localRotation = Quaternion.identity;
+            raiz.transform.rotation = Quaternion.Euler(0f, 0f, 25f);
+            return raiz;
         }
 
-        private static Font GetDefaultFont()
+        static Material materialBase;
+        static Material MaterialBase()
         {
-            if (MainMenuController.SharedBodyFont != null) return MainMenuController.SharedBodyFont;
-            Font f = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (f == null) f = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            return f;
+            if (materialBase) return materialBase;
+            foreach (var mr in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))
+            {
+                var m = mr.sharedMaterial;
+                if (m != null && m.shader != null && m.shader.name == "HDRP/Lit") { materialBase = m; break; }
+            }
+            return materialBase;
         }
+
+        // ------------------------------------------------------------------ mundo del visor
+        void ConstruirMundo()
+        {
+            mundo = new GameObject("CuadernoVisor_Mundo").transform;
+            mundo.position = new Vector3(0f, -10000f, 0f);
+            DontDestroyOnLoad(mundo.gameObject);
+            pivote = new GameObject("Pivote").transform;
+            pivote.SetParent(mundo, false);
+
+            var cg = new GameObject("Camara"); cg.layer = CAPA_PREVIEW;
+            cg.transform.SetParent(mundo, false);
+            cg.transform.localPosition = new Vector3(0f, 0.12f, -2.3f);
+            cg.transform.localRotation = Quaternion.Euler(3f, 0f, 0f);
+            var cam = cg.AddComponent<Camera>();
+            cam.targetTexture = rt; cam.fieldOfView = 32f; cam.nearClipPlane = 0.05f; cam.farClipPlane = 20f;
+            cam.cullingMask = 1 << CAPA_PREVIEW;
+            var hd = cg.AddComponent<HDAdditionalCameraData>();
+            hd.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
+            // fondo del color del papel: el objeto queda "apoyado" en la hoja del cuaderno
+            hd.backgroundColorHDR = FondoPapel.linear * 3.2f;
+            hd.volumeLayerMask = 1 << CAPA_PREVIEW;
+
+            var vg = new GameObject("Volumen"); vg.layer = CAPA_PREVIEW; vg.transform.SetParent(mundo, false);
+            var vol = vg.AddComponent<Volume>(); vol.isGlobal = true; vol.priority = 100f;
+            var perfil = ScriptableObject.CreateInstance<VolumeProfile>();
+            var exp = perfil.Add<Exposure>(true); exp.mode.Override(ExposureMode.Fixed); exp.fixedExposure.Override(5.5f);
+            var fog = perfil.Add<Fog>(true); fog.enabled.Override(false);
+            var tm = perfil.Add<Tonemapping>(true); tm.mode.Override(TonemappingMode.None);
+            vol.sharedProfile = perfil;
+
+            Luz(new Vector3(1.2f, 1.6f, -1.4f), 700f, new Color(1f, 0.93f, 0.82f));
+            Luz(new Vector3(-1.5f, 0.3f, -1.0f), 260f, new Color(0.85f, 0.85f, 0.9f));
+            Luz(new Vector3(0f, 1.2f, 1.5f), 220f, new Color(1f, 0.9f, 0.75f));
+        }
+
+        void Luz(Vector3 pos, float lumen, Color c)
+        {
+            var g = new GameObject("Luz"); g.layer = CAPA_PREVIEW;
+            g.transform.SetParent(mundo, false); g.transform.localPosition = pos;
+            var l = g.AddComponent<Light>(); l.type = LightType.Point; l.color = c; l.range = 5f;
+            l.lightUnit = LightUnit.Lumen; l.intensity = lumen; l.shadows = LightShadows.None;
+        }
+
+        private void OnDestroy() { if (rt != null) rt.Release(); }
     }
 }
