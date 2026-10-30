@@ -6,8 +6,24 @@
 
 ---
 
+## 30-oct-2026 (tarde) — El final del hospital es una escena 3D
+- [x] **Cuarto del hospital** (`Editor/Mejoras/MejorasEscena.CuartoHospital`, objeto `Mejoras_CuartoHospital`, apagado):
+  el aula de música se vuelve el cuarto donde Pa vela a Mateo. Cama de hierro, mesa de noche con jarrón y flores (Pa trae
+  flores cada cumpleaños), foto, lámpara, silla de ruedas y reloj: modelos CC0 de Poly Haven en `Art/Hospital/PolyHaven`
+  (créditos en `CREDITOS.md`, bajados con `Herramientas/polyhaven_bajar.js`). Colchón, sábana con la silueta de Mateo,
+  monitor y suero: `Herramientas/blender/hospital_props.py` (Blender 5.2 sin ventana) → `Art/Hospital/Hospital_Props.fbx`.
+  **Pa** sale del carro del prólogo (sin las gafas), sentado en una silla plástica, girado hacia la cabecera.
+  Luz: lámpara cálida, brillo verde del monitor y un relleno frío bajo.
+- [x] `RecuerdoAula`: después de "…Pa. Quiero volver." hay un destello blanco, los muebles del aula se esconden, aparece
+  el cuarto y el jugador queda junto a la puerta mirando a Pa de espaldas; los textos del giro van abajo sobre la escena.
+  `Colegio/MonitorECG.cs`: la línea del pulso (`Art/Hospital/ecg.png`) corre al ritmo del pitido y se calma al respirar.
+- [x] Arreglos de la herramienta: las piezas de Poly Haven salían 100 veces más chicas (se pisaba la escala ×100 de la raíz
+  del FBX) y el cuarto viejo no se borraba (`GameObject.Find` no ve objetos apagados).
+- Revisar: `Herramientas/blender/vista_previa.py` renderiza cualquier FBX sin abrir Blender;
+  `MejorasRevision.HospitalBatch` fotografía el cuarto como lo ve el jugador.
+
 ## 30-oct-2026 — Rama `mejoras/remaster-capitulo1` (Duvan + Claude): la respiración vuelve a ser el centro
-> Propuesta completa con razones: página "Están Dentro — Remaster" (Duvan la comparte). Todo pasa por el sí de Henry;
+> Propuesta completa con razones: página "Están Dentro — Remaster" (Duvan la comparte). Diseño del equipo de Duvan;
 > lo que cambia el diseño se puede apagar desde el Inspector.
 - [x] **Respirar con Pa** (`Scripts/Colegio/Concentrarse.cs`, reescrito; mismo nombre y tecla Q/LB): ya no es "mantener Q y el
   estrés baja solo". Es seguir el ritmo de Pa: INHALA 4 s (mantén) · SOSTÉN 4 s (mantén) · EXHALA 6 s (suelta). A tiempo baja el

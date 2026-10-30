@@ -60,6 +60,47 @@ namespace EstanDentro.EditorMejoras
             catch (Exception e) { Debug.LogError("[Mejoras] " + e); EditorApplication.Exit(1); }
         }
 
+        /// <summary>Aplica las mejoras a la escena, la guarda y fotografía el cuarto del hospital como lo ve el jugador en el final.</summary>
+        public static void HospitalBatch()
+        {
+            try
+            {
+                string dir = Salida();
+                MejorasEscena.AplicarYGuardar();
+                var cuarto = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().First(g => g.name == "Mejoras_CuartoHospital");
+                // como en el final: apagón (solo luna) y el aula sin sus muebles
+                foreach (var l in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                    if (l.type != LightType.Directional) l.enabled = false;
+                var caja = new Bounds(new Vector3(3.6f, cuarto.transform.position.y + 1.3f, 23.5f), new Vector3(6.4f, 2.6f, 10f));
+                foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                {
+                    var b = r.bounds;
+                    if (caja.Contains(b.center) && b.size.x <= 3.5f && b.size.z <= 3.5f && b.size.y <= 2.4f) r.enabled = false;
+                }
+                cuarto.SetActive(true);
+                foreach (var r in cuarto.GetComponentsInChildren<Renderer>(true)) r.enabled = true;
+                var sb = new StringBuilder();
+                foreach (var r in cuarto.GetComponentsInChildren<Renderer>(true))
+                {
+                    var mf = r.GetComponent<MeshFilter>();
+                    sb.AppendLine($"{r.transform.parent?.name}/{r.name} activo={r.gameObject.activeInHierarchy} enabled={r.enabled} centro={r.bounds.center:F2} tamaño={r.bounds.size:F2} " +
+                                  $"malla={(mf && mf.sharedMesh ? mf.sharedMesh.name + "/" + mf.sharedMesh.vertexCount : "—")} lod={(r.GetComponentInParent<LODGroup>() ? "sí" : "no")} " +
+                                  $"shaders=[{string.Join(", ", r.sharedMaterials.Select(m => m ? m.shader.name + ":" + m.name : "null"))}]");
+                }
+                File.WriteAllText(Path.Combine(dir, "hospital_piezas.txt"), sb.ToString(), Encoding.UTF8);
+                var vista = cuarto.transform.Find("Vista_Final");
+                var go = new GameObject("CamCaptura"); var cam = go.AddComponent<Camera>();
+                cam.fieldOfView = 70f; cam.nearClipPlane = 0.05f; go.AddComponent<HDAdditionalCameraData>();
+                go.transform.position = vista.position + Vector3.up * 1.6f; go.transform.rotation = vista.rotation * Quaternion.Euler(9f, 0f, 0f);
+                Render(cam, Path.Combine(dir, "hospital_vista_jugador.png"), 1600, 900);
+                go.transform.position = new Vector3(3.3f, cuarto.transform.position.y + 1.25f, 22.2f);
+                go.transform.rotation = Quaternion.LookRotation(new Vector3(1.6f, cuarto.transform.position.y + 0.8f, 24.6f) - go.transform.position);
+                Render(cam, Path.Combine(dir, "hospital_cerca.png"), 1600, 900);
+                EditorApplication.Exit(0);
+            }
+            catch (Exception e) { Debug.LogError("[Mejoras] " + e); EditorApplication.Exit(1); }
+        }
+
         static readonly int Emisivo = Shader.PropertyToID("_EmissiveColor");
 
         /// <summary>

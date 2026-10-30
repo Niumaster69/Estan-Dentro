@@ -287,8 +287,11 @@ namespace EstanDentro.Colegio
             }
 
             // 4c. casillero con candado: la clave está en un papelito cerca
+            // (lejos del recuerdo del pasillo: si el robot cae encima, lo gasta antes de tiempo; un jugador no llega ahí sin la llave)
+            var zonaPasillo = GameObject.Find("Recuerdo_Pasillo4B");
             var conCandado = FindObjectsByType<Casillero>(FindObjectsSortMode.None)
                              .Where(c => c.GetComponent<CombinationLock>() && !c.GetComponent<CombinationLock>().IsSolved)
+                             .Where(c => !zonaPasillo || Vector3.Distance(c.transform.position, zonaPasillo.transform.position) > 6f)
                              .OrderBy(c => Vector3.Distance(c.transform.position, Jugador().transform.position)).ToList();
             Revisar(conCandado.Count >= 2, $"Hay casilleros con candado ({conCandado.Count})");
             if (conCandado.Count >= 2)

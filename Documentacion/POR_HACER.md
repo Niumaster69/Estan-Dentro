@@ -7,6 +7,20 @@
 
 ---
 
+## ▶ RAMA `mejoras/remaster-capitulo1` — SEGUIR AQUÍ (30-oct, 5 p. m.)
+Entrega: martes 3-nov. Lo hecho está en `HECHO.md` (30-oct). Ciclo de trabajo en el PC de Duvan: `C:\Users\duvan\Dev\ciclo.ps1`
+(aplicar a la escena → capturas → compilar → prueba automática; `-sinAplicar -sinCapturas` para solo compilar y probar).
+- [ ] **Jugar a mano** el capítulo completo: respirar con Pa (Q, ritmo 4-4-6), el escondite con el Observador cerca
+  (aguantar el aire), el bucle del pasillo y el final del hospital. La prueba automática no cubre el escondite.
+- [ ] Medir FPS en la GTX 1650 con calidad Media y Alta (Ajustes > Video).
+- [ ] Hospital: cara de Mateo más trabajada (hoy es una forma simple), foto de Mateo y Pa en el portarretratos, cortina.
+- [ ] La Pesadilla esconde la clave: en la Pesadilla el tablero del 4°B muestra un número que en Normal está borrado.
+- [ ] Primer recuerdo guiado en el 4°B que enseñe a respirar (antes de la rectoría).
+- [ ] Observador que camina (animación de Mixamo) en vez de saltar.
+- [ ] Luz dorada propia del aula de música para el recuerdo de Pa cantando; alfombra de flores bajo el jacarandá.
+- [ ] Grabar "seis" con la voz de Pa (hoy solo subtítulo) y las grabaciones de Pa coleccionables.
+- [ ] Actualizar la página "Están Dentro — Remaster" con capturas nuevas al terminar cada bloque.
+
 ## A. Probar lo que ya existe (lo primero)
 ### ▶ SEGUIR AQUÍ (actualizado 19-oct tarde)
 - [ ] Pesadilla, siguiente: números cambiados en la Pesadilla (clave de un candado), animación de caminar del Observador (ahora salta a trompicones), ¿más recuerdos? (el celular de Pa). Probar a mano la persecución en el pasillo del piso 3.

@@ -99,9 +99,16 @@ namespace EstanDentro.Colegio
         // capítulo; el monitor se calma con cada ciclo bien hecho). Después: título, gancho del capítulo 2 y el resumen
         // "Lo que aprendiste" con el rango de calma.
 
-        Image fondo; Text linea, aviso;
+        Image fondo, banda; Text linea, aviso;
         float intervaloMonitor = 0.8f;
         bool monitorVivo;
+
+        /// <summary>El cuarto 3D del hospital (lo arma Editor/Mejoras/MejorasEscena.CuartoHospital, apagado). Si no está, el final va sobre negro.</summary>
+        static GameObject BuscarCuarto()
+        {
+            foreach (var g in SceneManager.GetActiveScene().GetRootGameObjects()) if (g.name == "Mejoras_CuartoHospital") return g;
+            return null;
+        }
 
         IEnumerator Hospital(Player.PlayerController j, AudioSource musica)
         {
@@ -109,14 +116,45 @@ namespace EstanDentro.Colegio
             ConstruirFinal();
             monitorVivo = true;
             StartCoroutine(Monitor());
-            for (float t = 0f; t < 3f; t += Time.deltaTime)
+            var cuarto = BuscarCuarto();
+            if (cuarto)
             {
-                fondo.color = new Color(0.05f, 0.04f, 0.035f, t / 3f);
-                if (musica) musica.volume = Mathf.Lerp(0.18f, 0f, t / 3f);
-                yield return null;
+                // un destello blanco y el aula de música ya es el cuarto del hospital
+                for (float t = 0f; t < 1.2f; t += Time.deltaTime)
+                {
+                    fondo.color = new Color(1f, 0.98f, 0.94f, t / 1.2f);
+                    if (musica) musica.volume = Mathf.Lerp(0.18f, 0f, t / 1.2f);
+                    yield return null;
+                }
+                if (musica) Destroy(musica.gameObject);
+                var luzRecuerdo = GameObject.Find("Luz_Recuerdo"); if (luzRecuerdo) Destroy(luzRecuerdo);
+                // la escena se ve limpia: sin la barra de estrés, sin las manos del HUD (capas 100 y 120) ni lo que Mateo tiene en la mano
+                foreach (var mv in FindObjectsByType<Player.ManosVisibles>(FindObjectsSortMode.None)) mv.enabled = false;
+                var manos = GameObject.Find("Manos_Objetos"); if (manos) manos.SetActive(false);
+                foreach (var c in FindObjectsByType<Canvas>(FindObjectsSortMode.None)) if (c.sortingOrder == 100 || c.sortingOrder == 120) c.enabled = false;
+                ApagarAula(cuarto.transform, j);
+                cuarto.SetActive(true);
+                var vista = cuarto.transform.Find("Vista_Final");
+                if (j && vista) { j.Teletransportar(vista.position); j.transform.rotation = vista.rotation; j.SetPitch(9f); }
+                yield return new WaitForSeconds(0.6f);
+                for (float t = 0f; t < 3f; t += Time.deltaTime) { fondo.color = new Color(1f, 0.98f, 0.94f, 1f - t / 3f); yield return null; }
+                fondo.color = Color.clear;
+                banda.color = Color.white;                                   // los textos van abajo, sobre la escena
+                linea.rectTransform.anchoredPosition = new Vector2(0f, -330f);
+                aviso.rectTransform.anchoredPosition = new Vector2(0f, -410f);
+                yield return new WaitForSeconds(2.5f);                       // dejar mirar el cuarto antes del primer texto
             }
-            if (musica) Destroy(musica.gameObject);
-            yield return new WaitForSeconds(1.2f);
+            else
+            {
+                for (float t = 0f; t < 3f; t += Time.deltaTime)
+                {
+                    fondo.color = new Color(0.05f, 0.04f, 0.035f, t / 3f);
+                    if (musica) musica.volume = Mathf.Lerp(0.18f, 0f, t / 3f);
+                    yield return null;
+                }
+                if (musica) Destroy(musica.gameObject);
+                yield return new WaitForSeconds(1.2f);
+            }
 
             string[] giro = {
                 "Diecisiete de mayo. Tu cumpleaños.",
@@ -154,6 +192,9 @@ namespace EstanDentro.Colegio
             var golpe = Resources.Load<AudioClip>("Sonidos/golpe");
             if (golpe && cam) AudioSource.PlayClipAtPoint(golpe, cam.transform.position, 1f);
             fondo.color = new Color(0.02f, 0f, 0f, 1f);
+            banda.color = Color.clear;
+            linea.rectTransform.anchoredPosition = Vector2.zero;
+            aviso.rectTransform.anchoredPosition = new Vector2(0f, -170f);
             linea.font = Fuentes.Titulo ? Fuentes.Titulo : linea.font; linea.fontSize = 120;
             linea.text = "<color=#c23a2e>ESTÁN DENTRO</color>";
             linea.color = Color.white;
@@ -178,10 +219,26 @@ namespace EstanDentro.Colegio
             g.AddComponent<AudioReverbFilter>().reverbPreset = AudioReverbPreset.Room;
             while (monitorVivo)
             {
+                MonitorECG.Intervalo = intervaloMonitor;                       // la línea del pulso va con el pitido
                 if (pitido) a.Play();
                 yield return new WaitForSeconds(intervaloMonitor);
             }
             Destroy(g, 1f);
+        }
+
+        /// <summary>Esconde los muebles del aula de música (no las paredes ni el piso) para que quede solo el cuarto del hospital.</summary>
+        static void ApagarAula(Transform cuarto, Player.PlayerController j)
+        {
+            var caja = new Bounds(new Vector3(3.6f, cuarto.position.y + 1.3f, 23.5f), new Vector3(6.4f, 2.6f, 10f));
+            int n = 0;
+            foreach (var r in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+            {
+                if (r.transform.IsChildOf(cuarto) || (j && r.transform.IsChildOf(j.transform))) continue;
+                var b = r.bounds;
+                if (!caja.Contains(b.center) || b.size.x > 3.5f || b.size.z > 3.5f || b.size.y > 2.4f) continue;   // paredes, piso, techo
+                r.enabled = false; n++;
+            }
+            Debug.Log($"[Final] aula de música → hospital: {n} muebles escondidos");
         }
 
         IEnumerator Linea(string s, float dura)
@@ -242,6 +299,15 @@ namespace EstanDentro.Colegio
             fondo = new GameObject("Fondo", typeof(RectTransform)).AddComponent<Image>(); fondo.transform.SetParent(go.transform, false);
             var r = (RectTransform)fondo.transform; r.anchorMin = Vector2.zero; r.anchorMax = Vector2.one; r.offsetMin = r.offsetMax = Vector2.zero;
             fondo.color = Color.clear; fondo.raycastTarget = false;
+            // banda oscura abajo: los textos del giro se leen sobre el cuarto del hospital
+            banda = new GameObject("Banda", typeof(RectTransform)).AddComponent<Image>(); banda.transform.SetParent(go.transform, false);
+            var rb = (RectTransform)banda.transform; rb.anchorMin = Vector2.zero; rb.anchorMax = new Vector2(1f, 0f); rb.pivot = new Vector2(0.5f, 0f);
+            rb.sizeDelta = new Vector2(0f, 420f); rb.anchoredPosition = Vector2.zero;
+            var gt = new Texture2D(1, 64) { wrapMode = TextureWrapMode.Clamp };
+            for (int y = 0; y < 64; y++) gt.SetPixel(0, y, new Color(0.02f, 0.015f, 0.01f, Mathf.SmoothStep(0.85f, 0f, y / 63f)));
+            gt.Apply();
+            banda.sprite = Sprite.Create(gt, new Rect(0, 0, 1, 64), new Vector2(0.5f, 0.5f));
+            banda.color = Color.clear; banda.raycastTarget = false;
             linea = TextoFinal(go.transform, 46, Vector2.zero, new Vector2(1600f, 900f));
             aviso = TextoFinal(go.transform, 30, new Vector2(0f, -170f), new Vector2(1400f, 200f));
         }
