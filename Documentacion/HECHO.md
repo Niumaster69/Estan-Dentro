@@ -6,7 +6,7 @@
 
 ---
 
-## 30-oct-2026 — Rama `mejoras/duvan-claude` (Duvan + Claude): la respiración vuelve a ser el centro
+## 30-oct-2026 — Rama `mejoras/remaster-capitulo1` (Duvan + Claude): la respiración vuelve a ser el centro
 > Propuesta completa con razones: página "Están Dentro — Remaster" (Duvan la comparte). Todo pasa por el sí de Henry;
 > lo que cambia el diseño se puede apagar desde el Inspector.
 - [x] **Respirar con Pa** (`Scripts/Colegio/Concentrarse.cs`, reescrito; mismo nombre y tecla Q/LB): ya no es "mantener Q y el
