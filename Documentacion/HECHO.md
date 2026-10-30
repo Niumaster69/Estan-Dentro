@@ -6,6 +6,39 @@
 
 ---
 
+## 30-oct-2026 — Rama `mejoras/duvan-claude` (Duvan + Claude): la respiración vuelve a ser el centro
+> Propuesta completa con razones: página "Están Dentro — Remaster" (Duvan la comparte). Todo pasa por el sí de Henry;
+> lo que cambia el diseño se puede apagar desde el Inspector.
+- [x] **Respirar con Pa** (`Scripts/Colegio/Concentrarse.cs`, reescrito; mismo nombre y tecla Q/LB): ya no es "mantener Q y el
+  estrés baja solo". Es seguir el ritmo de Pa: INHALA 4 s (mantén) · SOSTÉN 4 s (mantén) · EXHALA 6 s (suelta). A tiempo baja el
+  estrés; a destiempo lo sube un poco; un ciclo completo bien hecho da alivio extra y, calmado, sigue el "Revelio" de antes.
+  Guía en pantalla (anillo que crece y se encoge + cuenta), voz de Pa desde el hospital (`Voz.Lugar.Lejos`) en los dos primeros
+  ciclos, micrófono calibrado vale para exhalar. Contadores `CiclosBuenos/CiclosTotales` para el final.
+  Voces: `Resources/Voces/Respirar/` (cortadas con ffmpeg de `Prologo/respira_conmigo_mijo_cuatro_sosten.wav`). Falta grabar "seis".
+- [x] Arreglo: `Concentrarse` ponía `FactorVelocidad` en cada cuadro y pisaba el 0,55 de `SillaArrastrable`; ahora solo al cambiar.
+- [x] **Escondite con aguantar la respiración** (`Colegio/Escondite.cs`, `Mente/Observador.cs`): el Observador ya no te pierde
+  al instante; ronda el escondite (`rondaEscondite` 4,5 s). Con él cerca hay que mantener Q (aguantar el aire, máx. 6 s): respirar
+  con él al lado o pasarse de los pulmones hace jadear a Mateo y lo delata (`Observador.Delatar`). Barra de aire en pantalla.
+- [x] **Pasillo en bucle** (`Mente/BuclePasillo.cs`, colocado por `Editor/Mejoras/MejorasEscena.cs` en x 12,6 del pasillo
+  norte del P3): en la Pesadilla del pasillo, al llegar a la esquina noroeste Mateo vuelve 8 m, otra vez frente al 4°B. Se rompe
+  con 2 ciclos bien respirados (o a la 6.ª vuelta). `ArreglosColegio.Batch` ya llama a `MejorasEscena.Aplicar()`.
+- [x] **Final del hospital** (NARRATIVA_UNIFICADA §2.3) en `RecuerdoAula.cs` (casilla `finalHospital`, encendida): después de
+  "…Pa. Quiero volver." el aula se apaga en el cuarto del hospital (pitido de monitor `Resources/Sonidos/monitor_pitido.wav`), los
+  cinco textos del giro, la última respiración con Pa (el monitor se calma con cada ciclo), ESTÁN DENTRO + gancho del capítulo 2
+  y la pantalla **"Lo que aprendiste"** con el rango de calma (S/A/B/C) y las líneas 192 opc. 4 / 106.
+- [x] Herramientas de revisión por línea de comandos (`Editor/Mejoras/MejorasRevision.cs`): volcado de puertas, escondites y
+  zonas; planta del piso desde arriba; capturas de la ruta en estado normal, apagón con linterna y Pesadilla.
+- [x] **Jacarandá en flor** (POR_HACER F): el follaje del modelo (color plano verde) pasa a lavanda, material propio en
+  `Assets/Art/Mejoras/`. Lo aplica `MejorasEscena.Aplicar()`.
+- [x] **Calidad gráfica en Ajustes > Video** (`UI/Settings.cs`, `UI/SettingsOverlay.cs`): Alta / Media / Baja = los tres niveles
+  de QualitySettings (High Fidelity, Balanced, Performant). Con tarjetas de 4 GB o menos empieza en Media. Se guarda y se aplica
+  en `Settings.ApplyAll()`.
+- [x] **Prueba automática**: nuevo paso 9c (el bucle devuelve a Mateo 8 m, dos ciclos con Pa cuentan y bajan el estrés, después
+  el bucle ya no gira) y el final del hospital con sus capturas. `Concentrarse.SimularQ` deja que el robot respire.
+  Resultado 30-oct: todo OK salvo las 2 fallas viejas de la prueba (celular del prólogo y pata de cabra).
+  Encontró y quedaron arreglados: la respiración se cortaba al final de cada exhalación (nunca contaba un ciclo) y el bucle
+  disparaba dos veces porque Mateo tiene dos colliders.
+
 ## 22-oct-2026 (madrugada, mientras Henry dormía)
 - [x] Segundo recuerdo: al salir del 4°B al pasillo del piso 3 el colegio se rompe (`Recuerdo_Pasillo4B`, `GatilloZona.cs`); el Observador ronda el pasillo largo; llegar al aula de música deshace la Pesadilla ("…Aquí no entra. Aquí no.") y empieza el recuerdo bonito con Pa.
 - [x] Cada recuerdo pasa una sola vez; al resolver, el Observador se va de una (`ControlMente.Resolver`).

@@ -99,7 +99,8 @@ namespace EstanDentro.UI
         private Image bgImage;
         private RectTransform panel;
         private Slider volumeSlider, musicSlider, sfxSlider, cinematicSlider, voiceSlider;
-        private Slider mouseSlider, gamepadSlider, brightnessSlider;
+        private Slider mouseSlider, gamepadSlider, brightnessSlider, calidadSlider;
+        private Text calidadValueText;
         private Text volumeValueText, musicValueText, sfxValueText, cinematicValueText, voiceValueText;
         private Text mouseValueText, gamepadValueText, brightnessValueText;
         private Toggle invertYToggle;
@@ -401,6 +402,7 @@ namespace EstanDentro.UI
             mouseSlider.SetValueWithoutNotify(Settings.MouseSensitivity);
             gamepadSlider.SetValueWithoutNotify(Settings.GamepadSensitivity);
             brightnessSlider.SetValueWithoutNotify(Settings.Brightness);
+            calidadSlider.SetValueWithoutNotify(Settings.Calidad);
             invertYToggle.SetIsOnWithoutNotify(Settings.InvertY);
             UpdateSwitchVisual(invertYToggle, invertYBgImg, invertYIndRT);
             UpdateValueLabels();
@@ -416,7 +418,10 @@ namespace EstanDentro.UI
             mouseValueText.text = Settings.MouseSensitivity.ToString("F2");
             gamepadValueText.text = Mathf.RoundToInt(Settings.GamepadSensitivity).ToString();
             brightnessValueText.text = (Settings.Brightness * 100f).ToString("F0") + "%";
+            calidadValueText.text = Settings.NombreCalidad(Settings.Calidad);
         }
+
+        private void OnCalidadChanged(float v) { Settings.Calidad = Mathf.RoundToInt(v); UpdateValueLabels(); }
 
         private void OnVolumeChanged(float v) { Settings.MasterVolume = v; UpdateValueLabels(); }
         private void OnMusicChanged(float v) { Settings.MusicVolume = v; UpdateValueLabels(); }
@@ -565,6 +570,12 @@ namespace EstanDentro.UI
                 "Brillo general del juego. Util si tu monitor es muy oscuro.",
                 Settings.BRIGHTNESS_MIN, Settings.BRIGHTNESS_MAX, OnBrightnessChanged, out brightnessValueText,
                 SettingsTab.Video);
+
+            calidadSlider = AddSliderRow(panel, ref yVideo, "Calidad grafica",
+                "Alta: niebla y sombras completas. Media: para tarjetas de 4 GB. Baja: para equipos sencillos.",
+                0f, Settings.CalidadMax, OnCalidadChanged, out calidadValueText, SettingsTab.Video);
+            calidadSlider.wholeNumbers = true;
+            calidadSlider.direction = Slider.Direction.RightToLeft;              // a la derecha = más calidad (nivel 0)
 
             // ===== TAB CONTROLES =====
             float yCtrl = firstRowY;

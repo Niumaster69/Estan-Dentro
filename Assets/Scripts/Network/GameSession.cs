@@ -74,6 +74,8 @@ namespace EstanDentro.Network
             BreathingFailedCycles = 0;
             ObserverTriggeredAtLeastOnce = false;
             StressCollapsed = false;
+            Colegio.Concentrarse.CiclosBuenos = 0;            // para el rango de calma del final
+            Colegio.Concentrarse.CiclosTotales = 0;
         }
 
         // Para retomar una partida vieja: setea el idPartida y resetea contadores,

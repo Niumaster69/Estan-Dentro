@@ -51,6 +51,7 @@ namespace EstanDentro.EditorColegio
             MaterialesPesadilla();
             PapelesApoyados();
             CajonProfe();
+            EstanDentro.EditorMejoras.MejorasEscena.Aplicar();   // rama de mejoras (Duvan + Claude, 30-oct): bucle del pasillo, etc.
             ConstruirColegio.PerfilColegio();                 // el ambiente (niebla, exposición, colores) no estaba guardado en el archivo
             EditorSceneManager.SaveScene(esc);
             Debug.Log($"[Arreglos] sillas quitadas para dejar pasillos={-sillas} tablero={tiza}");

@@ -15,6 +15,8 @@ namespace EstanDentro.Colegio
     public class RecuerdoAula : MonoBehaviour
     {
         public Vector3 puntoPa;                 // donde "estaba" Pa (frente al tablero del aula)
+        [Tooltip("Final de NARRATIVA_UNIFICADA §2.3: el aula se vuelve el cuarto del hospital y Mateo respira con Pa. Apagado = cierre anterior.")]
+        public bool finalHospital = true;
         bool hecho;
         Image blanco; Text cierre;
 
@@ -68,6 +70,11 @@ namespace EstanDentro.Colegio
             yield return new WaitForSeconds(4.8f);
             ObjectiveHUD.Notify("…Pa. Quiero volver.", 3.5f);
             yield return new WaitForSeconds(2.5f);
+            if (finalHospital)
+            {
+                yield return Hospital(j, musica);
+                yield break;
+            }
             // todo se pone blanco: fin del capítulo
             if (j) j.InputEnabled = false;
             Construir();
@@ -84,6 +91,170 @@ namespace EstanDentro.Colegio
             Cursor.lockState = CursorLockMode.None; Cursor.visible = true;
             EstanDentro.UI.Pausa.Reiniciar();
             SceneManager.LoadScene("MainMenu");
+        }
+
+        // ---------------- Final del hospital (NARRATIVA_UNIFICADA §2.3) ----------------
+        // El aula se apaga en un cuarto de hospital de noche: solo el pitido del monitor y la voz de Pa desde "afuera".
+        // Los cinco textos del giro y la última respiración con Pa (la misma mecánica de Q que se practicó en todo el
+        // capítulo; el monitor se calma con cada ciclo bien hecho). Después: título, gancho del capítulo 2 y el resumen
+        // "Lo que aprendiste" con el rango de calma.
+
+        Image fondo; Text linea, aviso;
+        float intervaloMonitor = 0.8f;
+        bool monitorVivo;
+
+        IEnumerator Hospital(Player.PlayerController j, AudioSource musica)
+        {
+            if (j) j.InputEnabled = false;
+            ConstruirFinal();
+            monitorVivo = true;
+            StartCoroutine(Monitor());
+            for (float t = 0f; t < 3f; t += Time.deltaTime)
+            {
+                fondo.color = new Color(0.05f, 0.04f, 0.035f, t / 3f);
+                if (musica) musica.volume = Mathf.Lerp(0.18f, 0f, t / 3f);
+                yield return null;
+            }
+            if (musica) Destroy(musica.gameObject);
+            yield return new WaitForSeconds(1.2f);
+
+            string[] giro = {
+                "Diecisiete de mayo. Tu cumpleaños.",
+                "Ese día no murió nadie.",
+                "Pa está vivo. Te visita todos los días.",
+                "El que no ha vuelto eres tú.",
+                "Tres años dormido."
+            };
+            foreach (var s in giro) yield return Linea(s, 2.8f);
+
+            // la última respiración con Pa
+            var cam = Camera.main;
+            var voz = Resources.Load<AudioClip>("Voces/Respirar/pa_respira_conmigo");
+            if (voz) EstanDentro.Audio.Voz.Sonar(voz, cam ? cam.transform.position : transform.position, EstanDentro.Audio.Voz.Lugar.Lejos, 1f);
+            Concentrarse.YaInvito();
+            linea.text = "<color=#d9b45a>Pa:</color> Respira conmigo, mijo.";
+            yield return Fundir(linea, 0f, 1f, 1f);
+            aviso.text = "Mantén Q y respira con él";
+            int base0 = Concentrarse.CiclosBuenos;
+            float espera = 0f;
+            while (Concentrarse.CiclosBuenos - base0 < 2 && espera < 60f)
+            {
+                espera += Time.deltaTime;
+                aviso.color = new Color(0.93f, 0.89f, 0.82f, Concentrarse.Respirando ? Mathf.Max(0f, aviso.color.a - Time.deltaTime) : 0.6f + 0.3f * Mathf.Sin(Time.time * 2.5f));
+                intervaloMonitor = Mathf.Lerp(0.8f, 1.25f, (Concentrarse.CiclosBuenos - base0) / 2f);   // el corazón se calma
+                yield return null;
+            }
+            aviso.color = Color.clear;
+            yield return Fundir(linea, 1f, 0f, 1.2f);
+            yield return new WaitForSeconds(1.5f);
+
+            // el monitor se acelera y la imagen se rompe
+            for (float t = 0f; t < 2.5f; t += Time.deltaTime) { intervaloMonitor = Mathf.Lerp(1.2f, 0.18f, t / 2.5f); yield return null; }
+            monitorVivo = false;
+            var golpe = Resources.Load<AudioClip>("Sonidos/golpe");
+            if (golpe && cam) AudioSource.PlayClipAtPoint(golpe, cam.transform.position, 1f);
+            fondo.color = new Color(0.02f, 0f, 0f, 1f);
+            linea.font = Fuentes.Titulo ? Fuentes.Titulo : linea.font; linea.fontSize = 120;
+            linea.text = "<color=#c23a2e>ESTÁN DENTRO</color>";
+            linea.color = Color.white;
+            yield return new WaitForSeconds(2.2f);
+            aviso.text = "Algo no quiere que despiertes.\n\n<size=26>Capítulo 2: Los pasillos</size>";
+            yield return Fundir(aviso, 0f, 1f, 1.2f);
+            yield return new WaitForSeconds(3.5f);
+            yield return Fundir(linea, 1f, 0f, 1f);
+            aviso.color = Color.clear;
+
+            yield return LoQueAprendiste();
+            Cursor.lockState = CursorLockMode.None; Cursor.visible = true;
+            EstanDentro.UI.Pausa.Reiniciar();
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        IEnumerator Monitor()
+        {
+            var pitido = Resources.Load<AudioClip>("Sonidos/monitor_pitido");
+            var g = new GameObject("Monitor_Hospital"); DontDestroyOnLoad(g);
+            var a = g.AddComponent<AudioSource>(); a.clip = pitido; a.spatialBlend = 0f; a.volume = 0.35f;
+            g.AddComponent<AudioReverbFilter>().reverbPreset = AudioReverbPreset.Room;
+            while (monitorVivo)
+            {
+                if (pitido) a.Play();
+                yield return new WaitForSeconds(intervaloMonitor);
+            }
+            Destroy(g, 1f);
+        }
+
+        IEnumerator Linea(string s, float dura)
+        {
+            linea.text = s;
+            yield return Fundir(linea, 0f, 1f, 1f);
+            yield return new WaitForSeconds(dura);
+            yield return Fundir(linea, 1f, 0f, 0.8f);
+            yield return new WaitForSeconds(0.4f);
+        }
+
+        static IEnumerator Fundir(Text tx, float de, float a, float dura)
+        {
+            var c = tx.color;
+            for (float t = 0f; t < dura; t += Time.deltaTime) { tx.color = new Color(c.r, c.g, c.b, Mathf.Lerp(de, a, t / dura)); yield return null; }
+            tx.color = new Color(c.r, c.g, c.b, a);
+        }
+
+        /// <summary>Resumen del capítulo: rango de calma, lo que se practicó y a quién llamar. Sigue con una tecla.</summary>
+        IEnumerator LoQueAprendiste()
+        {
+            int buenos = Concentrarse.CiclosBuenos, total = Mathf.Max(Concentrarse.CiclosTotales, buenos);
+            float precision = total > 0 ? (float)buenos / total : 0f;
+            bool colapso = Network.GameSession.StressCollapsed;
+            string rango = total == 0 ? "C" : precision >= 0.8f && total >= 4 && !colapso ? "S" : precision >= 0.6f && !colapso ? "A" : precision >= 0.4f || !colapso ? "B" : "C";
+            fondo.color = new Color(0.05f, 0.045f, 0.04f, 1f);
+            linea.font = Fuentes.Maquina ? Fuentes.Maquina : linea.font; linea.fontSize = 34;
+            linea.alignment = TextAnchor.MiddleCenter;
+            linea.text =
+                "<size=26><color=#d9b45a>LO QUE APRENDISTE</color></size>\n\n" +
+                $"<size=110><color=#a9cfd3>{rango}</color></size>\n<size=24>rango de calma</size>\n\n" +
+                (total == 0 ? "Esta vez no respiraste con Pa. La próxima, mantén Q al ritmo de su voz.\n\n"
+                            : $"Respiraste con Pa {total} {(total == 1 ? "vez" : "veces")}; {buenos} a tiempo.\n\n") +
+                "<size=28>Inhala 4 · sostén 4 · exhala 6.\nSoltar el aire más despacio de lo que entra ayuda a calmar el cuerpo.\nFunciona también fuera del juego.</size>\n\n" +
+                "<size=28>Mateo creyó algo que no era verdad. La culpa no siempre dice la verdad.</size>\n\n" +
+                "<size=26><color=#d9b45a>Si sientes que no puedes con algo, habla con alguien.\nLínea 192, opción 4 · Bogotá: 106</color></size>";
+            yield return Fundir(linea, 0f, 1f, 1.5f);
+            aviso.rectTransform.anchoredPosition = new Vector2(0f, -470f);
+            aviso.fontSize = 22; aviso.text = "Pulsa una tecla para volver al menú";
+            yield return Fundir(aviso, 0f, 0.7f, 1f);
+            float t = 0f;
+            yield return new WaitForSeconds(1.5f);
+            while (t < 40f)
+            {
+                t += Time.deltaTime;
+                var kb = UnityEngine.InputSystem.Keyboard.current; var gp = UnityEngine.InputSystem.Gamepad.current;
+                if ((kb != null && kb.anyKey.wasPressedThisFrame) || (gp != null && gp.buttonSouth.wasPressedThisFrame)) break;
+                yield return null;
+            }
+        }
+
+        void ConstruirFinal()
+        {
+            var go = new GameObject("Final_Hospital");
+            var cv = go.AddComponent<Canvas>(); cv.renderMode = RenderMode.ScreenSpaceOverlay; cv.sortingOrder = 170;   // tapa el HUD (100) y las manos (120)
+            Concentrarse.GuiaEncima(true);                                                                              // la guía de respirar queda encima (172)
+            var sc = go.AddComponent<CanvasScaler>(); sc.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; sc.referenceResolution = new Vector2(1920, 1080);
+            fondo = new GameObject("Fondo", typeof(RectTransform)).AddComponent<Image>(); fondo.transform.SetParent(go.transform, false);
+            var r = (RectTransform)fondo.transform; r.anchorMin = Vector2.zero; r.anchorMax = Vector2.one; r.offsetMin = r.offsetMax = Vector2.zero;
+            fondo.color = Color.clear; fondo.raycastTarget = false;
+            linea = TextoFinal(go.transform, 46, Vector2.zero, new Vector2(1600f, 900f));
+            aviso = TextoFinal(go.transform, 30, new Vector2(0f, -170f), new Vector2(1400f, 200f));
+        }
+
+        static Text TextoFinal(Transform padre, int tam, Vector2 pos, Vector2 tamano)
+        {
+            var tx = new GameObject("Texto", typeof(RectTransform)).AddComponent<Text>(); tx.transform.SetParent(padre, false);
+            tx.font = Fuentes.Maquina ? Fuentes.Maquina : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            tx.fontSize = tam; tx.alignment = TextAnchor.MiddleCenter; tx.supportRichText = true; tx.raycastTarget = false;
+            tx.color = new Color(0.93f, 0.89f, 0.82f, 0f);
+            tx.horizontalOverflow = HorizontalWrapMode.Wrap; tx.verticalOverflow = VerticalWrapMode.Overflow;
+            var rt = (RectTransform)tx.transform; rt.sizeDelta = tamano; rt.anchoredPosition = pos;
+            return tx;
         }
 
         static AudioSource Sonar(AudioClip clip, Vector3 pos, float vol, bool bucle)

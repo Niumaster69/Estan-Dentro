@@ -153,6 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1468319
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1624,6 +1627,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &20183035
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2587,6 +2593,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &39619941
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10319,6 +10328,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &153210402
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13900,6 +13912,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &203353457
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -19190,6 +19205,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &272878103
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -21910,6 +21928,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &321133249
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -31606,6 +31627,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &382516749
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -35237,6 +35261,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &425300672
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -38020,12 +38047,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c8eef74cf3cbd4093aaee394554167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Concentrarse
-  mantener: 0.7
+  inhala: 4
+  sostiene: 4
+  exhala: 6
+  bajaPorSegundo: 9
+  subeADestiempo: 1.5
+  alivioCiclo: 10
+  precisionCiclo: 0.75
+  esperaFin: 2.5
   radio: 7
   duracion: 2.8
   espera: 6
   estresMaximo: 0.6
-  bajaPorSegundo: 9
 --- !u!114 &470976709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38497,6 +38530,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &472803696
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -39759,6 +39795,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &489389746
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -39879,6 +39918,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &491441884
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -47544,6 +47586,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &603700161
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -48271,6 +48316,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &616826693
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -56224,6 +56272,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &719951399
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -57800,6 +57851,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &747844009
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -58079,6 +58133,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &754048400
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -62062,6 +62119,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &798939937
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -72646,6 +72706,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &858033089
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -75884,6 +75947,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &895733355
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -76767,6 +76833,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &909961395
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -82875,6 +82944,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1020174381
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -82932,6 +83004,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1020556861
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -89540,6 +89615,7 @@ MonoBehaviour:
   velocidad: 3.5
   miradaParaVerte: 2
   distanciaSentirte: 3.2
+  rondaEscondite: 4.5
 --- !u!4 &1114909291
 Transform:
   m_ObjectHideFlags: 0
@@ -89776,6 +89852,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1118281686
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -90871,6 +90950,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1134124454
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -91478,6 +91560,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1140105773
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -100631,6 +100716,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1259797966
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -100903,6 +100991,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1270518352
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -103660,6 +103751,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1304527224
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -105367,6 +105461,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1318137482
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -107582,6 +107679,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1360743355
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -110220,6 +110320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.RecuerdoAula
   puntoPa: {x: 1.6, y: 7.2, z: 23.5}
+  finalHospital: 1
 --- !u!65 &1392995018
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -125927,6 +126028,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1619671008
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -139413,6 +139517,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -281867725417700618, guid: 15e308ed2a5bd0641aa66d0e0b5a7854, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0a5fde92cfab0b54789c63efc006cf7c, type: 2}
     - target: {fileID: 919132149155446097, guid: 15e308ed2a5bd0641aa66d0e0b5a7854, type: 3}
       propertyPath: m_Name
       value: Jacaranda
@@ -139877,6 +139985,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1752644528
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -143655,6 +143766,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1796615765
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -145407,6 +145521,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1814994802
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -150868,6 +150985,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1881462323
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -155739,6 +155859,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Colegio.Escondite
   puntoDentro: {fileID: 0}
+  pulmones: 6
+  oyeA: 5
+  graciaRespirar: 1.6
 --- !u!64 &1942716061
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -175693,6 +175816,75 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.55, y: 0.72088933, z: 0.68}
   m_Center: {x: 0.065, y: 0.09955531, z: -0.34}
+--- !u!1 &2061947906
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2061947909}
+  - component: {fileID: 2061947908}
+  - component: {fileID: 2061947907}
+  m_Layer: 0
+  m_Name: Mejoras_BuclePasillo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2061947907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061947906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a73f3141e6d79d4eb06d90afa7bf5e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EstanDentro.Mente.BuclePasillo
+  retroceso: {x: 8, y: 0, z: 0}
+  ciclosParaRomper: 2
+  maxVueltas: 6
+--- !u!65 &2061947908
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061947906}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 2.6, z: 4.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &2061947909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061947906}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.6, y: 8.5, z: 27.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2062233584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183465,3 +183657,4 @@ SceneRoots:
   - {fileID: 1884729028}
   - {fileID: 844500657}
   - {fileID: 1628436014}
+  - {fileID: 2061947909}

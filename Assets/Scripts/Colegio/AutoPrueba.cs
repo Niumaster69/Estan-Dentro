@@ -499,6 +499,34 @@ namespace EstanDentro.Colegio
                 yield return new WaitForSecondsRealtime(1f); yield return Captura("pasillo_pesadilla");
             }
 
+            // 9c. (rama de mejoras) el pasillo da vueltas en la Pesadilla y respirar con Pa lo rompe
+            var bucle = GameObject.Find("Mejoras_BuclePasillo");
+            Revisar(bucle != null, "Hay bucle en el pasillo norte");
+            if (bucle && Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Pesadilla)
+            {
+                Mente.Observador.Pausado = true;
+                Vector3 enBucle = bucle.transform.position + Vector3.down * 1.25f;
+                Teletransportar(enBucle, Quaternion.LookRotation(Vector3.left));
+                yield return new WaitForSecondsRealtime(0.8f);
+                float x1 = Jugador().transform.position.x;
+                Revisar(x1 > bucle.transform.position.x + 6f, $"El pasillo devuelve a Mateo frente al 4°B (x {x1:F1})");
+                yield return Captura("bucle_vuelta");
+                var st = Stress.StressSystem.Instance;
+                float e0 = st ? st.Normalized : 0f; int b0 = Concentrarse.CiclosBuenos;
+                for (int c = 0; c < 2; c++)                                            // 4 inhala + 4 sostén (Q) · 6 exhala (suelta)
+                {
+                    Concentrarse.SimularQ = true; yield return new WaitForSecondsRealtime(8f);
+                    if (c == 0) yield return Captura("respirar_con_pa");
+                    Concentrarse.SimularQ = false; yield return new WaitForSecondsRealtime(6.1f);
+                }
+                Revisar(Concentrarse.CiclosBuenos - b0 >= 2, $"Respirar con Pa: ciclos bien hechos ({Concentrarse.CiclosBuenos - b0})");
+                Revisar(st && st.Normalized < e0, $"Respirar con Pa baja el estrés ({e0:P0} → {(st ? st.Normalized : 0f):P0})");
+                Teletransportar(enBucle, Quaternion.LookRotation(Vector3.left));
+                yield return new WaitForSecondsRealtime(0.8f);
+                float x2 = Jugador().transform.position.x;
+                Revisar(x2 < bucle.transform.position.x + 3f, $"Después de respirar el pasillo ya no da vueltas (x {x2:F1})");
+            }
+
             // 10. el aula de música: el recuerdo y el final del capítulo
             var rec = FindAnyObjectByType<RecuerdoAula>();
             Revisar(rec != null, "Existe el recuerdo del aula de música");
@@ -510,7 +538,19 @@ namespace EstanDentro.Colegio
                 Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Normal, $"El aula de música deshace la Pesadilla ({ta:F1} s)");
                 yield return new WaitForSecondsRealtime(8f); yield return Captura("recuerdo_aula_1");
                 yield return new WaitForSecondsRealtime(12f); yield return Captura("recuerdo_aula_2");
-                yield return EsperarEscena("MainMenu", 60f);
+                if (rec.finalHospital)
+                {
+                    // final del hospital: cinco textos, la respiración con Pa (el robot no respira: espera el tiempo límite),
+                    // título y "Lo que aprendiste" (sigue sola a los 40 s)
+                    yield return new WaitForSecondsRealtime(22f); yield return Captura("final_hospital_texto");
+                    yield return new WaitForSecondsRealtime(28f); yield return Captura("final_hospital_respira");
+                    float tf = 0f;
+                    while (GameObject.Find("Final_Hospital") == null && tf < 5f) { tf += Time.unscaledDeltaTime; yield return null; }
+                    Revisar(GameObject.Find("Final_Hospital") != null, "El final del hospital aparece después del recuerdo");
+                    yield return new WaitForSecondsRealtime(70f); yield return Captura("final_lo_que_aprendiste");
+                    yield return EsperarEscena("MainMenu", 120f);
+                }
+                else yield return EsperarEscena("MainMenu", 60f);
             }
             Terminar();
         }

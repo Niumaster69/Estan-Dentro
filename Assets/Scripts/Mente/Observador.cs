@@ -17,9 +17,25 @@ namespace EstanDentro.Mente
         public bool Activo { get; set; }
         public static bool Pausado;                     // la prueba automática lo apaga
         public float velocidad = 3.5f, miradaParaVerte = 2.0f, distanciaSentirte = 3.2f;
+        [Tooltip("Segundos que ronda el escondite (con Mateo callado) antes de irse.")]
+        public float rondaEscondite = 4.5f;
+
+        public static Observador Instancia { get; private set; }
+        /// <summary>Está a la vista y buscando (para el escondite: hay que aguantar la respiración).</summary>
+        public bool Presente => modo == Modo.Acechando || modo == Modo.Cazando;
+        public bool Cazando => modo == Modo.Cazando;
+
+        /// <summary>Mateo hizo ruido dentro del escondite (jadeó o respiró con él al lado): sabe dónde está.</summary>
+        public void Delatar(Vector3 donde)
+        {
+            if (modo == Modo.Atrapando || modo == Modo.Fuera) return;
+            ultimaVez = donde; sinVerte = 0f; quieto = 0f;
+            if (modo != Modo.Cazando) { modo = Modo.Cazando; proximoSalto = Time.time + 0.3f; EstadoMente.Ir(EstadoMente.Estado.Alterado); }
+        }
 
         enum Modo { Fuera, Acechando, Cazando, Atrapando }
         Modo modo = Modo.Fuera;
+        float quieto;                                    // tiempo con Mateo escondido y callado
         Transform cuerpo;
         Renderer[] rs;
         Camera cam;
@@ -28,9 +44,12 @@ namespace EstanDentro.Mente
         float mirada, sinVerlo, sinVerte, proximoSalto, cuandoPuede;
         Vector3 ultimaVez;
 
+        void Awake() { Instancia = this; }
+        void OnDestroy() { if (Instancia == this) Instancia = null; }
+
         void Start()
         {
-            cuerpo = transform.childCount > 0 ? transform.GetChild(0) : transform;
+            cuerpo =transform.childCount > 0 ? transform.GetChild(0) : transform;
             rs = GetComponentsInChildren<Renderer>(true);
             susurro = gameObject.AddComponent<AudioSource>();
             susurro.clip = Resources.Load<AudioClip>("Sonidos/susurro"); susurro.loop = true; susurro.spatialBlend = 1f;
@@ -109,7 +128,9 @@ namespace EstanDentro.Mente
             bool teVe = !Tapado(Pecho, cam.transform.position) && Escondido() == false;
             if (teVe) { ultimaVez = Pies; sinVerte = 0f; } else sinVerte += Time.deltaTime;
             float dist = Vector3.Distance(transform.position, Pies);
-            bool perdido = Escondido() && dist > 1.4f || sinVerte > 5f || dist > 22f;
+            // escondido no basta: se acerca a donde te vio y ronda; si Mateo aguanta callado, al rato se va
+            quieto = Escondido() ? quieto + Time.deltaTime : 0f;
+            bool perdido = Escondido() && dist > 1.4f && quieto > rondaEscondite || !Escondido() && sinVerte > 5f || dist > 22f;
             if (perdido) { StartCoroutine(Irse()); return; }
             if (dist < 1.05f && !Escondido()) { StartCoroutine(Atrapar()); return; }
             // a trompicones: avanza, se congela un instante, salta
@@ -125,7 +146,7 @@ namespace EstanDentro.Mente
             if (!teVe && d.magnitude < 0.3f) sinVerte += Time.deltaTime * 2f;    // llegó a donde te vio y no estás
         }
 
-        bool Escondido() => Colegio.Escondite.Actual != null;
+        bool Escondido() => Colegio.Escondite.Actual != null && !Colegio.Escondite.Delatado;
 
         IEnumerator Irse()
         {

@@ -13,6 +13,7 @@ namespace EstanDentro.UI
         private const string K_GAMEPAD_SENS = "settings_gamepadSens";
         private const string K_INVERT_Y = "settings_invertY";
         private const string K_BRIGHTNESS = "settings_brightness";
+        private const string K_CALIDAD = "settings_calidad";
 
         public const float DEFAULT_VOLUME = 1.0f;
         public const float DEFAULT_MUSIC_VOLUME = 0.85f;
@@ -113,11 +114,39 @@ namespace EstanDentro.UI
             }
         }
 
+        /// <summary>
+        /// Calidad gráfica = nivel de QualitySettings (cada uno con su asset de HDRP): 0 Alta (High Fidelity),
+        /// 1 Media (Balanced), 2 Baja (Performant). Con tarjetas de 4 GB o menos (GTX 1650, RTX 3050 4 GB) empieza en Media.
+        /// </summary>
+        public static int CalidadPorDefecto => SystemInfo.graphicsMemorySize > 0 && SystemInfo.graphicsMemorySize <= 4600 ? 1 : 0;
+        public static int CalidadMax => Mathf.Max(0, QualitySettings.names.Length - 1);
+
+        public static int Calidad
+        {
+            get => Mathf.Clamp(PlayerPrefs.GetInt(K_CALIDAD, CalidadPorDefecto), 0, CalidadMax);
+            set
+            {
+                PlayerPrefs.SetInt(K_CALIDAD, Mathf.Clamp(value, 0, CalidadMax));
+                PlayerPrefs.Save();
+                ApplyCalidad();
+            }
+        }
+
+        public static string NombreCalidad(int i) => i <= 0 ? "Alta" : i == 1 ? "Media" : "Baja";
+
+        private static void ApplyCalidad()
+        {
+            if (QualitySettings.names.Length == 0) return;
+            int q = Calidad;
+            if (QualitySettings.GetQualityLevel() != q) QualitySettings.SetQualityLevel(q, true);
+        }
+
         /// <summary>Aplica todos los settings activos. Llamar al iniciar cada escena.</summary>
         public static void ApplyAll()
         {
             AudioListener.volume = MasterVolume;
             ApplyBrightness();
+            ApplyCalidad();
         }
 
         /// <summary>Restaura todos los settings a sus valores por defecto.</summary>
@@ -132,6 +161,7 @@ namespace EstanDentro.UI
             GamepadSensitivity = DEFAULT_GAMEPAD_SENS;
             InvertY = DEFAULT_INVERT_Y;
             Brightness = DEFAULT_BRIGHTNESS;
+            Calidad = CalidadPorDefecto;
         }
 
         /// <summary>Aplica el brillo via RenderSettings.ambientIntensity (afecta luz ambiental).
