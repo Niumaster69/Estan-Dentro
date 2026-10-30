@@ -107,16 +107,18 @@ namespace EstanDentro.Breathing
             if (!BreathingInputProvider.Instance.MicAvailable)
             {
                 statusText.text = "No detectamos microfono.\nVamos a usar la tecla ESPACIO.";
-                phase = Phase.Done;
-                Invoke(nameof(FallbackFinish), 1.6f);
+                // el juego está en pausa (timeScale 0): Invoke nunca llegaba y quedaba la pantalla negra para siempre.
+                // Se espera en tiempo real y se cierra sin pasar por el chequeo de "ya terminó".
+                StartCoroutine(TerminarSinMicro(1.6f));
                 return;
             }
 
             if (!BreathingInputProvider.Instance.TryStartMic())
             {
                 statusText.text = "No pude abrir el microfono.\nVamos a usar la tecla ESPACIO.";
-                phase = Phase.Done;
-                Invoke(nameof(FallbackFinish), 1.6f);
+                // el juego está en pausa (timeScale 0): Invoke nunca llegaba y quedaba la pantalla negra para siempre.
+                // Se espera en tiempo real y se cierra sin pasar por el chequeo de "ya terminó".
+                StartCoroutine(TerminarSinMicro(1.6f));
                 return;
             }
 
@@ -206,6 +208,13 @@ namespace EstanDentro.Breathing
             BreathingInputProvider.Instance.ApplyCalibration(noiseAvg, exhaleAvg);
             bool useFallback = BreathingInputProvider.Instance.Mode == BreathingInputProvider.InputMode.KeyboardFallback;
             Finish(useFallback, withCalibration: !useFallback);
+        }
+
+        private System.Collections.IEnumerator TerminarSinMicro(float seg)
+        {
+            yield return new WaitForSecondsRealtime(seg);
+            phase = Phase.WaitStart;          // para que Finish no salga de una
+            Finish(true, withCalibration: false);
         }
 
         private void Finish(bool useFallback, bool withCalibration)

@@ -111,6 +111,9 @@ namespace EstanDentro.Colegio
                 yield return null;
             }
             cam.SetPositionAndRotation(destino, mira);
+            // las ruedas en el orden en que se VEN, de izquierda a derecha: A va a la izquierda y el primer número es el de la izquierda
+            // (según de qué lado se mire el candado, el orden del modelo quedaba al revés)
+            ruedas.Sort((r1, r2) => c.WorldToScreenPoint(r1.position).x.CompareTo(c.WorldToScreenPoint(r2.position).x));
             Cursor.lockState = CursorLockMode.None; Cursor.visible = true;
             titulo.text = cl.NombreVisible + "   ·   " + cl.CorrectCode.Length + " ruedas";
             ayuda.text = "A / D  rueda      W / S  o rueda del mouse  girar      E  probar      Esc  dejarlo"

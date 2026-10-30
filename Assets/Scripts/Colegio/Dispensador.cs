@@ -11,13 +11,16 @@ namespace EstanDentro.Colegio
         public string entregaId = "gaseosa";
         public string entregaNombre = "Gaseosa";
 
+        public override string Accion => "Usar";
+
+
         public override void Interact()
         {
             var inv = Inventory.Inventory.Instance;
             if (inv == null) return;
             if (!string.IsNullOrEmpty(requiereId) && !inv.HasItem(requiereId))
             {
-                ObjectiveHUD.Show("Necesitas una moneda.", 1.6f);
+                ObjectiveHUD.Show("Necesito una moneda.", 1.6f);
                 return;
             }
             if (!string.IsNullOrEmpty(requiereId)) inv.RemoveItem(requiereId);

@@ -71,11 +71,21 @@ namespace EstanDentro.UI
 
         // ---------- API publica ----------
 
-        public static void Notify(string text, float displayTime = -1f)
+        public static void Notify(string text, float displayTime = -1f) => Notify(text, displayTime, true);
+
+        /// <summary>Lo que piensa o dice Mateo, como subtítulo abajo; si hay voz grabada (Resources/Voces/Colegio) suena.
+        /// voz=false cuando quien llama ya hizo sonar la voz (el despertar).</summary>
+        public static void Notify(string text, float displayTime, bool voz)
         {
+            if (string.IsNullOrEmpty(text) || EsAvisoDeSistema(text)) return;
             EnsureInstance();
-            instance.NotifyInternal(text, displayTime);
+            instance.NotifyInternal(text, displayTime, voz);
         }
+
+        // Henry 20-oct: "las notificaciones podemos irlas quitando, el chino dice lo que necesita o lo que pasa".
+        // Fuera los avisos del sistema; queda lo que Mateo piensa.
+        static readonly string[] sistema = { "Tomaste", "Recogiste", "Soltaste", "Nueva misión", "La máquina suelta", "Sales del escondite", "Has encontrado", "Guardas " };
+        static bool EsAvisoDeSistema(string t) { foreach (var p in sistema) if (t.StartsWith(p)) return true; return false; }
 
         public static void PulseCircle()
         {
@@ -133,6 +143,47 @@ namespace EstanDentro.UI
         private void LateUpdate()
         {
             if (toastGroup != null && OverlayBlocker.IsBlocking) toastGroup.alpha = 0f;
+            ActualizarMisiones();
+        }
+
+        // ---------- misiones en pantalla (arriba a la izquierda) ----------
+        private Text misionesTxt; private CanvasGroup misionesGrupo; private string misionesAntes = ""; private float brilloMision;
+
+        private void BuildMisiones(Transform parent)
+        {
+            var go = new GameObject("Misiones", typeof(RectTransform));
+            var rt = go.GetComponent<RectTransform>(); rt.SetParent(parent, false);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);
+            rt.anchoredPosition = new Vector2(36f, -30f); rt.sizeDelta = new Vector2(620f, 200f);
+            misionesGrupo = go.AddComponent<CanvasGroup>(); misionesGrupo.blocksRaycasts = false; misionesGrupo.interactable = false;
+            misionesTxt = go.AddComponent<Text>();
+            misionesTxt.font = GetBodyFont(); misionesTxt.fontSize = 26; misionesTxt.alignment = TextAnchor.UpperLeft;
+            misionesTxt.color = textCream; misionesTxt.supportRichText = true; misionesTxt.raycastTarget = false;
+            misionesTxt.horizontalOverflow = HorizontalWrapMode.Wrap; misionesTxt.verticalOverflow = VerticalWrapMode.Overflow;
+            var sombra = go.AddComponent<Outline>(); sombra.effectColor = new Color(0f, 0f, 0f, 0.85f); sombra.effectDistance = new Vector2(1.5f, -1.5f);
+        }
+
+        private void ActualizarMisiones()
+        {
+            if (misionesTxt == null) return;
+            var inv = Inventory.Inventory.Instance;
+            string txt = "";
+            if (inv != null)
+            {
+                var sb = new System.Text.StringBuilder();
+                foreach (var m in inv.Missions)
+                    if (!m.completed && m.category == Inventory.Inventory.MissionCategory.Principal)
+                        sb.Append("<color=#F5D96B>◆</color>  ").Append(m.text).Append('\n');
+                foreach (var m in inv.Missions)
+                    if (!m.completed && m.category == Inventory.Inventory.MissionCategory.Secundaria)
+                        sb.Append("<size=21><color=#C8BFA8>◇  ").Append(m.text).Append("</color></size>\n");
+                txt = sb.ToString().TrimEnd();
+            }
+            if (txt != misionesAntes) { misionesAntes = txt; misionesTxt.text = txt; brilloMision = 1f; }
+            brilloMision = Mathf.MoveTowards(brilloMision, 0f, Time.unscaledDeltaTime * 0.5f);
+            bool ver = !OverlayBlocker.IsBlocking && Time.timeScale > 0f && txt.Length > 0;
+            misionesGrupo.alpha = Mathf.MoveTowards(misionesGrupo.alpha, ver ? 0.85f + 0.15f * brilloMision : 0f, Time.unscaledDeltaTime * 4f);
+            misionesTxt.color = Color.Lerp(textCream, amber, brilloMision);
         }
 
         // ---------- circulo ----------
@@ -174,14 +225,15 @@ namespace EstanDentro.UI
 
         // ---------- toast ----------
 
-        private void NotifyInternal(string text, float displayTime)
+        private void NotifyInternal(string text, float displayTime, bool voz = true)
         {
             if (string.IsNullOrEmpty(text)) return;
+            if (voz) conVoz.Add(text);
             if (displayTime < 0f) displayTime = toastDefaultDisplayTime;
-            displayTime = Mathf.Max(5f, displayTime);
+            displayTime = Mathf.Clamp(displayTime, 2.2f, 5f);
             // en fila: nunca se pisan, y esperan a que se cierre la nota/candado que esté abierto
             if (filaAvisos.Count > 0 && filaAvisos.ToArray()[filaAvisos.Count - 1].Item1 == text) return;
-            filaAvisos.Enqueue((text, displayTime));
+            filaAvisos.Enqueue((text, displayTime)); encolado[text] = Time.unscaledTime;
             if (filaRoutine == null) filaRoutine = StartCoroutine(ProcesarFila());
         }
 
@@ -194,6 +246,14 @@ namespace EstanDentro.UI
             {
                 while (OverlayBlocker.IsBlocking) yield return null;
                 var (texto, tiempo) = filaAvisos.Dequeue();
+                // lo que lleva mucho esperando ya no viene al caso (salía "la pantalla se apaga" en otro lugar)
+                if (encolado.TryGetValue(texto, out var cuando) && Time.unscaledTime - cuando > 7f && filaAvisos.Count > 0) { conVoz.Remove(texto); continue; }
+                if (conVoz.Remove(texto))
+                {
+                    var clip = EstanDentro.Audio.Voz.Clip("Colegio", texto);
+                    var cam = Camera.main;
+                    if (clip && cam) { EstanDentro.Audio.Voz.Sonar(clip, cam.transform.position, EstanDentro.Audio.Voz.Lugar.Pensamiento); tiempo = Mathf.Max(tiempo, clip.length + 1f); }
+                }
                 toastRoutine = StartCoroutine(ToastRoutine(texto, tiempo));
                 while (toastRoutine != null) yield return null;
             }
@@ -273,6 +333,8 @@ namespace EstanDentro.UI
             canvasGo.AddComponent<GraphicRaycaster>();
 
             BuildCircle(canvas.transform);
+            circleRT.gameObject.SetActive(false);       // la estrella ya no: las misiones se ven arriba a la izquierda (Henry 19-oct)
+            BuildMisiones(canvas.transform);
             BuildToastPanel(canvas.transform);
         }
 
@@ -393,7 +455,14 @@ namespace EstanDentro.UI
             var shadow = textGo.AddComponent<Shadow>();
             shadow.effectColor = new Color(0f, 0f, 0f, 0.7f);
             shadow.effectDistance = new Vector2(1f, -1f);
+            // estilo subtítulo: sin caja ni chulo; el texto centrado con contorno (es Mateo hablando, no un aviso del juego)
+            bg.color = Color.clear; outline.enabled = false; iconGo.SetActive(false);
+            textRT.offsetMin = new Vector2(10f, 4f); textRT.offsetMax = new Vector2(-10f, -4f);
+            toastText.alignment = TextAnchor.MiddleCenter; toastText.fontSize = 27; toastText.fontStyle = FontStyle.Normal;
+            var contorno = textGo.AddComponent<Outline>(); contorno.effectColor = new Color(0f, 0f, 0f, 0.9f); contorno.effectDistance = new Vector2(1.6f, -1.6f);
         }
+        private readonly System.Collections.Generic.HashSet<string> conVoz = new System.Collections.Generic.HashSet<string>();
+        private readonly System.Collections.Generic.Dictionary<string, float> encolado = new System.Collections.Generic.Dictionary<string, float>();
 
         // ---------- sprites ----------
 

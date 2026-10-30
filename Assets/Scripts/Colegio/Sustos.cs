@@ -112,16 +112,21 @@ namespace EstanDentro.Colegio
             g.transform.localScale = new Vector3(0.07f, 0.06f, 0.07f);
             var cam = Camera.main.transform;
             Vector3 hacia = cam.position - cas.transform.position; hacia.y = 0f; hacia.Normalize();
-            g.transform.position = cas.GetComponent<Renderer>().bounds.center + hacia * 0.45f + Vector3.up * 0.4f;
-            g.transform.rotation = Quaternion.LookRotation(Vector3.up, hacia) * Quaternion.Euler(90f, 0f, 0f);
+            // nace DENTRO, en la repisa de arriba junto a la puerta, parada; se vuelca y cae (antes aparecía en el aire y saltaba)
+            var b = cas.GetComponent<Renderer>().bounds;
+            Vector3 eje = Mathf.Abs(hacia.x) > Mathf.Abs(hacia.z) ? new Vector3(Mathf.Sign(hacia.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(hacia.z));
+            float fondo = Mathf.Abs(eje.x) > 0f ? b.extents.x : b.extents.z;
+            g.transform.position = new Vector3(b.center.x, b.max.y - 0.32f, b.center.z) + eje * (fondo - 0.08f);
+            g.transform.rotation = Quaternion.identity;
+            hacia = eje;
             var mr = g.GetComponent<Renderer>();
             var baseM = cas.GetComponent<Renderer>().sharedMaterial;
             if (baseM) { var m = new Material(baseM); if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", new Color(0.6f, 0.08f, 0.06f)); mr.sharedMaterial = m; }
             Object.Destroy(g.GetComponent<Collider>());
             g.AddComponent<CapsuleCollider>();
             var rb = g.AddComponent<Rigidbody>(); rb.mass = 0.3f;
-            rb.AddForce(hacia * 1.2f + Vector3.up * 0.3f, ForceMode.Impulse);
-            rb.AddTorque(Vector3.Cross(Vector3.up, hacia) * 0.3f, ForceMode.Impulse);
+            rb.AddForce(hacia * 0.18f, ForceMode.Impulse);                               // un empujoncito: se vuelca hacia afuera
+            rb.AddTorque(Vector3.Cross(Vector3.up, hacia) * 0.05f, ForceMode.Impulse);
         }
     }
 }

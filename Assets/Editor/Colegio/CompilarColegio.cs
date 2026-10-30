@@ -14,11 +14,13 @@ namespace EstanDentro.EditorColegio
         [MenuItem("Estan Dentro/6. Compilar ejecutable del colegio")]
         public static void Compilar()
         {
-            string exe = Path.GetFullPath(Path.Combine(Application.dataPath, "..", SALIDA));
+            // -salida <ruta.exe>: compilar en otra carpeta (para probar mientras el juego de Henry está abierto)
+            var args = Environment.GetCommandLineArgs(); int ia = Array.IndexOf(args, "-salida");
+            string exe = ia >= 0 && ia + 1 < args.Length ? Path.GetFullPath(args[ia + 1]) : Path.GetFullPath(Path.Combine(Application.dataPath, "..", SALIDA));
             Directory.CreateDirectory(Path.GetDirectoryName(exe));
             var opciones = new BuildPlayerOptions
             {
-                scenes = new[] { ConstruirPrologo.ESCENA, "Assets/Scenes/Colegio/Colegio.unity", PortarCapitulo1.ESCENA_DUCTOS },
+                scenes = new[] { "Assets/Scenes/MainMenu/MainMenu.unity", ConstruirPrologo.ESCENA, "Assets/Scenes/Colegio/Colegio.unity", PortarCapitulo1.ESCENA_DUCTOS },
                 locationPathName = exe,
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None,

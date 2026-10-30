@@ -46,6 +46,8 @@ namespace EstanDentro.Interaction
         private float intensidadBase;
         /// <summary>0..1 cuánto le queda a las pilas.</summary>
         public float Carga => carga;
+        public bool Desbloqueada => unlocked;
+        public bool Encendida => spotLight != null && spotLight.enabled;
 
         private void Awake()
         {
@@ -104,12 +106,13 @@ namespace EstanDentro.Interaction
             var gp = Gamepad.current;
             bool toggle = (kb != null && kb.fKey.wasPressedThisFrame)
                        || (gp != null && gp.buttonWest.wasPressedThisFrame);
-            if (toggle) Toggle();
+            if (toggle) { EstanDentro.UI.GuiaTeclas.Usada("F"); Toggle(); }
         }
 
         // Se gastan mientras alumbra; al final titila. Si se acaban y hay pilas en el inventario, Mateo las cambia solo.
         private void GastarPilas()
         {
+            NervioPorPilas();
             if (!spotLight.enabled) return;
             carga -= Time.deltaTime / Mathf.Max(1f, duracionPilas);
             if (carga > 0.15f) { spotLight.intensity = intensidadBase; return; }
@@ -127,6 +130,18 @@ namespace EstanDentro.Interaction
             }
         }
 
+        // con poca pila el miedo sube (Henry: "si no tiene mucha batería, la barra de estrés sube"); sin pilas, más.
+        // Nunca pasa del 60 %: la pila sola no mata.
+        private void NervioPorPilas()
+        {
+            var st = EstanDentro.Stress.StressSystem.Instance;
+            if (!unlocked || st == null || st.Normalized >= 0.6f) return;
+            var inv = Inventory.Inventory.Instance;
+            bool hayRepuesto = inv != null && inv.HasItem("baterias");
+            float ritmo = carga <= 0f && !hayRepuesto ? 0.6f : (spotLight.enabled && carga < 0.25f ? 0.35f : 0f);
+            if (ritmo > 0f) st.AddSilencioso(ritmo * Time.deltaTime);
+        }
+
         private bool CambiarPilas()
         {
             var inv = Inventory.Inventory.Instance;
@@ -134,7 +149,7 @@ namespace EstanDentro.Interaction
             inv.RemoveItem("baterias");
             carga = 1f; spotLight.intensity = intensidadBase;
             var it = inv.Buscar("baterias");
-            EstanDentro.UI.ObjectiveHUD.Notify("Cambias las pilas de la linterna." + (it != null ? $" Te quedan {it.cantidad}." : " Eran las últimas."), 3f);
+            EstanDentro.UI.ObjectiveHUD.Notify("Cambio las pilas.", 3f);
             return true;
         }
 

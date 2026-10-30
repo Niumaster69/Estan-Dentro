@@ -243,7 +243,7 @@ namespace EstanDentro.Player
             // Latido al pico desde antes del primer pestaneo
             if (heartbeatLoopClip != null)
             {
-                heartbeatSrc.volume = heartbeatPeakVolume;
+                heartbeatSrc.volume = heartbeatPeakVolume * 0.35f;      // despierta confundido, no en pánico: latido de fondo
                 heartbeatSrc.pitch = heartbeatPeakPitch;
                 heartbeatSrc.Play();
             }
@@ -257,7 +257,7 @@ namespace EstanDentro.Player
                 float openAlpha = Mathf.Lerp(0.7f, 0f, p);
 
                 // Gasp seco solo en el primer pestaneo (respira de golpe al abrir los ojos)
-                if (i == 0 && gaspClip != null) oneShotSrc.PlayOneShot(gaspClip, gaspVolume);
+                if (i == 0 && gaspClip != null) oneShotSrc.PlayOneShot(gaspClip, gaspVolume * 0.35f);
 
                 yield return FadeAlpha(canvasGroup.alpha, openAlpha, blinkOpenSeconds);
                 yield return new WaitForSecondsRealtime(blinkPauseOpen);
@@ -292,6 +292,8 @@ namespace EstanDentro.Player
             // ----- Fase 2: look around natural -----
             yield return new WaitForSecondsRealtime(lookStartDelay);
 
+            Pensar("¿Qué…? ¿Dónde estoy?", 3f);
+
             // Pestaneos lentos en paralelo durante el look around
             Coroutine slowBlinkCo = null;
             if (slowBlinksDuringLook) slowBlinkCo = StartCoroutine(SlowBlinksRoutine());
@@ -302,9 +304,13 @@ namespace EstanDentro.Player
             yield return RotateAndPitch(baseYaw, baseYaw - lookYawAmplitude, startPitch, Mathf.Lerp(startPitch, endPitch, 0.4f), lookLeftSeconds);
             yield return new WaitForSecondsRealtime(lookLeftPause);
 
+            Pensar("Este es mi salón… el 4°B.", 3f);
+
             // Derecha (recorrido completo)
             yield return RotateAndPitch(baseYaw - lookYawAmplitude, baseYaw + lookYawAmplitude, Mathf.Lerp(startPitch, endPitch, 0.4f), Mathf.Lerp(startPitch, endPitch, 0.75f), lookRightSeconds);
             yield return new WaitForSecondsRealtime(lookRightPause);
+
+            Pensar("¿Por qué es de noche…? ¿Pa?", 3.5f);
 
             // Volver al centro y enfocar
             yield return RotateAndPitch(baseYaw + lookYawAmplitude, baseYaw, Mathf.Lerp(startPitch, endPitch, 0.75f), endPitch, lookCenterSeconds);
@@ -321,9 +327,11 @@ namespace EstanDentro.Player
             playerController.InputEnabled = true;
 
             // Tutorial primer toast: explica el inventario + bindings
-            ObjectiveHUD.Notify("Apretá [I] (teclado) o [Touchpad] (mando) para abrir tu inventario y misiones.", 7f);
-
-            // Esperar un momento para que se vea el tutorial antes del objetivo
+            float dur = Pensar("Pa iba manejando… ¿Dónde está Pa? Tengo que salir de aquí.", 5f);
+            yield return new WaitForSecondsRealtime(dur + 0.4f);
+            GuiaTeclas.PrimeraVez("Tab", "Abrir tu cuaderno: misiones y pistas");
+            GuiaTeclas.PrimeraVez("I", "Abrir la mochila: lo que llevas");
+            GuiaTeclas.PrimeraVez("Q", "Mantén para respirar hondo: baja el estrés (y calmado, brilla lo que sirve)");
             yield return new WaitForSecondsRealtime(2.5f);
 
             // Agregar primer objetivo principal al sistema de misiones
@@ -355,6 +363,27 @@ namespace EstanDentro.Player
 
             // Disparar eventos al terminar (ej. arrancar ambient sound del salon)
             onWakeUpComplete?.Invoke();
+        }
+
+        /// <summary>Mateo piensa en voz alta (voz grabada si existe, con su subtítulo abajo). Devuelve cuánto dura.</summary>
+        // los pensamientos van en fila: uno no empieza hasta que termina el anterior (no se montan)
+        private float pensarLibre;
+        private float Pensar(string texto, float seg)
+        {
+            var clip = EstanDentro.Audio.Voz.Clip("Colegio", texto);
+            if (clip) seg = clip.length + 0.3f;
+            float espera = Mathf.Max(0f, pensarLibre - Time.realtimeSinceStartup);
+            pensarLibre = Time.realtimeSinceStartup + espera + seg;
+            StartCoroutine(PensarDespues(texto, clip, seg, espera));
+            return espera + seg;
+        }
+
+        private IEnumerator PensarDespues(string texto, AudioClip clip, float seg, float espera)
+        {
+            if (espera > 0f) yield return new WaitForSecondsRealtime(espera);
+            var cam = Camera.main ? Camera.main.transform.position : transform.position;
+            if (clip) EstanDentro.Audio.Voz.Sonar(clip, cam, EstanDentro.Audio.Voz.Lugar.Pensamiento);
+            ObjectiveHUD.Notify(texto, seg, false);              // la voz ya sonó arriba
         }
 
         private IEnumerator SlowBlinksRoutine()

@@ -54,6 +54,7 @@ namespace EstanDentro.Stress
 
         private void HandleCollapse()
         {
+            if (!isActiveAndEnabled) return;            // colegio dormido (Mateo en los ductos): ahí lo maneja ViajeDuctos
             Show();
         }
 
@@ -115,6 +116,7 @@ namespace EstanDentro.Stress
 
         private void RestartScene()
         {
+            Hide();                                             // suelta su registro en OverlayBlocker antes de recargar
             EstanDentro.UI.Pausa.Reiniciar();
             Inventory.Inventory.NuevaPartida();
             EstanDentro.UI.SceneTransition.Reload(tip: "Respira. Empieza otra vez.");

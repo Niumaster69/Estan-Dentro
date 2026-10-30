@@ -53,6 +53,24 @@ namespace EstanDentro.Interaction
         /// <summary>El objeto de adentro que todavía no cupo (manos llenas). Se toma volviendo a interactuar.</summary>
         public bool TienePendiente => IsOpen && !itemTomado && !string.IsNullOrEmpty(itemToGiveId);
         private bool itemTomado;
+        private GameObject visible;          // el objeto de adentro, a la vista (se coge con E)
+        public string NombreAdentro => itemToGiveDisplayName;
+
+        // ya abierto y vacío: E lo cierra y lo vuelve a abrir (si tiene puertas; la lonchera no)
+        private bool cerradoOtraVez;
+        public bool TienePuertas
+        {
+            get { foreach (var d in GetComponentsInChildren<EstanDentro.Colegio.DatosBlender>()) if (d.Get("prop_tipo") == "puerta_casillero") return true; return false; }
+        }
+        public bool CerradoOtraVez => cerradoOtraVez;
+        public void Alternar()
+        {
+            if (!IsOpen || !TienePuertas) return;
+            cerradoOtraVez = !cerradoOtraVez;
+            if (cerradoOtraVez) EstanDentro.Colegio.Casillero.CerrarPuertas(gameObject, 0.5f);
+            else EstanDentro.Colegio.Casillero.AbrirPuertas(gameObject);
+            EstanDentro.Audio.SonidoCorto.Juego("casillero/pestillo", transform.position + Vector3.up, 0.6f, 0.8f, 0.8f);
+        }
 
         public void TomarPendiente(bool mostrarAviso = true)
         {
@@ -60,11 +78,12 @@ namespace EstanDentro.Interaction
             var inv = Inventory.Inventory.Instance;
             if (inv != null && !inv.RegisterItem(itemToGiveId, itemToGiveDisplayName))
             {
-                ObjectiveHUD.Show($"Adentro hay {itemToGiveDisplayName.ToLower()}. {inv.MotivoLleno()}", 3.5f);
+                ObjectiveHUD.Show(inv.MotivoLleno(), 3.5f);
                 hudMessage = "";   // el aviso de "has encontrado" no aplica todavía
                 return;
             }
             itemTomado = true;
+            if (visible) Destroy(visible);
             if (mostrarAviso) ObjectiveHUD.Show($"Tomaste: {itemToGiveDisplayName}", 2f);
         }
 
@@ -97,7 +116,9 @@ namespace EstanDentro.Interaction
             // sin Animator (objetos del colegio nuevo): la apertura se ve porque su CandadoVisual se cae
 
             EstanDentro.Colegio.Casillero.AbrirPuertas(gameObject);
-            TomarPendiente(mostrarAviso: false);
+            // lo de adentro se VE y el jugador lo coge (antes llegaba solo a la mano: "yo no cogí ninguna linterna")
+            if (!string.IsNullOrEmpty(itemToGiveId)) visible = EstanDentro.Colegio.BotinVisible.Poner(itemToGiveId, gameObject);
+            if (!visible) TomarPendiente(mostrarAviso: false);
 
             if (!string.IsNullOrEmpty(interiorNoteTitle))
             {

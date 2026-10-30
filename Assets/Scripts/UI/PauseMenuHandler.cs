@@ -69,7 +69,9 @@ namespace EstanDentro.UI
             {
                 if (active) { ClosePause(); return; }
                 // Si hay otro overlay modal abierto (nota, cerradura, calibracion, gameover), no abrir pause.
-                if (OverlayBlocker.IsBlocking) return;
+                // Esc en el cuaderno (o una nota) cierra SOLO eso; la pausa se abre con otro Esc
+                if (OverlayBlocker.IsBlocking || OverlayBlocker.WasJustDismissed || EstanDentro.Inventory.InventoryOverlay.EstaAbierto
+                    || EstanDentro.Colegio.TableroInteractivo.Mirando || EstanDentro.Inventory.MochilaOverlay.EstaAbierta) return;
                 if (Time.timeScale > 0f) OpenPause();
             }
         }

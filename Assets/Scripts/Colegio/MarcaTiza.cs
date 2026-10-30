@@ -23,6 +23,7 @@ namespace EstanDentro.Colegio
             if (OverlayBlocker.IsBlocking) return;
             var kb = Keyboard.current; var gp = Gamepad.current;
             if (!((kb != null && kb.tKey.wasPressedThisFrame) || (gp != null && gp.buttonNorth.wasPressedThisFrame))) return;
+            GuiaTeclas.Usada("T");
             IntentarMarcar();
         }
 

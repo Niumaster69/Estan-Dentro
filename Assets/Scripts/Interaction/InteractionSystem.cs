@@ -48,15 +48,19 @@ namespace EstanDentro.Interaction
             if (!jugable)
             {
                 currentTarget = null;
+                EstanDentro.UI.GuiaTeclas.Junto(null, null);
                 return;
             }
             currentTarget = ResolveTarget();
             UpdateReticleVisual();
+            // la tecla y lo que hace, junto al punto (se enseña cada cosa que se puede hacer)
+            if (currentTarget != null) EstanDentro.UI.GuiaTeclas.Junto("E", currentTarget.Accion); else EstanDentro.UI.GuiaTeclas.Junto(null, null);
             HandleInput();
         }
 
         private Interactable ResolveTarget()
         {
+            if (EstanDentro.Colegio.SillaArrastrable.Cargada != null) return EstanDentro.Colegio.SillaArrastrable.Cargada;
             Vector3 origin = sourceCamera.transform.position + sourceCamera.transform.forward * originForwardOffset;
             Ray ray = new Ray(origin, sourceCamera.transform.forward);
             Debug.DrawRay(ray.origin, ray.direction * maxDistance, Color.cyan);
@@ -113,7 +117,7 @@ namespace EstanDentro.Interaction
             var gp = Gamepad.current;
             bool pressed = (kb != null && kb.eKey.wasPressedThisFrame)
                         || (gp != null && gp.buttonSouth.wasPressedThisFrame);
-            if (pressed) currentTarget.Interact();
+            if (pressed) { EstanDentro.UI.GuiaTeclas.Junto(null, null); currentTarget.Interact(); }
         }
 
         private void BuildReticle()

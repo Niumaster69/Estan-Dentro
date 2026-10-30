@@ -16,19 +16,29 @@ namespace EstanDentro.Colegio
         public string escenaDestino = "";
         public string tipCarga = "";
         public string misionCompletada = "";
+        [Tooltip("Dónde aparece Mateo al salir del ducto (PlayerSpawnPoint del colegio). Vacío = como antes (recarga).")]
+        public string salidaEn = "";
+
+        [Tooltip("Para alcanzarla, los ojos deben estar a menos de esto (m) de la rejilla (hay que subirse a algo)")]
+        public float alcance = 1.3f;
+        bool Alcanza { get { var c = Camera.main; return !c || Mathf.Abs(transform.position.y - c.transform.position.y) < alcance; } }
+
+        public override string Accion => !Alcanza ? "Rejilla del techo (muy alta)" : abierta ? "Entrar al ducto" : "Quitar la rejilla";
+
 
         public override void Interact()
         {
             var inv = Inventory.Inventory.Instance;
+            if (!Alcanza) { ObjectiveHUD.Show("Está muy alta. Tengo que subirme a algo.", 3f); return; }
             if (!abierta)
             {
                 if (inv != null && !string.IsNullOrEmpty(requiereId) && !inv.Usar(requiereId))
                 {
-                    ObjectiveHUD.Show("Los tornillos no ceden. Necesitas un destornillador.", 2f);
+                    ObjectiveHUD.Show("Los tornillos no ceden… necesito un destornillador.", 2f);
                     return;
                 }
                 abierta = true;
-                ObjectiveHUD.Show("Quitas la rejilla. Puedes subir al ducto.", 2f);
+                ObjectiveHUD.Show("Los tornillos ceden… la rejilla se cae. Arriba está oscuro.", 2.5f);
                 // la rejilla cae (copia física) y el hueco queda para subir
                 var cae = new GameObject(name + "_caida");
                 cae.transform.SetPositionAndRotation(transform.position, transform.rotation);
@@ -48,7 +58,8 @@ namespace EstanDentro.Colegio
             if (!string.IsNullOrEmpty(escenaDestino))
             {
                 if (!string.IsNullOrEmpty(misionCompletada) && inv != null) inv.CompleteMission(misionCompletada);
-                SceneTransition.LoadScene(escenaDestino, tip: tipCarga);
+                if (!string.IsNullOrEmpty(salidaEn)) ViajeDuctos.Entrar(salidaEn);       // ida y vuelta sin perder lo hecho
+                else SceneTransition.LoadScene(escenaDestino, tip: tipCarga);
                 return;
             }
             ObjectiveHUD.Show($"El ducto lleva hacia {salida}... (aún no se puede entrar)", 2f);

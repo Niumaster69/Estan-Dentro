@@ -89,7 +89,7 @@ namespace EstanDentro.Inventory
 
         // ----- Capacidad: sin mochila solo lo que cabe en las manos -----
         public const int Manos = 2;
-        public const int EspaciosMochila = 4;
+        public const int EspaciosMochila = 6;          // Henry 20-oct: sin bolsillo, todo va en manos o mochila (lo que se junta ocupa un lugar)
         /// <summary>Cosas pequeñas que van al bolsillo y no ocupan espacio.</summary>
         /// <summary>Objetos grandes: ocupan las DOS manos y no caben en la mochila (pata de cabra, cizalla, galón).</summary>
         public static bool DosManos(string id) => id == "pata_de_cabra" || id == "cizalla" || id == "galon";
@@ -97,8 +97,10 @@ namespace EstanDentro.Inventory
         /// <summary>Se juntan en un solo lugar (3 monedas = un hueco; 4 pilas = un hueco).</summary>
         public static bool SeApila(string id) => id == "moneda" || id == "baterias" || id == "tiza";
 
+        // ya no hay bolsillo para cosas físicas (monedas, tiza, llaves ocupan un lugar en la mochila): solo papeles y fotos,
+        // que van al cuaderno
         public static bool VaAlBolsillo(string id) =>
-            !string.IsNullOrEmpty(id) && (id.StartsWith("moneda") || id.StartsWith("llave") || id.StartsWith("nota") || id.StartsWith("foto") || id == "tiza");
+            !string.IsNullOrEmpty(id) && (id.StartsWith("nota") || id.StartsWith("foto"));
 
         public bool TieneMochila { get; set; }
         public int Capacidad => Manos + (TieneMochila ? EspaciosMochila : 0);
@@ -200,6 +202,8 @@ namespace EstanDentro.Inventory
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
 
+        public bool YaLeida(string title) { foreach (var n in ReadNotes) if (n.title == title) return true; return false; }
+
         public void RegisterNote(string title, string body)
         {
             // Evita duplicados (por title). Si dos notas tienen el mismo title, la segunda
@@ -243,7 +247,7 @@ namespace EstanDentro.Inventory
             if (DosManos(id) && ManosOcupadas > 0)
             {
                 LiberarManos(simular: false);
-                ObjectiveHUD.Notify("Guardas lo que tenías en la mochila: esto necesita las dos manos.", 3f);
+                ObjectiveHUD.Notify("Guardo lo que tenía: esto necesita las dos manos.", 3f);
             }
             // a una mano libre; si no hay, a la mochila
             CarriedItems.Add(new ItemEntry(id, displayName ?? id) { enMano = VaAlBolsillo(id) || ManosOcupadas < Manos, ultimoUso = Time.time });
@@ -379,16 +383,19 @@ namespace EstanDentro.Inventory
         private void Update()
         {
             // No abrir si hay algun overlay modal activo
-            if (OverlayBlocker.IsBlocking || OverlayBlocker.WasJustDismissed || InventoryOverlay.EstaAbierto) return;
+            if (OverlayBlocker.IsBlocking || OverlayBlocker.WasJustDismissed || InventoryOverlay.EstaAbierto || MochilaOverlay.EstaAbierta) return;
             if (Time.timeScale <= 0f) return;
 
             var kb = Keyboard.current;
             var gp = Gamepad.current;
             bool hit = (kb != null && kb.iKey.wasPressedThisFrame)
                     || (gp != null && gp.selectButton.wasPressedThisFrame);
-            if (hit) InventoryOverlay.Open();
+            // I = la mochila (Mateo se agacha a mirarla); Tab = el cuaderno (pistas y misiones)
+            if (hit) { UI.GuiaTeclas.Usada("I"); MochilaOverlay.Abrir(); }
+            if (kb != null && kb.tabKey.wasPressedThisFrame) { UI.GuiaTeclas.Usada("Tab"); InventoryOverlay.Open(); }
             if (kb != null && kb.gKey.wasPressedThisFrame)
             {
+                UI.GuiaTeclas.Usada("G");
                 var cam = Camera.main;
                 if (cam != null)
                 {

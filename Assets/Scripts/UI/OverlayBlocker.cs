@@ -27,5 +27,13 @@ namespace EstanDentro.UI
         }
 
         public static void Reset() { count = 0; lastDismissFrame = -1; }
+
+        // al cargar una escena entera no queda ninguna ventana abierta: si alguna no se cerró (game over, recarga),
+        // el juego quedaba "bloqueado" (sin mirar, sin tocar nada, sin pausa)
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void AlCargarEscenas()
+        {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += (_, modo) => { if (modo == UnityEngine.SceneManagement.LoadSceneMode.Single) Reset(); };
+        }
     }
 }

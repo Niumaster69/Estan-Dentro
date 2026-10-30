@@ -62,7 +62,7 @@ namespace EstanDentro.Stress
             if (!IsCollapsed && passiveRisePerSecond > 0f && CurrentStress < maxStress)
                 Add(passiveRisePerSecond * Time.deltaTime, silent: false);
 
-            if (debugKeysEnabled) PollDebugKeys();
+            if (debugKeysEnabled && Application.isEditor) PollDebugKeys();     // en el juego no: R (forzar candado) ponía el estrés en 0
         }
 
         private void PollDebugKeys()
@@ -75,6 +75,7 @@ namespace EstanDentro.Stress
         }
 
         public void Add(float delta) => Add(delta, silent: false);
+        public void AddSilencioso(float delta) => Add(delta, silent: true);
 
         private void Add(float delta, bool silent)
         {

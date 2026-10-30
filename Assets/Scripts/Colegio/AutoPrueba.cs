@@ -69,6 +69,16 @@ namespace EstanDentro.Colegio
         // ------------------------------------------------------------------ recorrido
         IEnumerator Recorrido()
         {
+            if (SceneManager.GetActiveScene().name == "MainMenu")
+            {
+                Anotar("Menú principal");
+                yield return new WaitForSecondsRealtime(4f);
+                yield return Captura("menu");
+                Revisar(FindAnyObjectByType<UI.MainMenuController>() != null, "El menú principal carga");
+                FindAnyObjectByType<UI.MainMenuController>()?.OnPrologoClicked();       // la prueba pasa también por el prólogo
+                yield return EsperarEscena("Prologo", 30f);
+                yield return new WaitForSecondsRealtime(1f);
+            }
             if (SceneManager.GetActiveScene().name == "Prologo") yield return PruebaPrologo();
             Anotar("Inicio de la prueba automática del Capítulo 1");
             yield return new WaitForSecondsRealtime(2f);
@@ -96,9 +106,33 @@ namespace EstanDentro.Colegio
             }
 
             // 1. nota del cajón del profe -> clave 142
-            var escProfe = Datos("escritorio_profesor").Select(d => d.GetComponent<Note>()).FirstOrDefault(n => n && EnSalonInicio(n.transform.position));
+            // el cajón del escritorio del profe se abre y la nota está adentro
+            var cajon = FindObjectsByType<Cajon>(FindObjectsSortMode.None).FirstOrDefault(c => c.GetComponentInChildren<Note>());
+            Revisar(cajon != null, "El escritorio del profe tiene un cajón que se abre");
+            Note escProfe = null;
+            if (cajon)
+            {
+                yield return Acercarse(cajon);
+                cajon.Interact(); yield return new WaitForSecondsRealtime(0.8f);
+                yield return Captura("cajon_profe_abierto");
+                escProfe = cajon.GetComponentInChildren<Note>();
+            }
             yield return Interactuar(escProfe, "nota_cajon_profe", "Nota del cajón del profe (pista 142)");
             CerrarOverlays();
+
+            // 1b. el tablero se mira de cerca
+            var tab = FindAnyObjectByType<TableroInteractivo>();
+            Revisar(tab != null, "El tablero se puede mirar");
+            if (tab)
+            {
+                yield return Acercarse(tab);
+                Revisar(Alcanza(tab), "Tablero: se puede mirar y alcanzar");
+                tab.Interact(); yield return new WaitForSecondsRealtime(1.5f);
+                yield return Captura("tablero_de_cerca");
+                var kbT = UnityEngine.InputSystem.Keyboard.current;
+                tab.SendMessage("Salir", SendMessageOptions.DontRequireReceiver);
+                yield return new WaitForSecondsRealtime(1f);
+            }
 
             // 2. cartas en los pupitres
             foreach (var n in FindObjectsByType<Note>(FindObjectsSortMode.None).Where(n => EnSalonInicio(n.transform.position) && n != escProfe).Take(3).ToList())
@@ -108,9 +142,10 @@ namespace EstanDentro.Colegio
             var cas = FindObjectsByType<CombinationLock>(FindObjectsSortMode.None)
                       .FirstOrDefault(c => c.CorrectCode.SequenceEqual(new[] { 1, 4, 2 }));
             yield return Candado(cas, "casillero", "Casillero con clave 142");
-            Revisar(Inv() != null && Inv().HasItem("destornillador"), "Casillero entrega el destornillador");
             yield return new WaitForSecondsRealtime(0.5f);
             CerrarOverlays();                                   // carta de Pa
+            yield return Coger(cas, "casillero_142");           // el destornillador SE VE adentro: otra E para cogerlo
+            Revisar(Inv() != null && Inv().HasItem("destornillador"), "Casillero entrega el destornillador");
             yield return new WaitForSecondsRealtime(0.8f);
             yield return Captura("tarjeta_destornillador");
             Revisar(Time.timeScale == 0f, "Al recoger el destornillador aparece su tarjeta (el juego espera)");
@@ -121,20 +156,32 @@ namespace EstanDentro.Colegio
             var lon = FindObjectsByType<CombinationLock>(FindObjectsSortMode.None)
                       .FirstOrDefault(c => c.CorrectCode.SequenceEqual(new[] { 0, 4, 6 }));
             yield return Candado(lon, "lonchera", "Lonchera con clave 046");
+            CerrarOverlays();
+            yield return Coger(lon, "lonchera");
+            CerrarOverlays();
             Revisar(Inv() != null && Inv().HasItem("linterna"), "Lonchera entrega la linterna");
             // capacidad: sin mochila, solo lo que cabe en las dos manos
             if (Inv() != null)
             {
                 Revisar(Inv().Ocupados == 2 && Inv().Capacidad == 2, $"Manos llenas con destornillador y linterna ({Inv().Ocupados}/{Inv().Capacidad})");
                 Revisar(!Inv().PuedeCargar("piedra"), "Un tercer objeto no cabe sin mochila");
-                Revisar(Inv().PuedeCargar("moneda"), "Una moneda sí cabe (va al bolsillo)");
+                Revisar(!Inv().PuedeCargar("moneda"), "Sin mochila y con las manos llenas, ni una moneda cabe");
             }
             var mochila = FindAnyObjectByType<MochilaEquipable>();
             Revisar(mochila != null, "Está la mochila de Mateo en el 4°B");
             if (mochila)
             {
                 yield return Interactuar(mochila, "mochila", "Mochila de Mateo");
-                Revisar(Inv() != null && Inv().TieneMochila && Inv().Capacidad == 6, "Con la mochila puede cargar 6 cosas");
+                Revisar(Inv() != null && Inv().TieneMochila && Inv().Capacidad == 8, "Con la mochila puede cargar 8 cosas (2 manos + 6)");
+                // la mochila nueva (I): Mateo se agacha y se ven los dibujos
+                CerrarOverlays(); yield return new WaitForSecondsRealtime(0.5f);
+                Inventory.MochilaOverlay.Abrir();
+                yield return new WaitForSecondsRealtime(1.5f);
+                Revisar(Inventory.MochilaOverlay.EstaAbierta, "Con I se abre la mochila");
+                yield return Captura("mochila_abierta");
+                Inventory.MochilaOverlay.Cerrar();
+                yield return new WaitForSecondsRealtime(1f);
+                Revisar(!Inventory.MochilaOverlay.EstaAbierta && !EstanDentro.UI.OverlayBlocker.IsBlocking, "La mochila se cierra y el juego sigue");
                 CerrarOverlays();
                 // el cuaderno: manos / mochila, y pasar de una a otra
                 Inventory.InventoryOverlay.Open();
@@ -152,7 +199,7 @@ namespace EstanDentro.Colegio
             CerrarOverlays();
             yield return Captura("apagon");
             var lint = Jugador()?.GetComponentsInChildren<Flashlight>(true).FirstOrDefault(f => f.GetComponent<Light>());
-            if (lint) { lint.SetEnabled(true); yield return new WaitForSecondsRealtime(0.5f); }
+            if (lint) { Inv()?.Usar("linterna"); lint.SetEnabled(true); yield return new WaitForSecondsRealtime(0.5f); }
             Revisar(lint && lint.IsUnlocked && lint.IsOn, "La linterna se puede encender");
             foreach (var hm in FindObjectsByType<HiddenMessage>(FindObjectsSortMode.None).Take(2))
             { Mirar(hm.transform.position, 2.2f); yield return new WaitForSecondsRealtime(2.5f); yield return Captura("mensaje_oculto"); }
@@ -177,8 +224,11 @@ namespace EstanDentro.Colegio
                 casB.Interact();
                 yield return new WaitForSecondsRealtime(1.4f);
                 CerrarOverlays();
-                yield return new WaitForSecondsRealtime(0.4f);
                 yield return Captura("casillero_" + botin);
+                casB.Interact();                                 // coger lo que se ve adentro
+                yield return new WaitForSecondsRealtime(0.8f);
+                CerrarOverlays();
+                yield return new WaitForSecondsRealtime(0.4f);
                 Revisar(puerta && Quaternion.Angle(antes, puerta.transform.rotation) > 60f, $"La puerta del casillero gira ({(puerta ? Quaternion.Angle(antes, puerta.transform.rotation) : 0):F0}°)");
                 Revisar(Inv().HasItem(botin), $"El casillero entrega {botin}");
                 float altoDespues = puerta ? puerta.GetComponent<Renderer>().bounds.center.y : 0f;
@@ -212,6 +262,9 @@ namespace EstanDentro.Colegio
                 int notasAntes = Inv().ReadNotes.Count;
                 yield return Acercarse(cr);
                 cr.Interact();
+                yield return new WaitForSecondsRealtime(1.2f);
+                CerrarOverlays();
+                cr.Interact();                                   // coger el papel que se ve adentro
                 yield return new WaitForSecondsRealtime(1.2f);
                 yield return Captura("recuerdo");
                 CerrarOverlays();
@@ -291,12 +344,38 @@ namespace EstanDentro.Colegio
             }
 
             // 5. rejilla del techo -> ductos
-            var rej = FindObjectsByType<RejillaDucto>(FindObjectsSortMode.None).FirstOrDefault(r => !string.IsNullOrEmpty(r.escenaDestino));
+            var rej = FindObjectsByType<RejillaDucto>(FindObjectsSortMode.None).FirstOrDefault(r => !string.IsNullOrEmpty(r.escenaDestino) && r.name != "REJILLA_P1_RECT");   // la del 4°B, no la de la rectoría
             Revisar(rej != null, "La rejilla del 4°B lleva a los ductos");
             if (rej)
             {
-                yield return Acercarse(rej);
-                Revisar(Alcanza(rej), "Desde el piso se alcanza la rejilla con la mira");
+                // desde el piso no se alcanza: pupitre -> casillero -> rejilla
+                var sp0 = GameObject.Find("SpawnPoint_4b_desde_ducto");
+                if (sp0) { Jugador().Teletransportar(sp0.transform.position); yield return new WaitForSecondsRealtime(0.5f); }
+                Mirar(rej.transform.position, 0f); yield return new WaitForSecondsRealtime(0.3f);
+                rej.Interact(); yield return new WaitForSecondsRealtime(0.5f);
+                Revisar(!rej.abierta, "Desde el piso la rejilla está muy alta");
+                var silla = FindObjectsByType<SillaArrastrable>(FindObjectsSortMode.None).Where(x => x.transform.position.y > 6.5f).OrderBy(x => Vector3.Distance(x.transform.position, x.destino)).FirstOrDefault();
+                var trepar = GameObject.Find("Trepar_Casillero")?.GetComponent<Escalada>();
+                Revisar(silla && trepar, "Hay silla para arrastrar y casillero para trepar");
+                if (silla && trepar)
+                {
+                    yield return Acercarse(silla);
+                    silla.Interact(); yield return new WaitForSecondsRealtime(0.5f);                 // agarrarla
+                    // llevarla: Mateo camina hasta quedar frente al casillero con la silla delante
+                    Vector3 alCas = new Vector3(silla.destino.x - trepar.arriba.x, 0f, silla.destino.z - trepar.arriba.z).normalized;
+                    Vector3 pie = silla.destino + alCas * 0.9f; pie.y = Jugador().transform.position.y;
+                    Jugador().Teletransportar(pie); Jugador().transform.rotation = Quaternion.LookRotation(-alCas);
+                    yield return new WaitForSecondsRealtime(1.2f);
+                    silla.Interact(); yield return new WaitForSecondsRealtime(0.6f);                 // soltarla junto al casillero
+                    yield return Captura("silla_arrastrada");
+                    silla.Interact(); yield return new WaitForSecondsRealtime(1.2f);                 // subirse
+                    Revisar(Jugador().transform.position.y > 7.5f, $"Mateo se sube a la silla (pies a {Jugador().transform.position.y:F2})");
+                    trepar.Interact(); yield return new WaitForSecondsRealtime(1.2f);
+                    Revisar(Jugador().transform.position.y > 8.6f, $"Mateo se sube al casillero (pies a {Jugador().transform.position.y:F2})");
+                    Mirar(rej.transform.position, 0f); yield return new WaitForSecondsRealtime(0.5f);
+                    yield return Captura("encima_casillero");
+                }
+                Revisar(Alcanza(rej), "Desde el casillero se alcanza la rejilla con la mira");
                 rej.Interact(); yield return new WaitForSecondsRealtime(2f);
                 Revisar(rej.abierta, "Con destornillador se quita la rejilla");
                 Revisar(Inv() != null && Inv().EstaEnMano("destornillador"), "Mateo saca solo el destornillador de la mochila para usarlo");
@@ -306,46 +385,132 @@ namespace EstanDentro.Colegio
                 yield return new WaitForSecondsRealtime(6f);
                 yield return Captura("ductos");
 
-                // 6. salida de los ductos -> vuelve al colegio frente a la rectoría
+                // 6. salida de los ductos -> cae DENTRO de la rectoría (sin recargar el colegio)
                 var salida = FindObjectsByType<ExitDuctsTrigger>(FindObjectsSortMode.None).FirstOrDefault();
                 Revisar(salida != null, "Los ductos tienen salida");
                 if (salida) { Teletransportar(salida.GetComponent<Collider>().bounds.center, Quaternion.identity); }
                 yield return EsperarEscena("Colegio", 40f);
-                yield return new WaitForSecondsRealtime(5f);
+                float tv = Time.realtimeSinceStartup; while (ViajeDuctos.Activo && Time.realtimeSinceStartup - tv < 20f) yield return null;
+                yield return new WaitForSecondsRealtime(2f);
                 var pc2 = Jugador();
-                Revisar(pc2 && Vector3.Distance(pc2.transform.position, (GameObject.Find("SpawnPoint_salas_finales") ? GameObject.Find("SpawnPoint_salas_finales").transform.position : new Vector3(14.7f, 0f, 8.9f))) < 2.5f,
-                        $"Al salir de los ductos aparece frente a la rectoría ({(pc2 ? pc2.transform.position.ToString("F1") : "sin jugador")})");
-                yield return Captura("vuelta_al_colegio");
+                var spR = GameObject.Find("SpawnPoint_rectoria_dentro");
+                Revisar(pc2 && spR && Vector3.Distance(pc2.transform.position, spR.transform.position) < 1.5f,
+                        $"Al salir del ducto cae dentro de la rectoría ({(pc2 ? pc2.transform.position.ToString("F1") : "sin jugador")})");
+                yield return Captura("rectoria_por_dentro");
                 Revisar(Inv() != null && Inv().HasItem("destornillador") && Inv().HasItem("linterna") && Inv().TieneMochila,
                         "Al volver de los ductos conserva el destornillador, la linterna y la mochila");
                 Revisar(FindObjectsByType<Inventory.Inventory>(FindObjectsSortMode.None).Length == 1, "Hay un solo inventario en la partida");
+                Revisar(cas != null && cas.IsSolved, "El colegio sigue como lo dejaste (el casillero 142 sigue abierto)");
             }
 
-            // 7. pistas del 1705 en la secretaría
-            foreach (var n in FindObjectsByType<Note>(FindObjectsSortMode.None).Where(n => n.transform.position.x > 28.67f && n.transform.position.z < 7f && n.transform.position.y < 2f).Take(2).ToList())
-            { yield return Interactuar(n, "pista_1705", "Pista del 1705 en la secretaría"); CerrarOverlays(); }
-
-            // 8. rectoría 1705 -> final
-            var rect = FindObjectsByType<CombinationLock>(FindObjectsSortMode.None)
-                       .FirstOrDefault(c => c.CorrectCode.SequenceEqual(new[] { 1, 7, 0, 5 }) && c.GetComponent<LockedDoor>());
-            if (rect)
+            // 7. rectoría: la foto del recuerdo rompe el colegio (Pesadilla); la llave del 4°B solo está en la Pesadilla
+            Revisar(GameObject.Find("Llave_4B") == null, "Antes del recuerdo la llave del 4°B no está");
+            var foto = GameObject.Find("Foto_Dia_Familia")?.GetComponent<Note>();
+            yield return Interactuar(foto, "foto_recuerdo", "Foto del Día de la familia");
+            CerrarOverlays();
+            float tp = 0f;
+            while (Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Pesadilla && tp < 8f) { tp += Time.unscaledDeltaTime; yield return null; }
+            Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Pesadilla, "La foto dispara la Pesadilla");
+            yield return new WaitForSecondsRealtime(4f);
+            var obs = FindAnyObjectByType<Mente.Observador>();
+            Revisar(obs && obs.GetComponentInChildren<Renderer>().enabled, "En la Pesadilla aparece el Observador" + (obs ? $" ({Vector3.Distance(obs.transform.position, Jugador().transform.position):F1} m)" : ""));
+            yield return Captura("pesadilla_rectoria");
+            if (obs)
             {
-                var puerta = rect.GetComponent<LockedDoor>();
-                Revisar(puerta.IsLocked, "La rectoría empieza cerrada");
-                yield return Candado(rect, "rectoria", "Puerta de la rectoría con clave 1705");
-                yield return new WaitForSecondsRealtime(0.5f);
-                Revisar(!puerta.IsLocked, "La clave 1705 desbloquea la rectoría");
-                puerta.Interact(); yield return new WaitForSecondsRealtime(2f);
-                Revisar(puerta.IsOpen, "La puerta de la rectoría se abre");
-                yield return Captura("rectoria_abierta");
+                // mirarlo fijo: te ve y te caza (Alterado). Apenas pasa se pausa, para que no atrape al robot.
+                Vector3 alObs = obs.transform.position - Jugador().transform.position; alObs.y = 0f;
+                Jugador().transform.rotation = Quaternion.LookRotation(alObs);
+                Jugador().SetPitch(0f);
+                float tm = 0f;
+                while (Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Alterado && tm < 5f) { tm += Time.unscaledDeltaTime; Jugador().transform.rotation = Quaternion.LookRotation(new Vector3(obs.transform.position.x - Jugador().transform.position.x, 0f, obs.transform.position.z - Jugador().transform.position.z)); yield return null; }
+                Mente.Observador.Pausado = true;
+                Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Alterado, $"Mirarlo fijo dispara la persecución (Alterado) en {tm:F1} s");
+                yield return new WaitForSecondsRealtime(0.4f); yield return Captura("alterado_persecucion");
+                Mente.EstadoMente.Ir(Mente.EstadoMente.Estado.Pesadilla);
+                tm = 0f; while (Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Pesadilla && tm < 6f) { tm += Time.unscaledDeltaTime; yield return null; }
+                Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Pesadilla, "Al perderte vuelve la Pesadilla");
             }
-            else Revisar(false, "Existe la puerta de la rectoría con clave 1705");
-            var fin = FindObjectsByType<EndGameTrigger>(FindObjectsSortMode.None).FirstOrDefault();
-            Revisar(fin != null, "Hay un final dentro de la rectoría");
-            if (fin)
+            Mente.Observador.Pausado = true;                                   // que no persiga al robot de la prueba
+            var llave = GameObject.Find("Llave_4B")?.GetComponent<Recogible>();
+            yield return Interactuar(llave, "llave_4b", "Llave del 4°B (en la Pesadilla, en otro lugar)");
+            CerrarOverlays(); yield return new WaitForSecondsRealtime(0.5f);
+            Revisar(Inv() != null && Inv().HasItem("llave_4b"), "Se coge la llave del 4°B");
+            tp = 0f;
+            while (Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Normal && tp < 10f) { tp += Time.unscaledDeltaTime; yield return null; }
+            Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Normal, "Con la llave la Pesadilla se va");
+            yield return new WaitForSecondsRealtime(1f); yield return Captura("rectoria_otra_vez_normal");
+            var fin0 = FindObjectsByType<EndGameTrigger>(FindObjectsSortMode.None).FirstOrDefault();
+            Revisar(fin0 == null, "La rectoría ya no tiene el final viejo");
+
+            // 8. de vuelta: silla -> archivadores -> rejilla -> ducto -> 4°B
+            var trepR = GameObject.Find("Trepar_Archivadores")?.GetComponent<Escalada>();
+            var sillaR = FindObjectsByType<SillaArrastrable>(FindObjectsSortMode.None).Where(x => x.transform.position.x > 10f && x.transform.position.x < 19.4f && x.transform.position.z < 7.2f && x.transform.position.y < 2f)
+                         .OrderBy(x => Vector3.Distance(x.transform.position, x.destino)).FirstOrDefault();
+            var rejR = FindObjectsByType<RejillaDucto>(FindObjectsSortMode.None).FirstOrDefault(x => x.name == "REJILLA_P1_RECT");
+            Revisar(trepR && sillaR && rejR, "En la rectoría hay silla, archivadores para subir y rejilla abierta");
+            if (trepR && sillaR && rejR)
             {
-                Teletransportar(fin.GetComponent<Collider>().bounds.center, Quaternion.identity);
-                for (int k = 0; k < 4; k++) { yield return new WaitForSecondsRealtime(4f); yield return Captura("final"); }
+                yield return Acercarse(sillaR);
+                sillaR.Interact(); yield return new WaitForSecondsRealtime(0.5f);
+                Vector3 alA = new Vector3(sillaR.destino.x - trepR.arriba.x, 0f, sillaR.destino.z - trepR.arriba.z).normalized;
+                Vector3 pieR = sillaR.destino + alA * 0.9f; pieR.y = Jugador().transform.position.y;
+                Jugador().Teletransportar(pieR); Jugador().transform.rotation = Quaternion.LookRotation(-alA);
+                yield return new WaitForSecondsRealtime(1.2f);
+                sillaR.Interact(); yield return new WaitForSecondsRealtime(0.6f);
+                sillaR.Interact(); yield return new WaitForSecondsRealtime(1.2f);
+                trepR.Interact(); yield return new WaitForSecondsRealtime(1.2f);
+                Revisar(Jugador().transform.position.y > 1.2f, $"Mateo se sube a los archivadores (pies a {Jugador().transform.position.y:F2})");
+                Mirar(rejR.transform.position, 0f); yield return new WaitForSecondsRealtime(0.4f);
+                yield return Captura("rectoria_rejilla");
+                rejR.Interact();
+                yield return EsperarEscena("EsecenaUno-DuctosDeVentilacion", 25f);
+                yield return new WaitForSecondsRealtime(4f);
+                var salida2 = FindObjectsByType<ExitDuctsTrigger>(FindObjectsSortMode.None).FirstOrDefault();
+                if (salida2) Teletransportar(salida2.GetComponent<Collider>().bounds.center, Quaternion.identity);
+                yield return EsperarEscena("Colegio", 40f);
+                float tv2 = Time.realtimeSinceStartup; while (ViajeDuctos.Activo && Time.realtimeSinceStartup - tv2 < 20f) yield return null;
+                yield return new WaitForSecondsRealtime(2f);
+                var sp4 = GameObject.Find("SpawnPoint_4b_desde_ducto");
+                Revisar(sp4 && Vector3.Distance(Jugador().transform.position, sp4.transform.position) < 1.5f, "Por el ducto vuelve al 4°B");
+                yield return Captura("vuelta_al_4b");
+            }
+
+            // 9. la puerta del 4°B con la llave
+            var puerta4b = FindObjectsByType<LockedDoor>(FindObjectsSortMode.None).FirstOrDefault(d => d.llaveId == "llave_4b");
+            Revisar(puerta4b != null, "La puerta del 4°B se abre con llave");
+            if (puerta4b)
+            {
+                yield return Acercarse(puerta4b);
+                puerta4b.Interact(); yield return new WaitForSecondsRealtime(2f);
+                Revisar(!puerta4b.IsLocked && puerta4b.IsOpen, "Con la llave se abre la puerta del 4°B");
+                yield return Captura("puerta_4b_abierta");
+            }
+            Revisar(GameObject.Find("Barricada_NO") && GameObject.Find("Barricada_SE"), "Las escaleras del piso 3 tienen barricada");
+
+            // 9b. al salir al pasillo el colegio se rompe otra vez (hasta llegar al aula de música)
+            var zonaP = GameObject.Find("Recuerdo_Pasillo4B");
+            Revisar(zonaP != null, "Hay recuerdo en el pasillo del 4°B");
+            if (zonaP)
+            {
+                Teletransportar(zonaP.transform.position + Vector3.down * 1.25f, Jugador().transform.rotation);
+                float tz = 0f;
+                while (Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Pesadilla && tz < 8f) { tz += Time.unscaledDeltaTime; yield return null; }
+                Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Pesadilla, "Salir al pasillo dispara la Pesadilla");
+                yield return new WaitForSecondsRealtime(1f); yield return Captura("pasillo_pesadilla");
+            }
+
+            // 10. el aula de música: el recuerdo y el final del capítulo
+            var rec = FindAnyObjectByType<RecuerdoAula>();
+            Revisar(rec != null, "Existe el recuerdo del aula de música");
+            if (rec)
+            {
+                Teletransportar(rec.transform.position + Vector3.down * 1.3f, Quaternion.LookRotation(Vector3.left));
+                float ta = 0f;
+                while ((Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Normal || Mente.EstadoMente.EnTransicion) && ta < 10f) { ta += Time.unscaledDeltaTime; yield return null; }
+                Revisar(Mente.EstadoMente.Actual == Mente.EstadoMente.Estado.Normal, $"El aula de música deshace la Pesadilla ({ta:F1} s)");
+                yield return new WaitForSecondsRealtime(8f); yield return Captura("recuerdo_aula_1");
+                yield return new WaitForSecondsRealtime(12f); yield return Captura("recuerdo_aula_2");
+                yield return EsperarEscena("MainMenu", 60f);
             }
             Terminar();
         }
@@ -360,6 +525,16 @@ namespace EstanDentro.Colegio
             yield return new WaitForSecondsRealtime(1.2f);
             yield return Captura(captura);
             Revisar(true, que + ": se interactuó");
+        }
+
+        /// <summary>Segunda E: coger lo que quedó a la vista dentro del contenedor (y fotografiarlo antes).</summary>
+        IEnumerator Coger(CombinationLock cl, string captura)
+        {
+            if (!cl) yield break;
+            yield return new WaitForSecondsRealtime(0.7f);
+            yield return Captura(captura + "_adentro");
+            cl.Interact();
+            yield return new WaitForSecondsRealtime(0.6f);
         }
 
         IEnumerator Candado(CombinationLock cl, string captura, string que)
@@ -512,12 +687,20 @@ namespace EstanDentro.Colegio
             yield return Captura("prologo_inicio");
             yield return new WaitForSecondsRealtime(8f);
             yield return Captura("prologo_mirando_al_frente");
-            foreach (var g in new[] { pr.cuaderno, pr.lonchera, pr.radio, pr.celular })
+            foreach (var g in new[] { pr.cuaderno, pr.lonchera, pr.celular, pr.radio })   // la radio es lo último (lleva al choque)
             {
+                // como el jugador: se espera a que nadie esté hablando (antes no se puede tocar)
+                float tw = Time.realtimeSinceStartup;
+                while (!pr.PuedeTocar && Time.realtimeSinceStartup - tw < 45f) yield return null;
+                while (g == pr.radio && !pr.RadioLista && Time.realtimeSinceStartup - tw < 90f) yield return null;   // la radio se ofrece al final
+                while (!pr.PuedeTocar && Time.realtimeSinceStartup - tw < 120f) yield return null;
                 // mirar el objeto como lo haría el jugador y tocarlo
                 var dir = (g.GetComponent<Collider>() ? g.GetComponent<Collider>().bounds.center : g.transform.position) - pr.ojos.position;
                 pr.Apuntar(dir);
                 yield return null; yield return null;
+                // la cabeza gira desde el cuello: los ojos se movieron, se vuelve a apuntar desde donde quedaron
+                dir = (g.GetComponent<Collider>() ? g.GetComponent<Collider>().bounds.center : g.transform.position) - pr.ojos.position;
+                pr.Apuntar(dir); yield return null; yield return null;
                 bool alcanza = pr.Mirando == g;
                 if (!alcanza) Anotar($"   (desde los ojos, {g.name} está a {dir.magnitude:F2} m; la mira ve '{pr.LoQueVe()}')");
                 Revisar(alcanza, $"Prólogo: se alcanza a mirar {g.name}");
@@ -552,6 +735,7 @@ namespace EstanDentro.Colegio
             foreach (var t in papeles.Keys)
             {
                 var r = t.GetComponent<Renderer>(); if (!r) continue;
+                if (r.bounds.size.y > 0.15f) continue;                  // de pie: pegado con cinta en una puerta (no está "flotando")
                 var b = r.bounds; var o = new Vector3(b.center.x, b.min.y + 0.01f, b.center.z);
                 var hits = Physics.RaycastAll(o, Vector3.down, 3f).Where(h => !h.collider.transform.IsChildOf(t)).OrderBy(h => h.distance).ToList();
                 if (hits.Count == 0 || hits[0].distance > 0.05f) { flotando++; if (flotando <= 5) Anotar($"   (papel flotando: '{t.name}' a {(hits.Count > 0 ? hits[0].distance : 3f):F2} m del apoyo, en {t.position:F2})"); }

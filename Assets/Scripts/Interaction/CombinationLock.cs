@@ -54,6 +54,21 @@ namespace EstanDentro.Interaction
         public int FailsCount { get; private set; }
         public int[] CorrectCode => correctCode;
 
+        public override string Accion
+        {
+            get
+            {
+                if (!IsSolved) return "Mirar el candado";
+                var lc = GetComponent<LockedContainer>();
+                if (lc != null && lc.TienePendiente) return "Tomar: " + lc.NombreAdentro.ToLower();
+                var cas = GetComponent<EstanDentro.Colegio.Casillero>();
+                if (cas != null) return cas.Accion;
+                if (lc != null && lc.TienePuertas) return lc.CerradoOtraVez ? "Abrir el casillero" : "Cerrar el casillero";
+                return "Ya está abierto";
+            }
+        }
+
+
         public override void Interact()
         {
             // Defensa: ignorar interaccion si hay un overlay modal activo (ej. minijuego de respiracion).
@@ -65,6 +80,7 @@ namespace EstanDentro.Interaction
                 if (lc != null && lc.TienePendiente) lc.TomarPendiente();
                 var cas = GetComponent<EstanDentro.Colegio.Casillero>();
                 if (cas != null) cas.Interact();                       // casillero ya abierto: tomar lo que quedó
+                else if (lc != null && !lc.TienePendiente) lc.Alternar();   // vacío: cerrarlo / abrirlo otra vez
                 return;
             }
 

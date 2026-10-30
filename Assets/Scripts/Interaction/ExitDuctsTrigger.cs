@@ -151,6 +151,8 @@ namespace EstanDentro.Interaction
             }
 
             // Setear spawn point destino antes de cambiar de escena
+            // ida y vuelta sin recargar el colegio (ViajeDuctos): el colegio despierta como lo dejaste
+            if (EstanDentro.Colegio.ViajeDuctos.Activo) { Time.timeScale = 1f; EstanDentro.Colegio.ViajeDuctos.Salir(); yield break; }
             GameSession.NextSpawnPointId = targetSpawnId;
 
             Time.timeScale = 1f;

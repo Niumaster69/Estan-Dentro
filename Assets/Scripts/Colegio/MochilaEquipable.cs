@@ -9,6 +9,9 @@ namespace EstanDentro.Colegio
     {
         public AudioClip sonido;
 
+        public override string Accion => "Ponerse la mochila";
+
+
         public override void Interact()
         {
             var inv = Inventory.Inventory.Instance;

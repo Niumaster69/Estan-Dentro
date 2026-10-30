@@ -254,8 +254,13 @@ namespace EstanDentro.EditorColegio
                             var sn = new SerializedObject(nota);
                             sn.FindProperty("noteTitle").stringValue = d.Get("pista_titulo");
                             sn.FindProperty("noteText").stringValue = d.Get("pista_texto").Replace("\\n", "\n");
-                            sn.FindProperty("disappearAfterRead").boolValue = false;
+                            sn.FindProperty("disappearAfterRead").boolValue = true;     // el papelito se recoge: queda en el cuaderno (Pistas)
                             sn.ApplyModifiedPropertiesWithoutUndo();
+                            // zona de toque generosa (la hoja es finísima: costaba que saliera la acción de cogerla)
+                            foreach (var mc in g.GetComponents<MeshCollider>()) UnityEngine.Object.DestroyImmediate(mc);
+                            var mfP = g.GetComponent<MeshFilter>();
+                            var bcP = g.AddComponent<BoxCollider>();
+                            if (mfP && mfP.sharedMesh) { var mb = mfP.sharedMesh.bounds; bcP.center = mb.center; bcP.size = Vector3.Max(mb.size, Vector3.one * 0.06f); }
                             break;
                         }
                         var r = g.AddComponent<Recogible>(); r.itemId = tipo; r.nombreVisible = Capital(nombre); break;
@@ -383,11 +388,23 @@ namespace EstanDentro.EditorColegio
             string hdr = RAIZ + "/Cielos/kloppenheim_02_puresky_4k.hdr";   // noche (decisión de Henry, 19-oct)
             if (AssetImporter.GetAtPath(hdr) is TextureImporter ti && ti.textureShape != TextureImporterShape.TextureCube)
             { ti.textureShape = TextureImporterShape.TextureCube; ti.SaveAndReimport(); }
-            var cubo = AssetDatabase.LoadAssetAtPath<Cubemap>(hdr);
+            var perfil = PerfilColegio();
 
+            var vol = new GameObject("Volumen_Recuerdo").AddComponent<Volume>();
+            vol.isGlobal = true; vol.sharedProfile = perfil;
+            CielosYVolumenLuz();
+        }
+
+        /// <summary>El perfil de ambiente del colegio (cielo, exposición, niebla, colores). Se guarda DENTRO del archivo: antes los
+        /// componentes quedaban solo en memoria y el juego compilado salía sin niebla ni exposición fija.</summary>
+        public static VolumeProfile PerfilColegio()
+        {
+            string hdr = RAIZ + "/Cielos/kloppenheim_02_puresky_4k.hdr";
+            var cubo = AssetDatabase.LoadAssetAtPath<Cubemap>(hdr);
             string rutaPerfil = "Assets/Scenes/Colegio/Colegio_Recuerdo_Volumen.asset";
             var perfil = AssetDatabase.LoadAssetAtPath<VolumeProfile>(rutaPerfil);
             if (perfil == null) { perfil = ScriptableObject.CreateInstance<VolumeProfile>(); AssetDatabase.CreateAsset(perfil, rutaPerfil); }
+            perfil.components.RemoveAll(c => c == null);
             var ve = perfil.Has<VisualEnvironment>() ? perfil.components.OfType<VisualEnvironment>().First() : perfil.Add<VisualEnvironment>(true);
             ve.skyType.Override((int)SkyType.HDRI);
             var sky = perfil.Has<HDRISky>() ? perfil.components.OfType<HDRISky>().First() : perfil.Add<HDRISky>(true);
@@ -420,10 +437,14 @@ namespace EstanDentro.EditorColegio
             sh.cascadeShadowSplitCount.Override(4);
             var cs = perfil.Has<ContactShadows>() ? perfil.components.OfType<ContactShadows>().First() : perfil.Add<ContactShadows>(true);
             cs.enable.Override(true); cs.length.Override(0.35f); cs.distanceScaleFactor.Override(0.5f);
-            EditorUtility.SetDirty(perfil);
+            foreach (var comp in perfil.components)
+                if (comp && !AssetDatabase.Contains(comp)) { comp.name = comp.GetType().Name; comp.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy; AssetDatabase.AddObjectToAsset(comp, perfil); }
+            EditorUtility.SetDirty(perfil); AssetDatabase.SaveAssets();
+            return perfil;
+        }
 
-            var vol = new GameObject("Volumen_Recuerdo").AddComponent<Volume>();
-            vol.isGlobal = true; vol.sharedProfile = perfil;
+        static void CielosYVolumenLuz()
+        {
             var sol = new GameObject("Luna");
             sol.transform.rotation = Quaternion.Euler(38f, 210f, 0f);
             var l = sol.AddComponent<Light>(); l.type = LightType.Directional; l.color = new Color(0.55f, 0.66f, 1f);

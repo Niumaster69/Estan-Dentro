@@ -18,8 +18,19 @@ namespace EstanDentro.Player
         public Transform CameraPivot => cameraPivot;
         public bool InputEnabled { get; set; } = true;
         public bool Agachado => crouchHeld;
+        /// <summary>Agachado a la fuerza (encima de un casillero no cabe de pie).</summary>
+        public bool ForzarAgachado { get; set; }
+        /// <summary>Multiplica la velocidad (respirando hondo con Q se va despacio).</summary>
+        public float FactorVelocidad { get; set; } = 1f;
+
+        /// <summary>Pone al jugador en un punto (los pies) sin que el CharacterController lo devuelva.</summary>
+        public void Teletransportar(Vector3 pies)
+        {
+            controller.enabled = false; transform.position = pies; verticalVelocity = 0f; controller.enabled = true;
+        }
         public bool Corriendo => sprintHeld && !crouchHeld;
-        public void SetPitch(float p) { pitch = Mathf.Clamp(p, minPitch, maxPitch); }
+        public void SetPitch(float p) { pitch = Mathf.Clamp(p, minPitch, maxPitch); if (cameraPivot != null) cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f); }
+        public float Pitch => pitch;
         [SerializeField, Tooltip("Grados por pixel de delta del mouse. Subir = mas rapido. Tipico 0.1 - 0.4.")]
         private float mouseSensitivity = 0.25f;
         [SerializeField, Tooltip("Grados por segundo cuando el stick esta a tope. Subir = mas rapido. Tipico 150 - 320.")]
@@ -55,6 +66,8 @@ namespace EstanDentro.Player
         private void Start()
         {
             ApplySettings();
+            // el plano cercano debe quedar DENTRO del cuerpo (radio 0,25 m): a 0,3 m la cámara veía a través de las paredes
+            foreach (var c in GetComponentsInChildren<Camera>(true)) if (c.nearClipPlane > 0.06f) c.nearClipPlane = 0.05f;
         }
 
         public void ApplySettings()
@@ -69,7 +82,8 @@ namespace EstanDentro.Player
             if (InputEnabled)
             {
                 PollHoldInputs();
-                HandleLook();
+                // con el cuaderno, una nota o un candado abiertos el mouse es para la pantalla, no para girar la cabeza
+                if (!EstanDentro.UI.OverlayBlocker.IsBlocking && Cursor.lockState == CursorLockMode.Locked) HandleLook();
             }
             HandleMove(); // gravedad sigue funcionando aunque input este bloqueado
             HandleCrouchHeight();
@@ -81,7 +95,7 @@ namespace EstanDentro.Player
             var gp = Gamepad.current;
             sprintHeld = (kb != null && kb.leftShiftKey.isPressed) ||
                          (gp != null && gp.leftStickButton.isPressed);
-            crouchHeld = (kb != null && kb.cKey.isPressed) ||
+            crouchHeld = ForzarAgachado || (kb != null && kb.cKey.isPressed) ||
                          (gp != null && gp.rightTrigger.isPressed);
         }
 
@@ -116,7 +130,7 @@ namespace EstanDentro.Player
 
             Vector2 effectiveMove = InputEnabled ? moveInput : Vector2.zero;
             Vector3 move = transform.right * effectiveMove.x + transform.forward * effectiveMove.y;
-            move *= speed;
+            move *= speed * FactorVelocidad;
 
             if (controller.isGrounded && verticalVelocity < 0f)
                 verticalVelocity = -2f;

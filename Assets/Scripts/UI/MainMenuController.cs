@@ -57,7 +57,9 @@ namespace EstanDentro.UI
         [SerializeField] private string versionLabel = "Capitulo 1 - prototipo";
 
         [Header("Carga")]
-        [SerializeField] private string playSceneName = "Cinematic_Intro";
+        [SerializeField] private string playSceneName = "Colegio";         // Henry 20-oct: empezar de una vez en el salón 4°B
+        [SerializeField] private string prologoSceneName = "Prologo";      // el prólogo se juega aparte (botón PRÓLOGO)
+        [SerializeField] private string continuarSceneName = "Colegio";
 
         [Header("Tipografia (opcional - asignar .ttf desde Inspector)")]
         [SerializeField, Tooltip("Fuente del titulo grande. Recomendado: Creepster de Google Fonts. Vacio = LegacyRuntime.")]
@@ -141,6 +143,7 @@ namespace EstanDentro.UI
         private Canvas canvas;
         private CanvasGroup canvasGroup;
         private Button playButton;
+        private Button prologoButton;
         private Button continueButton;
         private Text continueHintText;
         private Button settingsButton;
@@ -245,7 +248,7 @@ namespace EstanDentro.UI
         private void RelayoutButtons()
         {
             const float startY = -40f;
-            Button[] order = { playButton, continueButton, settingsButton, quitButton };
+            Button[] order = { playButton, prologoButton, continueButton, settingsButton, quitButton };
             int visibleIdx = 0;
             string debugStr = "[MainMenu] RelayoutButtons: ";
             foreach (var btn in order)
@@ -423,6 +426,15 @@ namespace EstanDentro.UI
             StartCoroutine(RunCalibrationThenLoad());
         }
 
+        public void OnPrologoClicked()
+        {
+            HideMenuPanel();
+            Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
+            EstanDentro.UI.Pausa.Reiniciar();
+            Inventory.Inventory.NuevaPartida();
+            SceneManager.LoadScene(prologoSceneName);
+        }
+
         public void OnContinueClicked()
         {
             PartidasOverlay.Open(
@@ -446,12 +458,8 @@ namespace EstanDentro.UI
                 providerGo.AddComponent<BreathingInputProvider>();
             }
 
-            // 2. MicCalibration (skip si ya esta calibrado)
-            var calibGo = new GameObject("__MicCalibration");
-            var calib = calibGo.AddComponent<MicCalibration>();
-            bool done = false;
-            calib.OnCalibrationDone += _ => done = true;
-            while (!done) yield return null;
+            // 2. (sin calibrar el micrófono: respirar ahora es mantener Q)
+            yield return null;
 
             // 3. Reusar idPartida viejo (no POST nueva)
             GameSession.ResumePartida(idPartida, fechaInicioOriginal);
@@ -463,7 +471,7 @@ namespace EstanDentro.UI
             Cursor.visible = false;
             EstanDentro.UI.Pausa.Reiniciar();
             Inventory.Inventory.NuevaPartida();
-            SceneManager.LoadScene(playSceneName);
+            SceneManager.LoadScene(continuarSceneName);
         }
 
         private IEnumerator RunCalibrationThenLoad()
@@ -475,17 +483,7 @@ namespace EstanDentro.UI
                 providerGo.AddComponent<BreathingInputProvider>();
             }
 
-            // 2. Spawnear MicCalibration. Su Start() decide:
-            //    - Si ya hay calibracion guardada -> skip inmediato (canvas oculto, dispara OnCalibrationDone).
-            //    - Si no -> muestra UI y arranca el flujo.
-            var calibGo = new GameObject("__MicCalibration");
-            var calib = calibGo.AddComponent<MicCalibration>();
-
-            bool done = false;
-            calib.OnCalibrationDone += _ => done = true;
-
-            // Esperar a que la calibracion termine (auto-skip o usuario completo el flujo).
-            while (!done) yield return null;
+            // 2. (sin calibrar el micrófono: respirar ahora es mantener Q, no hace falta micrófono)
 
             // 3. Crear la partida en la API (best-effort).
             //    Si no hay jugador (modo offline), saltar. Si la API no responde, continuar igual.
@@ -774,18 +772,20 @@ namespace EstanDentro.UI
 
             // Botones en columna centrada, debajo del subtitle.
             playButton = MakeMenuButton("Btn_Play", "NUEVA PARTIDA", Vector2.zero, OnPlayClicked);
+            prologoButton = MakeMenuButton("Btn_Prologo", "PRÓLOGO (EL CARRO)", Vector2.zero, OnPrologoClicked);
             continueButton = MakeMenuButton("Btn_Continue", "CONTINUAR", Vector2.zero, OnContinueClicked);
             settingsButton = MakeMenuButton("Btn_Settings", "AJUSTES", Vector2.zero, OnSettingsClicked);
             quitButton = MakeMenuButton("Btn_Quit", "SALIR", Vector2.zero, OnQuitClicked);
 
             buttonRTs = new RectTransform[] {
                 playButton.GetComponent<RectTransform>(),
+                prologoButton.GetComponent<RectTransform>(),
                 continueButton.GetComponent<RectTransform>(),
                 settingsButton.GetComponent<RectTransform>(),
                 quitButton.GetComponent<RectTransform>()
             };
 
-            SetupNavigation(playButton, continueButton, settingsButton, quitButton);
+            SetupNavigation(playButton, prologoButton, continueButton, settingsButton, quitButton);
             RelayoutButtons();
 
             // Hint pequeño debajo del boton Continuar para indicar estado (sin partidas / sin conexion).

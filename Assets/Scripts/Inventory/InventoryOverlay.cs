@@ -180,7 +180,7 @@ namespace EstanDentro.Inventory
             foreach (var kv in pestanas)
             {
                 bool act = kv.Key == tab;
-                kv.Value.rectTransform.sizeDelta = new Vector2(act ? 78f : 62f, 118f);
+                kv.Value.rectTransform.sizeDelta = new Vector2(116f, act ? 82f : 66f);          // la sección activa sobresale más
                 kv.Value.color = new Color(kv.Value.color.r, kv.Value.color.g, kv.Value.color.b, act ? 1f : 0.7f);
             }
             switch (tab)
@@ -189,7 +189,7 @@ namespace EstanDentro.Inventory
                 case Tab.Notas: PaginaPistas(); break;
                 case Tab.Misiones: PaginaObjetivos(); break;
             }
-            pie.text = modoNuevo ? "[E] seguir          [I] ver lo que llevo"
+            pie.text = modoNuevo ? "[E] seguir          [I] mochila"
                      : tab == Tab.Items ? "W/S elegir     Espacio mano ⇄ mochila     G soltar     Tab pestaña     I cerrar"
                      : "W/S elegir     Tab pestaña     I cerrar";
         }
@@ -339,9 +339,10 @@ namespace EstanDentro.Inventory
             contIzq = Rect(hojaIzq, "Contenido", new Vector2(40f, 0f), new Vector2(640f, 860f));
             contDer = Rect(hojaDer, "Contenido", new Vector2(-10f, 0f), new Vector2(640f, 860f));
 
-            Pestana(libro, Tab.Items, "OBJETOS", new Vector2(830f, 300f), new Color(0.55f, 0.12f, 0.10f));
-            Pestana(libro, Tab.Notas, "PISTAS", new Vector2(830f, 170f), new Color(0.23f, 0.35f, 0.23f));
-            Pestana(libro, Tab.Misiones, "OBJETIVOS", new Vector2(830f, 40f), new Color(0.20f, 0.29f, 0.45f));
+            // secciones arriba del cuaderno, como separadores (estilo The Forest): mochila, lupa, diana
+            Pestana(libro, Tab.Items, "OBJETOS", new Vector2(-590f, 446f), new Color(0.55f, 0.12f, 0.10f));
+            Pestana(libro, Tab.Notas, "PISTAS", new Vector2(-460f, 446f), new Color(0.23f, 0.35f, 0.23f));
+            Pestana(libro, Tab.Misiones, "OBJETIVOS", new Vector2(-330f, 446f), new Color(0.20f, 0.29f, 0.45f));
 
             pie = Texto(canvas.transform, "", 20, new Color(0.95f, 0.93f, 0.85f, 0.6f), new Vector2(0f, -495f), 1500, TextAnchor.MiddleCenter);
         }
@@ -365,12 +366,14 @@ namespace EstanDentro.Inventory
 
         void Pestana(Transform padre, Tab t, string texto, Vector2 pos, Color c)
         {
-            var r = Rect(padre, "Pestana_" + texto, pos, new Vector2(62f, 118f));
-            r.pivot = new Vector2(0f, 0.5f);
+            var r = Rect(padre, "Pestana_" + texto, pos, new Vector2(116f, 66f));
+            r.pivot = new Vector2(0.5f, 0f);
             var img = r.gameObject.AddComponent<Image>(); img.color = c;
-            var tx = Texto(r, texto, 16, new Color(0.95f, 0.93f, 0.85f), Vector2.zero, 110, TextAnchor.MiddleCenter);
-            tx.rectTransform.anchorMin = tx.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            tx.rectTransform.localRotation = Quaternion.Euler(0, 0, -90f);
+            // ícono en vez de palabra: mochila = objetos, lupa = pistas, diana = objetivos
+            var ic = Rect(r, "Icono", Vector2.zero, new Vector2(46f, 46f));
+            ic.anchorMin = ic.anchorMax = new Vector2(0.5f, 0.5f);
+            var ii = ic.gameObject.AddComponent<Image>(); ii.raycastTarget = false; ii.preserveAspect = true;
+            ii.sprite = IconosCuaderno.Crear(t == Tab.Items ? IconosCuaderno.Icono.Mochila : t == Tab.Notas ? IconosCuaderno.Icono.Lupa : IconosCuaderno.Icono.Diana);
             pestanas[t] = img;
         }
 

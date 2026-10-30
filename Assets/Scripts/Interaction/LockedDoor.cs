@@ -54,6 +54,10 @@ namespace EstanDentro.Interaction
         [SerializeField, TextArea(1, 3), Tooltip("Mensaje HUD al intentar abrir mientras esta locked. Vacio = no muestra.")]
         private string lockedHudMessage = "Esta cerrada.";
         [SerializeField] private float hudMessageSeconds = 1.5f;
+        [Tooltip("Llave (id del inventario) que abre esta puerta, p. ej. llave_4b. Vacío = no se abre con llave.")]
+        public string llaveId = "";
+        public string llaveNombre = "la llave";
+        bool TieneLlave => !string.IsNullOrEmpty(llaveId) && Inventory.Inventory.Instance != null && Inventory.Inventory.Instance.HasItem(llaveId);
         [SerializeField, Tooltip("Audio al intentar abrir mientras esta locked (jaloneo / chapa).")]
         private AudioClip lockedAudioClip;
         [SerializeField, Range(0f, 1f)] private float lockedAudioVolume = 0.85f;
@@ -170,16 +174,46 @@ namespace EstanDentro.Interaction
             }
         }
 
+        public override string Accion => isLocked && TieneLlave ? "Abrir con " + llaveNombre : isLocked && integratedLock != null && !integratedLock.IsSolved && TieneCandadoVisible() ? "Empujar la puerta" : "Abrir la puerta";
+
+        bool? candadoVisible;
+        bool TieneCandadoVisible()
+        {
+            if (candadoVisible == null)
+            {
+                candadoVisible = false;
+                foreach (var cv in FindObjectsByType<EstanDentro.Colegio.CandadoVisual>(FindObjectsSortMode.None))
+                    if (cv.cerradura == integratedLock) { candadoVisible = true; break; }
+            }
+            return candadoVisible.Value;
+        }
+
+
         public override void Interact()
         {
             // Defensa: si hay un overlay modal activo (minijuego de respiracion, ajustes, notas...)
             // ignorar la interaccion para que no se traslape con la UI activa.
             if (EstanDentro.UI.OverlayBlocker.IsBlocking) return;
 
+            if (isLocked && TieneLlave)
+            {
+                EstanDentro.Audio.SonidoCorto.Juego("casillero/pestillo", transform.position + Vector3.up, 0.8f, 0.8f, 0.8f);
+                ObjectiveHUD.Show($"La llave gira. Se abrió.", 2f);
+                Unlock();
+                if (!IsOpen) ToggleOpen();
+                return;
+            }
             if (isLocked)
             {
                 // Patron loquer/taquilla: si hay una cerradura integrada NO resuelta, abrir directamente
                 // su UI sin necesidad de objeto separado para el candado.
+                // si la cerradura tiene un candado de verdad colgando (CandadoVisual), la clave se pone EN EL CANDADO:
+                // la puerta no abre otra pantalla de clave (había dos sistemas para lo mismo)
+                if (integratedLock != null && !integratedLock.IsSolved && TieneCandadoVisible())
+                {
+                    TryFeedbackLocked();
+                    return;
+                }
                 if (integratedLock != null && !integratedLock.IsSolved)
                 {
                     LockOverlay.Open(integratedLock);

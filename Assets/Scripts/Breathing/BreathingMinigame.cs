@@ -320,6 +320,10 @@ namespace EstanDentro.Breathing
                 return;
             }
 
+            // ya no se abre sola (Henry 20-oct): respirar es una acción del jugador (mantener Q, ver Colegio/Concentrarse)
+            if (!alwaysVisibleForDebug) { if (visible) TryHide(); return; }
+            // no se abre encima del cuaderno, una nota, un candado o la pausa (Espacio cerraba la nota y avanzaba la respiración a la vez)
+            if (!visible && (EstanDentro.UI.OverlayBlocker.IsBlocking || Time.timeScale == 0f)) return;
             if (alwaysVisibleForDebug || forcedVisible) { TryShow(); return; }
             if (StressSystem.Instance == null) { TryHide(); return; }
             float t = StressSystem.Instance.Normalized;
@@ -500,15 +504,21 @@ namespace EstanDentro.Breathing
                     silencedBehaviours.Add(b);
                 }
             }
+            // se PAUSAN (no se paran): al salir vuelven donde iban — música, latido, voces, golpes de los ductos
+            pausadas.Clear();
             var sources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
             foreach (var src in sources)
             {
-                if (src.isPlaying) src.Stop();
+                if (src.transform.IsChildOf(transform)) continue;          // los sonidos de la respiración misma
+                if (src.isPlaying) { src.Pause(); pausadas.Add(src); }
             }
         }
+        private readonly System.Collections.Generic.List<AudioSource> pausadas = new System.Collections.Generic.List<AudioSource>();
 
         private void RestoreSceneAudio()
         {
+            foreach (var src in pausadas) if (src) src.UnPause();
+            pausadas.Clear();
             foreach (var b in silencedBehaviours)
             {
                 if (b != null) b.enabled = true;

@@ -32,6 +32,9 @@ namespace EstanDentro.Colegio
             if (registro.TryGetValue(cerradura, out var v) && v == this) registro.Remove(cerradura);
         }
 
+        public override string Accion => "Mirar el candado";
+
+
         public override void Interact()
         {
             if (caido || cerradura == null) return;

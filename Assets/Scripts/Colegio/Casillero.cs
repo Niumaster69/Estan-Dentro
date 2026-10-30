@@ -6,21 +6,24 @@ using EstanDentro.UI;
 namespace EstanDentro.Colegio
 {
     /// <summary>
-    /// Casillero que se abre de verdad: E gira su(s) puerta(s) sobre la bisagra y entrega lo que hay adentro
-    /// (pilas, tiza, monedas… o nada). Queda ENTREABIERTO, así se ve de lejos cuál ya revisaste.
-    /// Si no cabe (manos y mochila llenas), lo de adentro se queda para después.
+    /// Casillero que se abre de verdad: E gira su(s) puerta(s) y lo que hay adentro SE VE (BotinVisible).
+    /// Otra E coge la cosa; con el casillero vacío, E lo vuelve a cerrar (y otra vez lo abre).
+    /// Si no cabe (manos y mochila llenas), lo de adentro se queda ahí para después.
     /// </summary>
     public class Casillero : Interactable
     {
         public string botinId = "";
         public string botinNombre = "";
         public AudioClip sonidoAbrir;
+        public AudioClip sonidoBisagra;   // chirrido de la puerta de lata (se oye el primer segundo y medio)
         public AudioClip sonidoTomar;
         public float angulo = 105f;
         [Tooltip("portazo / cae / celular / susurro (vacío = sin susto). Ver Sustos.cs")]
         public string susto = "";
-        bool abierto, tomado;
+        bool abierto, tomado, girando;
+        GameObject visible;
         public bool Abierto => abierto;
+        bool Queda => !tomado && !string.IsNullOrEmpty(botinId);
 
         CombinationLock candado;
 
@@ -30,39 +33,59 @@ namespace EstanDentro.Colegio
             if (candado != null) candado.onSolved.AddListener(() => { if (!abierto) Interact(); });
         }
 
+        public override string Accion =>
+            candado != null && !candado.IsSolved ? "Mirar el candado"
+            : !abierto ? "Abrir el casillero"
+            : Queda ? "Tomar: " + (Recuerdos.Es(botinId) ? "papel" : botinNombre.ToLower())
+            : "Cerrar el casillero";
+
+
         public override void Interact()
         {
             if (candado != null && !candado.IsSolved) { candado.Interact(); return; }   // primero el candado
+            if (girando) return;
             if (!abierto)
             {
                 abierto = true;
+                StartCoroutine(Pausa(0.6f));
                 AbrirPuertas(gameObject, angulo);
                 EstanDentro.Audio.SonidoCorto.Play(sonidoAbrir, transform.position + Vector3.up, 0.8f, 1.6f);
+                var b = EstanDentro.Audio.SonidoCorto.Play(sonidoBisagra, transform.position + Vector3.up * 1.2f, 0.6f, 1.5f);
+                if (b) b.pitch = Random.Range(0.92f, 1.12f);                     // cada casillero chilla un poco distinto
                 if (!string.IsNullOrEmpty(susto))
                 {
                     var tipo = susto; susto = "";                              // el susto pasa una sola vez
                     StartCoroutine(SustoYDespues(tipo));
                     return;
                 }
-                StartCoroutine(TomarDespues(0.45f));
+                MostrarBotin();
                 return;
             }
-            Tomar();
+            if (Queda) { Tomar(); return; }
+            // vacío: se vuelve a cerrar
+            abierto = false; StartCoroutine(Pausa(0.6f));
+            CerrarPuertas(gameObject, 0.5f);
+            EstanDentro.Audio.SonidoCorto.Play(sonidoAbrir, transform.position + Vector3.up, 0.6f, 1.2f);
         }
 
-        IEnumerator TomarDespues(float s) { yield return new WaitForSeconds(s); Tomar(); }
+        IEnumerator Pausa(float s) { girando = true; yield return new WaitForSeconds(s); girando = false; }
+
+        void MostrarBotin()
+        {
+            if (!Queda) { if (string.IsNullOrEmpty(botinId) && !tomado) { tomado = true; ObjectiveHUD.Show("Vacío.", 1.5f); } return; }
+            if (!visible) visible = BotinVisible.Poner(botinId, gameObject);
+        }
 
         IEnumerator SustoYDespues(string tipo)
         {
             yield return Sustos.Ejecutar(tipo, this);
             if (tipo == "portazo") abierto = false;                            // se cerró solo: se puede volver a abrir
-            else Tomar();
+            else MostrarBotin();
         }
 
         void Tomar()
         {
-            if (tomado) { ObjectiveHUD.Show("Ya no queda nada.", 1.5f); return; }
-            if (string.IsNullOrEmpty(botinId)) { tomado = true; ObjectiveHUD.Show("Vacío.", 1.5f); return; }
+            if (!Queda) return;
             if (Recuerdos.Es(botinId))
             {
                 // un recuerdo: va a PISTAS del cuaderno y se lee enseguida
@@ -70,17 +93,17 @@ namespace EstanDentro.Colegio
                 Inventory.Inventory.Instance?.RegisterNote(titulo, texto);
                 EstanDentro.Audio.SonidoCorto.Juego("objetos/papel_tomar", transform.position + Vector3.up, 0.7f, 0.5f);
                 NoteOverlay.Show(titulo, texto);
-                tomado = true;
+                tomado = true; if (visible) Destroy(visible);
                 return;
             }
             var inv = Inventory.Inventory.Instance;
             bool nuevo = inv != null && !inv.YaVisto(botinId);
             if (inv != null && !inv.RegisterItem(botinId, botinNombre))
             {
-                ObjectiveHUD.Show($"Hay {botinNombre.ToLower()}. {inv.MotivoLleno()}", 3f);
+                ObjectiveHUD.Show(inv.MotivoLleno(), 3f);
                 return;
             }
-            tomado = true;
+            tomado = true; if (visible) Destroy(visible);
             if (botinId == "moneda") EstanDentro.Audio.SonidoCorto.Juego("objetos/monedas", transform.position + Vector3.up, 0.7f, 0.5f);
             else if (sonidoTomar) AudioSource.PlayClipAtPoint(sonidoTomar, transform.position + Vector3.up, 0.7f);
             if (!nuevo) ObjectiveHUD.Show($"Tomaste: {botinNombre}" + (inv != null ? Cuantos(inv, botinId) : ""), 2f);
@@ -95,12 +118,12 @@ namespace EstanDentro.Colegio
         static readonly System.Collections.Generic.Dictionary<Transform, Quaternion> cerradas = new System.Collections.Generic.Dictionary<Transform, Quaternion>();
 
         /// <summary>Cierra de golpe las puertas (susto "portazo").</summary>
-        public static void CerrarPuertas(GameObject casillero)
+        public static void CerrarPuertas(GameObject casillero, float duracion = 0.12f)
         {
             var host = casillero.GetComponent<MonoBehaviour>();
             foreach (var d in casillero.GetComponentsInChildren<DatosBlender>())
                 if (d.Get("prop_tipo") == "puerta_casillero" && cerradas.TryGetValue(d.transform, out var q) && host)
-                    host.StartCoroutine(GirarA(d.transform, q, 0.12f));
+                    host.StartCoroutine(GirarA(d.transform, q, duracion));
         }
 
         static IEnumerator GirarA(Transform t, Quaternion fin, float d)

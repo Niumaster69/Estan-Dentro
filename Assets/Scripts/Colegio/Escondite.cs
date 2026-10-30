@@ -12,6 +12,9 @@ namespace EstanDentro.Colegio
         private Vector3 posAntes;
         private Transform jugador;
 
+        public override string Accion => "Esconderse";
+
+
         public override void Interact()
         {
             if (jugador == null)
@@ -35,7 +38,7 @@ namespace EstanDentro.Colegio
             jugador.position = puntoDentro ? puntoDentro.position : transform.position + Vector3.up * 0.05f;
             if (cc) cc.enabled = true;
             Actual = this;
-            ObjectiveHUD.Show("Escondido. Contén la respiración.", 1.8f);
+            ObjectiveHUD.Show("Aquí no me ven… no respires.", 1.8f);
         }
     }
 }

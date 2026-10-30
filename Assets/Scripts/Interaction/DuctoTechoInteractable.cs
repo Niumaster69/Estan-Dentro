@@ -193,6 +193,10 @@ namespace EstanDentro.Interaction
 
         private void Awake()
         {
+            // sistema viejo del primer salón: en el colegio nuevo la entrada es la rejilla (RejillaDucto) y dentro de los
+            // ductos salía "entrar al ducto" estando ya adentro
+            string esc = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (esc == "Colegio" || esc.Contains("Ductos")) { enabled = false; return; }
             if (animator == null) animator = GetComponentInParent<Animator>();
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null)

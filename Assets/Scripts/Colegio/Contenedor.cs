@@ -14,22 +14,35 @@ namespace EstanDentro.Colegio
         public bool registrado;
         public AudioClip sonidoAbrir;
 
+        GameObject visible;
+
+        public override string Accion => visible ? "Tomar: " + botinNombre.ToLower() : registrado ? "Ya lo revisé" : "Revisar " + nombreVisible.ToLower();
+
         public override void Interact()
         {
+            // primera E: se revisa y lo que haya SE VE; segunda E: se coge
+            if (visible) { Tomar(); return; }
             if (sonidoAbrir) AudioSource.PlayClipAtPoint(sonidoAbrir, transform.position);
             if (registrado || string.IsNullOrEmpty(botinId))
             {
-                ObjectiveHUD.Show(registrado ? "Ya lo revisaste." : $"Revisas {nombreVisible.ToLower()}... nada.", 1.6f);
+                ObjectiveHUD.Show(registrado ? "Ya lo revisé." : $"Reviso {nombreVisible.ToLower()}... nada.", 1.6f);
                 registrado = true;
                 return;
             }
+            visible = BotinVisible.Poner(botinId, gameObject);
+            if (!visible) Tomar();
+        }
+
+        void Tomar()
+        {
             var inv = Inventory.Inventory.Instance;
             if (inv != null && !inv.RegisterItem(botinId, botinNombre))
             {
-                ObjectiveHUD.Show($"Hay {botinNombre.ToLower()} aquí. {inv.MotivoLleno()}", 3f);   // se queda adentro para después
+                ObjectiveHUD.Show(inv.MotivoLleno(), 3f);   // se queda adentro para después
                 return;
             }
             registrado = true;
+            if (visible) Destroy(visible);
         }
     }
 }

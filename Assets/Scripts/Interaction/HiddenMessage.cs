@@ -49,8 +49,32 @@ namespace EstanDentro.Interaction
             ApplyAlpha(0f);
         }
 
+        // letra a mano (imagen de 02_Arte3D_Blender/scripts_blender/textos_pared.py) en un plano: el TextMesh viejo salía
+        // comprimido y raro en HDRP. Si no hay imagen para el texto, se usa el TextMesh como antes.
+        private Material matTexto;
+        [SerializeField, Tooltip("Ancho del texto en la pared (m)")] private float anchoMetros = 1.1f;
+
+        private bool CrearPlano()
+        {
+            var mat = Resources.Load<Material>("Textos/Mat_" + EstanDentro.Audio.Voz.Clave(messageText));
+            if (!mat) return false;
+            var viejo = GetComponent<MeshRenderer>(); if (viejo) viejo.enabled = false;
+            var q = GameObject.CreatePrimitive(PrimitiveType.Quad); q.name = "Texto";
+            Destroy(q.GetComponent<Collider>());
+            q.transform.SetParent(transform, false);
+            var tex = mat.GetTexture("_BaseColorMap");
+            float alto = anchoMetros * (tex ? (float)tex.height / tex.width : 0.25f);
+            Vector3 ls = transform.lossyScale;                                   // tamaño real en el mundo, sin importar la escala del padre
+            q.transform.localScale = new Vector3(anchoMetros / Mathf.Max(1e-4f, Mathf.Abs(ls.x)), alto / Mathf.Max(1e-4f, Mathf.Abs(ls.y)), 1f);
+            matTexto = new Material(mat);
+            q.GetComponent<MeshRenderer>().sharedMaterial = matTexto;
+            q.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            return true;
+        }
+
         private void EnsureTextMesh()
         {
+            if (CrearPlano()) return;
             textMesh = GetComponent<TextMesh>();
             if (textMesh == null) textMesh = gameObject.AddComponent<TextMesh>();
             textMesh.text = messageText;
@@ -64,7 +88,7 @@ namespace EstanDentro.Interaction
         private void Update()
         {
             // Refrescar texto si se cambio en Inspector durante runtime
-            if (textMesh != null && textMesh.text != messageText) textMesh.text = messageText;
+            if (textMesh != null && matTexto == null && textMesh.text != messageText) textMesh.text = messageText;
 
             if (cachedFlashlight == null) cachedFlashlight = ResolveFlashlightLight();
 
@@ -76,6 +100,7 @@ namespace EstanDentro.Interaction
 
         private void ApplyAlpha(float a)
         {
+            if (matTexto != null) { var c = matTexto.GetColor("_BaseColor"); c.a = a; matTexto.SetColor("_BaseColor", c); return; }
             if (textMesh == null) return;
             textMesh.color = new Color(messageColor.r, messageColor.g, messageColor.b, a);
         }

@@ -9,6 +9,8 @@ namespace EstanDentro.Interaction
     public abstract class Interactable : MonoBehaviour
     {
         public abstract void Interact();
+        /// <summary>Lo que hace la tecla E con esto (se muestra junto al punto del centro).</summary>
+        public virtual string Accion => "Usar";
     }
 
     public class Note : Interactable
@@ -26,9 +28,32 @@ namespace EstanDentro.Interaction
         private AudioClip pickupClip;
         [SerializeField, Range(0f, 1f)] private float pickupVolume = 0.85f;
 
+
+
+        public override string Accion => Inventory.Inventory.Instance != null && Inventory.Inventory.Instance.YaLeida(noteTitle) ? "Ya la leí: " + noteTitle : "Leer: " + noteTitle;
+
+        /// <summary>La primera frase de la nota, corta.</summary>
+        static string Resumen(string t)
+        {
+            t = System.Text.RegularExpressions.Regex.Replace(t ?? "", "<.*?>", "").Replace('\n', ' ').Trim();
+            int p = t.IndexOfAny(new[] { '.', '!', '?', '…' });
+            if (p > 10) t = t.Substring(0, p + 1);
+            return t.Length > 90 ? t.Substring(0, 87) + "…" : t;
+        }
+
+        /// <summary>Al cerrar una nota recién leída (título). Lo usan los recuerdos que disparan la Pesadilla.</summary>
+        public static event System.Action<string> AlCerrar;
+
         public override void Interact()
         {
             Debug.Log($"[Note] Interact en '{name}'. title='{noteTitle}'");
+            // ya leída: Mateo no la vuelve a leer entera, solo recuerda de qué era (se puede releer en el cuaderno con I)
+            var inv0 = Inventory.Inventory.Instance;
+            if (inv0 != null && inv0.YaLeida(noteTitle))
+            {
+                ObjectiveHUD.Notify("Ya leí esta nota: " + Resumen(noteText) + "  (está en mi cuaderno, [Tab])", 4f);
+                return;
+            }
             if (Inventory.Inventory.Instance != null)
                 Inventory.Inventory.Instance.RegisterNote(noteTitle, noteText);
             else
@@ -41,10 +66,9 @@ namespace EstanDentro.Interaction
                 else AudioSource.PlayClipAtPoint(pickupClip, transform.position, pickupVolume);
             }
 
-            if (disappearAfterRead)
-                NoteOverlay.Show(noteTitle, noteText, onClose: () => { if (this != null) Destroy(gameObject); });
-            else
-                NoteOverlay.Show(noteTitle, noteText);
+            string titulo = noteTitle; bool desaparece = disappearAfterRead;
+            var recuerdo = GetComponent<EstanDentro.Mente.GatilloRecuerdo>();
+            NoteOverlay.Show(noteTitle, noteText, onClose: () => { if (recuerdo) recuerdo.Disparar(); if (desaparece && this != null) Destroy(gameObject); AlCerrar?.Invoke(titulo); });
         }
     }
 
@@ -57,6 +81,7 @@ namespace EstanDentro.Interaction
         private float prevTimeScale;
         private bool consumeInputThisFrame;
         private System.Action onCloseCallback;
+        private AudioSource voz;
 
         public static void Show(string title, string body, System.Action onClose = null)
         {
@@ -75,6 +100,16 @@ namespace EstanDentro.Interaction
             instance.consumeInputThisFrame = true;
             instance.onCloseCallback = onClose;
             OverlayBlocker.Register();
+            // la nota leída en voz alta: Mateo dice qué es y qué entiende; las cartas de Pa las lee Pa (archivo por título)
+            var clip = EstanDentro.Audio.Voz.Clip("Notas", title);
+            if (clip)
+            {
+                var cam = Camera.main ? Camera.main.transform.position : Vector3.zero;
+                // lo que escribió Pa suena como un recuerdo (eco, sin graves); lo que lee Mateo, en su cabeza
+                bool dePa = title.Contains("de Pa");
+                instance.voz = EstanDentro.Audio.Voz.Sonar(clip, cam, dePa ? EstanDentro.Audio.Voz.Lugar.Recuerdo : EstanDentro.Audio.Voz.Lugar.Pensamiento);
+                if (instance.voz) instance.voz.ignoreListenerPause = true;           // suena aunque el juego esté en pausa leyendo
+            }
             Debug.Log($"[NoteOverlay] Show OK. Canvas enabled, esperando input para cerrar.");
         }
 
@@ -83,6 +118,7 @@ namespace EstanDentro.Interaction
             if (instance == null || !instance.canvas.enabled) return;
             Debug.Log("[NoteOverlay] Hide llamado.");
             instance.canvas.enabled = false;
+            if (instance.voz) { Destroy(instance.voz.gameObject); instance.voz = null; }   // al cerrar la hoja se calla
             EstanDentro.UI.Pausa.Soltar(instance);
             OverlayBlocker.Unregister();
             var cb = instance.onCloseCallback;

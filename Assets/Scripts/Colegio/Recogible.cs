@@ -11,6 +11,9 @@ namespace EstanDentro.Colegio
         public string nombreVisible = "Objeto";
         public AudioClip sonido;
 
+        public override string Accion => "Recoger: " + nombreVisible;
+
+
         public override void Interact()
         {
             var inv = Inventory.Inventory.Instance;
@@ -20,6 +23,11 @@ namespace EstanDentro.Colegio
             // la primera vez lo explica la tarjeta de objeto; las siguientes basta un aviso corto
             if (!eraNuevo) ObjectiveHUD.Show($"Recogiste: {nombreVisible}", 1.8f);
             if (sonido) AudioSource.PlayClipAtPoint(sonido, transform.position);
+            // cada objeto que trae una tecla nueva la enseña la primera vez
+            if (itemId == "linterna") GuiaTeclas.PrimeraVez("F", "Prender o apagar la linterna");
+            else if (itemId == "tiza") GuiaTeclas.PrimeraVez("T", "Marcar la pared con tiza (para no perderte)");
+            else if (itemId == "llave_4b") ObjectiveHUD.Notify("La llave del 4°B… Puedo volver por el ducto.", 3f);
+            else if (itemId == "pata_de_cabra") GuiaTeclas.PrimeraVez("G", "Soltar lo que tienes en las manos");
             gameObject.SetActive(false);
         }
     }

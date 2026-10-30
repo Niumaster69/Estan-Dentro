@@ -17,6 +17,15 @@ namespace EstanDentro.EditorColegio
         // sonidos nuevos (Freesound CC0 + Kenney CC0), preparados con 04_Audio/preparar_sonidos.py
         static AudioClip J(string n) => AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/SonidosJuego/" + n + ".wav");
 
+        /// <summary>Solo re-aplica los sonidos a la escena del colegio ya armada (sin reconstruirla).</summary>
+        public static void AplicarBatch()
+        {
+            var esc = UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Scenes/Colegio/Colegio.unity");
+            Aplicar();
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(esc);
+            EditorApplication.Exit(0);
+        }
+
         public static void Aplicar()
         {
             int n = 0;
@@ -45,6 +54,7 @@ namespace EstanDentro.EditorColegio
             n += Poner<Interaction.Flashlight>("toggleClip", J("objetos/linterna"));       // era el mismo clic del menú
             n += Poner<CandadoVisual>("golpe", J("candado/cae"));
             n += Poner<Casillero>("sonidoAbrir", J("casillero/pestillo"));                 // era una bisagra de 17 s
+            n += Poner<Casillero>("sonidoBisagra", C("casillero-abriendose.mp3"));       // el chirrido de la bisagra (solo el comienzo)
             n += Poner<Casillero>("sonidoTomar", J("objetos/objeto_tomar"));
 
             n += Rellenar<Interaction.CombinationLock>("digitClickClip", C("CombinationLock click digito.wav"));

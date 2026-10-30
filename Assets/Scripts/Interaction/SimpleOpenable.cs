@@ -40,6 +40,9 @@ namespace EstanDentro.Interaction
             if (animator == null) Debug.LogWarning($"[SimpleOpenable] '{name}' no tiene Animator asignado ni en hijos.");
         }
 
+        public override string Accion => "Abrir";
+
+
         public override void Interact()
         {
             // Si oneShot y ya esta abierto, ignora (no permite cerrar).
