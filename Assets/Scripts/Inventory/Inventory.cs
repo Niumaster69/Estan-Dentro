@@ -188,6 +188,13 @@ namespace EstanDentro.Inventory
             if (vistos.Add("mochila")) OnObjetoNuevo?.Invoke("mochila", "Mochila");
         }
 
+        /// <summary>Da un objeto (o la mochila, id "mochila") sin la tarjeta de objeto nuevo: el modo exploración empieza con ellos.</summary>
+        public void DarSinTarjeta(string id, string nombre)
+        {
+            vistos.Add(id);
+            if (id == "mochila") PonerMochila(); else RegisterItem(id, nombre);
+        }
+
         /// <summary>True si el objeto ya se había recogido antes en esta partida (la tarjeta ya lo explicó).</summary>
         public bool YaVisto(string id) => vistos.Contains(id);
 
@@ -393,6 +400,7 @@ namespace EstanDentro.Inventory
             // I = la mochila (Mateo se agacha a mirarla); Tab = el cuaderno (pistas y misiones)
             if (hit) { UI.GuiaTeclas.Usada("I"); MochilaOverlay.Abrir(); }
             if (kb != null && kb.tabKey.wasPressedThisFrame) { UI.GuiaTeclas.Usada("Tab"); InventoryOverlay.Open(); }
+            if (kb != null && kb.mKey.wasPressedThisFrame && Colegio.MapaColegio.Hay && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Colegio") { UI.GuiaTeclas.Usada("M"); InventoryOverlay.OpenTab(InventoryOverlay.Tab.Mapa); }
             if (kb != null && kb.gKey.wasPressedThisFrame)
             {
                 UI.GuiaTeclas.Usada("G");

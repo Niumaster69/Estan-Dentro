@@ -8,7 +8,7 @@ namespace EstanDentro.Inventory
     /// </summary>
     public static class IconosCuaderno
     {
-        public enum Icono { Mochila, Lupa, Diana }
+        public enum Icono { Mochila, Lupa, Diana, Mapa }
         const int N = 96;
 
         public static Sprite Crear(Icono i)
@@ -20,7 +20,7 @@ namespace EstanDentro.Inventory
                 {
                     // coordenadas de -1 a 1; d < 0 = dentro de la forma (distancia con signo, en unidades de la textura)
                     float u = (x + 0.5f) / N * 2f - 1f, v = (y + 0.5f) / N * 2f - 1f;
-                    float d = i == Icono.Mochila ? Mochila(u, v) : i == Icono.Lupa ? Lupa(u, v) : Diana(u, v);
+                    float d = i == Icono.Mochila ? Mochila(u, v) : i == Icono.Lupa ? Lupa(u, v) : i == Icono.Mapa ? Mapa(u, v) : Diana(u, v);
                     float a = Mathf.Clamp01(0.5f - d * N * 0.5f);              // borde suave de un pixel
                     px[y * N + x] = new Color32(242, 237, 217, (byte)(a * 255));
                 }
@@ -55,6 +55,15 @@ namespace EstanDentro.Inventory
         // lupa: aro y mango en diagonal
         static float Lupa(float u, float v)
             => Mathf.Min(Anillo(u, v, -0.15f, 0.15f, 0.42f, 0.09f), Linea(u, v, new Vector2(0.17f, -0.17f), new Vector2(0.68f, -0.68f), 0.11f));
+
+        // mapa: hoja doblada en tres (los dobleces calados) con un camino en zigzag
+        static float Mapa(float u, float v)
+        {
+            float hoja = Caja(u, v, 0f, 0f, 0.7f, 0.56f, 0.06f);
+            float dobleces = Mathf.Min(Mathf.Abs(u + 0.23f), Mathf.Abs(u - 0.23f)) - 0.035f;
+            float camino = Mathf.Min(Linea(u, v, new Vector2(-0.5f, -0.3f), new Vector2(-0.05f, 0.2f), 0.05f), Linea(u, v, new Vector2(-0.05f, 0.2f), new Vector2(0.45f, -0.15f), 0.05f));
+            return Mathf.Max(hoja, -Mathf.Min(dobleces, camino));
+        }
 
         // diana: dos anillos y el centro
         static float Diana(float u, float v)

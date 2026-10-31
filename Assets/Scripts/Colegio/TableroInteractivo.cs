@@ -15,6 +15,8 @@ namespace EstanDentro.Colegio
         public Vector3 puntoCamara;
         public Vector3 mirarA;
         [TextArea] public string lectura = "17 de mayo… Tarea: ejercicios de la página 142.";
+        [Tooltip("Lo que lee Mateo si mira el tablero en la Pesadilla (vacío = lo mismo que en normal).")]
+        [TextArea] public string lecturaPesadilla = "";
         bool mirando, salir;
         public static bool Mirando { get; private set; }     // la pausa no se abre con el mismo Esc que sale del tablero
         public void Salir() => salir = true;                // (la prueba automática no puede apretar teclas)
@@ -42,8 +44,11 @@ namespace EstanDentro.Colegio
                 yield return null;
             }
             t.SetPositionAndRotation(puntoCamara, r1);
-            ObjectiveHUD.Show(lectura + "\n<size=80%>[E] o [Esc] volver</size>", 60f);
-            var clip = EstanDentro.Audio.Voz.Clip("Colegio", lectura);
+            // en la Pesadilla el borrón de la esquina dice algo (la clave del aula de música)
+            bool pesadilla = Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Normal && !string.IsNullOrEmpty(lecturaPesadilla);
+            string texto = pesadilla ? lecturaPesadilla : lectura;
+            ObjectiveHUD.Show(texto + "\n<size=80%>[E] o [Esc] volver</size>", 60f);
+            var clip = EstanDentro.Audio.Voz.Clip("Colegio", texto);
             if (clip) EstanDentro.Audio.Voz.Sonar(clip, t.position, EstanDentro.Audio.Voz.Lugar.Pensamiento);
             yield return null;
             while (true)

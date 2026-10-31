@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -75,6 +75,7 @@ namespace EstanDentro.Colegio
                 yield return new WaitForSecondsRealtime(4f);
                 yield return Captura("menu");
                 Revisar(FindAnyObjectByType<UI.MainMenuController>() != null, "El menú principal carga");
+                if (Array.IndexOf(Environment.GetCommandLineArgs(), "-exploracion") >= 0) { yield return PruebaExploracion(); yield break; }
                 FindAnyObjectByType<UI.MainMenuController>()?.OnPrologoClicked();       // la prueba pasa también por el prólogo
                 yield return EsperarEscena("Prologo", 30f);
                 yield return new WaitForSecondsRealtime(1f);
@@ -203,6 +204,24 @@ namespace EstanDentro.Colegio
             Revisar(lint && lint.IsUnlocked && lint.IsOn, "La linterna se puede encender");
             foreach (var hm in FindObjectsByType<HiddenMessage>(FindObjectsSortMode.None).Take(2))
             { Mirar(hm.transform.position, 2.2f); yield return new WaitForSecondsRealtime(2.5f); yield return Captura("mensaje_oculto"); }
+            // (rama de mejoras) el primer recuerdo enseña a respirar con Pa: un ciclo bien hecho lo cierra
+            CerrarOverlays();
+            float tr = 0f;
+            while (!RecuerdoRespirar.Activo && !RecuerdoRespirar.Hecho && tr < 20f) { tr += Time.unscaledDeltaTime; yield return null; }
+            Revisar(RecuerdoRespirar.Activo, "Después del apagón llega el recuerdo que enseña a respirar");
+            if (RecuerdoRespirar.Activo)
+            {
+                tr = 0f; while (!RecuerdoRespirar.EsperandoQ && tr < 30f) { tr += Time.unscaledDeltaTime; yield return null; }
+                yield return Captura("recuerdo_respirar");
+                int b0 = Concentrarse.CiclosBuenos;
+                Concentrarse.SimularQ = true; yield return new WaitForSecondsRealtime(8f);
+                yield return Captura("recuerdo_respirar_guia");
+                Concentrarse.SimularQ = false; yield return new WaitForSecondsRealtime(6.3f);
+                Revisar(Concentrarse.CiclosBuenos > b0, "En el recuerdo se respira un ciclo con Pa");
+                tr = 0f; while (RecuerdoRespirar.Activo && tr < 30f) { tr += Time.unscaledDeltaTime; yield return null; }
+                Revisar(RecuerdoRespirar.Hecho && Jugador().InputEnabled, "El recuerdo termina y Mateo se puede mover");
+                Revisar(Inv() != null && Inv().YaLeida("Respirar con Pa"), "La técnica queda anotada en Pistas");
+            }
             if (Stress.StressSystem.Instance) Anotar($"Estrés tras el apagón: {Stress.StressSystem.Instance.CurrentStress:F0}");
             if (EstanDentro.UI.OverlayBlocker.IsBlocking) Anotar("AVISO: hay un minijuego/overlay bloqueando (posible respiración por estrés)");
             Stress.StressSystem.Instance?.ResetTo(0f);
@@ -488,6 +507,17 @@ namespace EstanDentro.Colegio
                 Revisar(!puerta4b.IsLocked && puerta4b.IsOpen, "Con la llave se abre la puerta del 4°B");
                 yield return Captura("puerta_4b_abierta");
             }
+            // el mapa del cuaderno (M): marca dónde está Mateo y lo que ya recorrió
+            if (MapaColegio.Hay)
+            {
+                int aqui = MapaColegio.SalaEn(Jugador().transform.position);
+                Revisar(aqui >= 0 && MapaColegio.Visitada(aqui), $"El mapa sabe en qué sala está Mateo ({MapaColegio.SalaPorId(aqui)?.nombre ?? "ninguna"})");
+                Inventory.InventoryOverlay.OpenTab(Inventory.InventoryOverlay.Tab.Mapa);
+                yield return new WaitForSecondsRealtime(0.8f);
+                yield return Captura("mapa_piso3");
+                Inventory.InventoryOverlay.Close();
+                yield return new WaitForSecondsRealtime(0.3f);
+            }
             Revisar(GameObject.Find("Barricada_NO") && GameObject.Find("Barricada_SE"), "Las escaleras del piso 3 tienen barricada");
 
             // 9b. al salir al pasillo el colegio se rompe otra vez (hasta llegar al aula de música)
@@ -528,6 +558,29 @@ namespace EstanDentro.Colegio
                 yield return new WaitForSecondsRealtime(0.8f);
                 float x2 = Jugador().transform.position.x;
                 Revisar(x2 < bucle.transform.position.x + 3f, $"Después de respirar el pasillo ya no da vueltas (x {x2:F1})");
+            }
+
+            // 9d. (rama de mejoras) la Pesadilla esconde la clave: «hab. 306» en el tablero del 4°B abre el aula de música
+            var t306 = FindObjectsByType<Mente.SoloEnPesadilla>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(s => s.name == "Tiza_306");
+            var borron = FindObjectsByType<Mente.SoloEnPesadilla>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(s => s.name == "Tiza_Borron");
+            Revisar(t306 && borron, "El tablero del 4°B tiene el borrón y la clave de la Pesadilla");
+            if (t306 && borron && Mente.EstadoMente.Actual != Mente.EstadoMente.Estado.Normal)
+            {
+                Revisar(t306.gameObject.activeInHierarchy && !borron.gameObject.activeInHierarchy, "En la Pesadilla el borrón dice «hab. 306»");
+                var tab306 = t306.GetComponentInParent<TableroInteractivo>();
+                if (tab306) { Teletransportar(tab306.puntoCamara + Vector3.down * 1.5f, Quaternion.LookRotation(tab306.mirarA - tab306.puntoCamara)); yield return new WaitForSecondsRealtime(0.5f); tab306.Interact(); yield return new WaitForSecondsRealtime(1.5f); yield return Captura("tablero_pesadilla_306"); tab306.Salir(); yield return new WaitForSecondsRealtime(1f); }
+            }
+            var puertaAula = FindObjectsByType<LockedDoor>(FindObjectsSortMode.None).FirstOrDefault(d => d.name.StartsWith("PUERTA_P3_012"));
+            var candadoAula = puertaAula ? puertaAula.GetComponentInChildren<CombinationLock>() : null;
+            Revisar(puertaAula && candadoAula && puertaAula.IsLocked, "El aula de música tiene candado de tres números");
+            if (candadoAula)
+            {
+                yield return Acercarse(puertaAula);
+                puertaAula.Interact(); yield return new WaitForSecondsRealtime(1f);
+                yield return Captura("candado_aula_musica");
+                candadoAula.NotifyAttempt(new[] { 3, 0, 6 });
+                yield return new WaitForSecondsRealtime(1.5f);
+                Revisar(!puertaAula.IsLocked && puertaAula.IsOpen, "Con 306 se abre el aula de música");
             }
 
             // 10. el aula de música: el recuerdo y el final del capítulo
@@ -719,6 +772,59 @@ namespace EstanDentro.Colegio
             try { File.WriteAllText(Path.Combine(carpeta, "autoprueba.txt"), informe.ToString()); } catch { }
         }
 
+        // ------------------------------------------------------------------ modo exploración (-autoprueba carpeta -exploracion)
+        IEnumerator PruebaExploracion()
+        {
+            Anotar("Modo exploración");
+            FindAnyObjectByType<UI.MainMenuController>()?.OnExplorarClicked();
+            yield return EsperarEscena("Colegio", 30f);
+            yield return new WaitForSecondsRealtime(5f);
+            Revisar(Exploracion.Activo, "El modo exploración está activo");
+            var pc = Jugador();
+            Revisar(pc && pc.InputEnabled, "Mateo se puede mover de una vez (sin despertar)");
+            int cerradas = FindObjectsByType<LockedDoor>(FindObjectsSortMode.None).Count(d => d.IsLocked);
+            Revisar(cerradas == 0, $"Ninguna puerta tiene llave ({cerradas} cerradas)");
+            int bloqueos = FindObjectsByType<Bloqueo>(FindObjectsSortMode.None).Length;
+            Revisar(bloqueos == 0, $"Sin barricadas ni portón ({bloqueos})");
+            var inv = Inventory.Inventory.Instance;
+            Revisar(inv != null && inv.TieneMochila && inv.HasItem("linterna"), "Empieza con mochila y linterna");
+            yield return Captura("exploracion_inicio");
+            Inventory.InventoryOverlay.OpenTab(Inventory.InventoryOverlay.Tab.Mapa);
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return Captura("exploracion_mapa");
+            Inventory.InventoryOverlay.Close();
+
+            // un viaje por planta: aparece de pie en la sala, sin caerse ni quedar dentro de un mueble
+            foreach (var nombre in new[] { "Biblioteca", "Rectoría", "Patio central", "Patio", "Sótano", "Aula de música", "Cafetería", "Lab. de química" })
+            {
+                var s = MapaColegio.Salas.Where(x => x.nombre == nombre).OrderByDescending(x => x.area).FirstOrDefault();
+                if (s == null) { Revisar(false, $"Hay sala «{nombre}» en el mapa"); continue; }
+                Exploracion.IrA(s);
+                yield return new WaitForSecondsRealtime(2.5f);
+                var p = Jugador().transform.position;
+                bool dePie = Mathf.Abs(p.y - s.py) < 0.6f && new Vector2(p.x - s.px, p.z - s.pz).magnitude < 1.5f;
+                Revisar(dePie && MapaColegio.SalaEn(p) == s.id, $"Viaje a «{nombre}» ({MapaColegio.Pisos[s.piso].nombre}): llega en {p:F1}");
+                yield return Captura("explorar_" + nombre.Replace(" ", "_").Replace(".", ""));
+            }
+            // la puerta más cercana se abre sin llave
+            var pu = FindObjectsByType<LockedDoor>(FindObjectsSortMode.None).OrderBy(d => Vector3.Distance(d.transform.position, Jugador().transform.position)).FirstOrDefault();
+            if (pu)
+            {
+                yield return Acercarse(pu);
+                if (!pu.IsOpen) pu.Interact();
+                yield return new WaitForSecondsRealtime(1.5f);
+                Revisar(pu.IsOpen, $"La puerta '{pu.name}' abre sin llave");
+                yield return Captura("explorar_puerta");
+            }
+            // el mapa del primer piso con todo recorrido
+            Inventory.InventoryOverlay.OpenTab(Inventory.InventoryOverlay.Tab.Mapa);
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return Captura("exploracion_mapa_final");
+            Inventory.InventoryOverlay.Close();
+            Anotar($"Fin. Fallas: {fallas}");
+            StartCoroutine(Salir());
+        }
+
         // ------------------------------------------------------------------ prólogo en el carro
         IEnumerator PruebaPrologo()
         {
@@ -742,8 +848,12 @@ namespace EstanDentro.Colegio
                 pr.Apuntar(dir);
                 yield return null; yield return null;
                 // la cabeza gira desde el cuello: los ojos se movieron, se vuelve a apuntar desde donde quedaron
-                dir = (g.GetComponent<Collider>() ? g.GetComponent<Collider>().bounds.center : g.transform.position) - pr.ojos.position;
-                pr.Apuntar(dir); yield return null; yield return null;
+                // (lo que está muy cerca, como el celular en las piernas, pide corregir varias veces)
+                for (int k = 0; k < 6 && pr.Mirando != g; k++)
+                {
+                    dir = (g.GetComponent<Collider>() ? g.GetComponent<Collider>().bounds.center : g.transform.position) - pr.ojos.position;
+                    pr.Apuntar(dir); yield return null; yield return null;
+                }
                 bool alcanza = pr.Mirando == g;
                 if (!alcanza) Anotar($"   (desde los ojos, {g.name} está a {dir.magnitude:F2} m; la mira ve '{pr.LoQueVe()}')");
                 Revisar(alcanza, $"Prólogo: se alcanza a mirar {g.name}");

@@ -24,6 +24,167 @@ namespace EstanDentro.EditorMejoras
             BuclePasilloNorte();
             JacarandaEnFlor();
             CuartoHospital();
+            ClavePesadilla();
+            ObservadorCamina();
+            PataALaVista();
+            MapaColegio.Generar();          // el plano del mapa del cuaderno, con la escena ya como queda
+        }
+
+        /// <summary>
+        /// La pata de cabra del cuarto del celador quedaba metida en la caja de colisión del escritorio metálico (más alta que
+        /// la tabla): la mira chocaba con el escritorio. Se sube hasta apoyarse encima de lo que tenga debajo.
+        /// </summary>
+        static void PataALaVista()
+        {
+            Physics.SyncTransforms();
+            var pata = UnityEngine.Object.FindObjectsByType<Colegio.Recogible>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(r => r.itemId == "pata_de_cabra");
+            var rp = pata ? pata.GetComponentInChildren<Renderer>() : null;
+            if (!rp) return;
+            var b = rp.bounds; float tope = b.min.y;
+            foreach (var c in Physics.OverlapBox(b.center, b.extents, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (c.transform.IsChildOf(pata.transform)) continue;
+                tope = Mathf.Max(tope, c.bounds.max.y);
+            }
+            float sube = tope + 0.005f - b.min.y;
+            if (sube > 0.002f && sube < 0.4f) { pata.transform.position += Vector3.up * sube; EditorUtility.SetDirty(pata.transform); }
+            Debug.Log($"[Mejoras] pata de cabra: subió {sube * 100f:F1} cm (apoyo en y {tope:F2})");
+        }
+
+        // ------------------------------------------------------------------ el Observador camina
+        const string OBS = "Assets/Art/Observador";
+
+        /// <summary>
+        /// El cuerpo del Observador pasa a ser el modelo con huesos (Herramientas/blender/observador_camina.py →
+        /// Observador_Rig.fbx) con un Animator de dos estados, Quieto y Caminar, en bucle. Queda debajo de un "Cuerpo"
+        /// vacío: Observador.cs le da a ese vacío los tics de la cabeza sin pisar la rotación propia del FBX.
+        /// </summary>
+        static void ObservadorCamina()
+        {
+            var obs = UnityEngine.Object.FindObjectsByType<Mente.Observador>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault();
+            string rutaFbx = OBS + "/Observador_Rig.fbx";
+            if (!obs || !File.Exists(rutaFbx)) { Debug.LogWarning("[Mejoras] falta el Observador o " + rutaFbx); return; }
+
+            // clips en bucle
+            var imp = (ModelImporter)AssetImporter.GetAtPath(rutaFbx);
+            imp.animationType = ModelImporterAnimationType.Generic;
+            var clips = imp.defaultClipAnimations;
+            foreach (var c in clips) { c.loopTime = true; c.name = c.takeName.Contains("Caminar") ? "Caminar" : c.takeName.Contains("Quieto") ? "Quieto" : c.name; }
+            imp.clipAnimations = clips;
+            imp.SaveAndReimport();
+            var todos = AssetDatabase.LoadAllAssetsAtPath(rutaFbx).OfType<AnimationClip>().Where(c => !c.name.StartsWith("__preview")).ToList();
+            var caminar = todos.FirstOrDefault(c => c.name == "Caminar"); var quieto = todos.FirstOrDefault(c => c.name == "Quieto");
+            if (!caminar || !quieto) { Debug.LogWarning($"[Mejoras] el FBX del Observador no trae Caminar/Quieto ({string.Join(", ", todos.Select(c => c.name))})"); return; }
+
+            string rutaCtl = OBS + "/Observador.controller";
+            AssetDatabase.DeleteAsset(rutaCtl);
+            var ctl = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(rutaCtl);
+            var sm = ctl.layers[0].stateMachine;
+            var eq = sm.AddState("Quieto"); eq.motion = quieto;
+            var ec = sm.AddState("Caminar"); ec.motion = caminar;
+            sm.defaultState = eq;
+
+            // el cuerpo nuevo, con la piel y los ojos de siempre
+            for (int i = obs.transform.childCount - 1; i >= 0; i--) UnityEngine.Object.DestroyImmediate(obs.transform.GetChild(i).gameObject);
+            var envoltura = new GameObject("Cuerpo").transform; envoltura.SetParent(obs.transform, false);
+            var modelo = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(rutaFbx));
+            PrefabUtility.UnpackPrefabInstance(modelo, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            modelo.name = "Modelo"; modelo.transform.SetParent(envoltura, false);
+            var piel = AssetDatabase.LoadAssetAtPath<Material>(OBS + "/OB_piel.mat"); var ojos = AssetDatabase.LoadAssetAtPath<Material>(OBS + "/OB_ojos.mat");
+            foreach (var r in modelo.GetComponentsInChildren<Renderer>())
+            {
+                r.sharedMaterials = r.sharedMaterials.Select(m => m && m.name.Contains("ojos") ? ojos : piel).ToArray();
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                if (r is SkinnedMeshRenderer sk) sk.updateWhenOffscreen = true;           // los brazos se salen de la caja al caminar
+            }
+            foreach (var c in modelo.GetComponentsInChildren<Collider>()) UnityEngine.Object.DestroyImmediate(c);
+            var an = modelo.GetComponent<Animator>(); if (!an) an = modelo.AddComponent<Animator>();
+            an.runtimeAnimatorController = ctl; an.applyRootMotion = false; an.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            var b = modelo.GetComponentInChildren<Renderer>().bounds;
+            Debug.Log($"[Mejoras] el Observador camina: alto {b.size.y:F2} m, clips {caminar.length:F1} s / {quieto.length:F1} s");
+        }
+
+        // ------------------------------------------------------------------ la clave que esconde la Pesadilla
+        public static readonly int[] CLAVE_AULA = { 3, 0, 6 };
+
+        /// <summary>
+        /// La Pesadilla esconde la clave (POR_HACER): en el tablero del 4°B, en estado normal, una esquina tiene un borrón; en
+        /// la Pesadilla ahí se lee «hab. 306» (la habitación del hospital: lo que Mateo no quiere ver). La puerta del aula de
+        /// música tiene un candado de tres números que abre con 306. Al acercarse, Mateo piensa en el tablero.
+        /// Las texturas salen de Herramientas/tiza_pesadilla.ps1.
+        /// </summary>
+        static void ClavePesadilla()
+        {
+            var tablero = UnityEngine.Object.FindObjectsByType<Colegio.TableroInteractivo>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .FirstOrDefault(t => t.lectura.Contains("142"));
+            var tiza = tablero ? tablero.transform.Find("Tiza") : null;
+            if (!tiza) { Debug.LogWarning("[Mejoras] no encontré la tiza del tablero del 4°B"); return; }
+            foreach (var n in new[] { "Tiza_Borron", "Tiza_306" }) { var v = tablero.transform.Find(n); if (v) UnityEngine.Object.DestroyImmediate(v.gameObject); }
+
+            Material MatTiza(string nombre)
+            {
+                string ruta = $"Assets/Resources/Textos/Mat_{nombre}.mat";
+                if (!AssetDatabase.LoadAssetAtPath<Material>(ruta)) AssetDatabase.CopyAsset("Assets/Resources/Textos/Mat_tablero_4b.mat", ruta);
+                var m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+                var tex = AssetDatabase.LoadAssetAtPath<Texture2D>($"Assets/Resources/Textos/{nombre}.png");
+                var imp = (TextureImporter)AssetImporter.GetAtPath($"Assets/Resources/Textos/{nombre}.png");
+                if (imp && !imp.alphaIsTransparency) { imp.alphaIsTransparency = true; imp.SaveAndReimport(); }
+                m.SetTexture("_BaseColorMap", tex); if (m.HasProperty("_UnlitColorMap")) m.SetTexture("_UnlitColorMap", tex);
+                EditorUtility.SetDirty(m);
+                return m;
+            }
+            // en la esquina de abajo a la derecha de lo escrito (libre: «4°B» va al centro)
+            float anchoT = tiza.lossyScale.x, altoT = tiza.lossyScale.y;
+            GameObject Placa(string nombre, Material m, bool soloPesadilla)
+            {
+                var q = GameObject.CreatePrimitive(PrimitiveType.Quad); q.name = nombre;
+                UnityEngine.Object.DestroyImmediate(q.GetComponent<Collider>());
+                q.transform.SetParent(tablero.transform, true);
+                q.transform.rotation = tiza.rotation;
+                float w = anchoT * 0.36f;
+                q.transform.position = tiza.position + tiza.right * (anchoT * 0.31f) - tiza.up * (altoT * 0.30f) - tiza.forward * (0.003f + (soloPesadilla ? 0.001f : 0f));
+                var s = tablero.transform.lossyScale;
+                q.transform.localScale = new Vector3(w / s.x, w * 320f / 512f / s.y, 1f / s.z);
+                var r = q.GetComponent<MeshRenderer>(); r.sharedMaterial = m; r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                q.AddComponent<Mente.SoloEnPesadilla>().alReves = !soloPesadilla;
+                return q;
+            }
+            Placa("Tiza_Borron", MatTiza("tablero_borron"), false);
+            Placa("Tiza_306", MatTiza("tablero_306"), true);
+            tablero.lecturaPesadilla = "Encima del borrón, con tiza roja, alguien escribió: «hab. 306». Antes no se leía nada… Tres números.";
+            EditorUtility.SetDirty(tablero);
+
+            // el candado de la puerta del aula de música
+            var puerta = UnityEngine.Object.FindObjectsByType<Interaction.LockedDoor>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(d => d.name.StartsWith("PUERTA_P3_012"));
+            if (!puerta) { Debug.LogWarning("[Mejoras] no encontré la puerta del aula de música"); return; }
+            var viejo = puerta.transform.Find("Candado_AulaMusica"); if (viejo) UnityEngine.Object.DestroyImmediate(viejo.gameObject);
+            var cg = new GameObject("Candado_AulaMusica"); cg.transform.SetParent(puerta.transform, false);
+            var cl = cg.AddComponent<Interaction.CombinationLock>();
+            var so = new SerializedObject(cl);
+            so.FindProperty("estilo").enumValueIndex = (int)Interaction.EstiloCandado.Laton3;
+            so.FindProperty("nombreVisible").stringValue = "Candado del aula de música";
+            var code = so.FindProperty("correctCode"); code.arraySize = CLAVE_AULA.Length;
+            for (int i = 0; i < CLAVE_AULA.Length; i++) code.GetArrayElementAtIndex(i).intValue = CLAVE_AULA[i];
+            so.FindProperty("contextualMissionId").stringValue = "candado_aula";
+            so.FindProperty("contextualMissionText").stringValue = "Abrir el candado del aula de música (tres números)";
+            so.ApplyModifiedPropertiesWithoutUndo();
+            var sp = new SerializedObject(puerta);
+            sp.FindProperty("isLocked").boolValue = true;
+            sp.FindProperty("integratedLock").objectReferenceValue = cl;
+            sp.FindProperty("autoOpenOnUnlock").boolValue = true;
+            sp.ApplyModifiedPropertiesWithoutUndo();
+
+            // el pensamiento delante de la puerta (del lado del pasillo)
+            var pv = UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(t => t.name == "Mejoras_AvisoAula").ToList();
+            foreach (var t in pv) UnityEngine.Object.DestroyImmediate(t.gameObject);
+            var rp = puerta.GetComponentInChildren<Renderer>(); Vector3 pc = rp ? rp.bounds.center : puerta.transform.position;
+            Vector3 d = pc - AulaCentro; d.y = 0f;
+            Vector3 afuera = Mathf.Abs(d.x) > Mathf.Abs(d.z) ? new Vector3(Mathf.Sign(d.x), 0, 0) : new Vector3(0, 0, Mathf.Sign(d.z));
+            var av = new GameObject("Mejoras_AvisoAula"); av.transform.position = new Vector3(pc.x, P3 + 1.3f, pc.z) + afuera * 1.2f;
+            var bc = av.AddComponent<BoxCollider>(); bc.isTrigger = true; bc.size = afuera.x != 0f ? new Vector3(1.6f, 2.6f, 3f) : new Vector3(3f, 2.6f, 1.6f);
+            var aviso = av.AddComponent<Colegio.AvisoPuerta>(); aviso.puerta = puerta;
+            aviso.pensamiento = "Tiene candado. Tres números… Cuando todo se rompió, en el tablero del 4°B alguien escribió algo.";
+            Debug.Log($"[Mejoras] clave de la Pesadilla: «hab. 306» en el tablero, candado en {puerta.name}, aviso en {av.transform.position:F1}");
         }
 
         // ------------------------------------------------------------------ cuarto del hospital (final del capítulo)

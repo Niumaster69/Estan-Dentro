@@ -6,6 +6,28 @@
 
 ---
 
+## 30-oct-2026 (noche) — Mapa, modo exploración, clave en la Pesadilla, primer recuerdo y el Observador camina
+- [x] **Mapa estilo Resident Evil** (pestaña MAPA del cuaderno, tecla **M**; `Scripts/Colegio/MapaColegio.cs`,
+  `Inventory/InventoryOverlay.PaginaMapa`): la planta a lápiz, las salas visitadas coloreadas, la actual en naranja, puertas
+  cerradas en rojo y abiertas en azul, ✕ en barricadas y portón, y una flecha donde está Mateo. A/D cambia de piso, W/S
+  elige sala. El plano lo saca `Editor/Mejoras/MapaColegio.cs` de la física de la escena (cuadrícula de 20 cm, 4 plantas,
+  55 salas con el nombre de su rejilla de `red_ductos.json`) → `Resources/Mapa/mapa_colegio.json`; se regenera solo en
+  `MejorasEscena.Aplicar`. Revisión de cada planta en `Dev/mapa_revision/*.png`.
+- [x] **Modo exploración** (botón EXPLORAR EL COLEGIO del menú; `Colegio/Exploracion.cs`): todas las puertas sin llave, sin
+  barricadas ni portón, sin Observador, Pesadillas ni estrés, con mochila y linterna. En el mapa, **Espacio** o doble clic
+  lleva a la sala elegida (aparece de pie, sin muebles encima). Prueba: `Dev/explora.ps1` (`-autoprueba carpeta -exploracion`).
+- [x] **La Pesadilla esconde la clave** (`MejorasEscena.ClavePesadilla`): en normal el tablero del 4°B tiene un borrón; en la
+  Pesadilla ahí se lee «hab. 306» (`Herramientas/tiza_pesadilla.ps1`). La puerta del aula de música tiene candado de 3 números
+  (306); delante, Mateo piensa en el tablero (`Colegio/AvisoPuerta.cs`). En el final: "Habitación 306. Tres años dormido."
+- [x] **Primer recuerdo guiado** (`Colegio/RecuerdoRespirar.cs`): con el apagón del 4°B, Mateo recuerda la noche de la tormenta
+  en el carro y Pa le enseña a respirar 4-4-6 con Q; un ciclo bien hecho lo cierra (si no sale, Pa lo repite; nunca se traba).
+  La técnica queda en PISTAS.
+- [x] **El Observador camina** (`Herramientas/blender/observador_camina.py` → `Art/Observador/Observador_Rig.fbx`): esqueleto y
+  pesos hechos por script (Mixamo pide subir el modelo con cuenta), animaciones Caminar y Quieto en bucle,
+  `Art/Observador/Observador.controller` (`MejorasEscena.ObservadorCamina`). Caza caminando a ~2,1 m/s (Mateo camina a 2,8).
+- [x] Fallas viejas de la prueba automática: el celular del prólogo (caja de 14 cm para mirarlo, `ControlPrologo`) y la pata
+  de cabra (lo que se recoge tiene al menos 8 cm de caja, `Recogible.Awake`).
+
 ## 30-oct-2026 (tarde) — El final del hospital es una escena 3D
 - [x] **Cuarto del hospital** (`Editor/Mejoras/MejorasEscena.CuartoHospital`, objeto `Mejoras_CuartoHospital`, apagado):
   el aula de música se vuelve el cuarto donde Pa vela a Mateo. Cama de hierro, mesa de noche con jarrón y flores (Pa trae

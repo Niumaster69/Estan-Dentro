@@ -14,7 +14,7 @@ namespace EstanDentro.Mente
         public void Disparar()
         {
             Debug.Log($"[Mente] recuerdo '{tituloNota}' (hecho={hecho})");
-            if (hecho) return;
+            if (hecho || Colegio.Exploracion.Activo) return;
             hecho = true;
             ControlMente.Recuerdo(pensamiento, resolverCon);
         }

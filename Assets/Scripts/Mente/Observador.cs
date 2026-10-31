@@ -8,8 +8,11 @@ namespace EstanDentro.Mente
     /// El Observador: solo existe en la Pesadilla. Se para lejos, en el borde de la vista, y te mira.
     ///   Acechando → si lo miras fijo (~2 s), te le acercas o corres cerca, te ve: Alterado y te caza.
     ///               Si no lo miras un rato, cambia de lugar (nunca delante de tus ojos).
-    ///   Cazando   → va hacia ti a trompicones (se congela y salta); atraviesa las paredes, pero solo sabe dónde
-    ///               te vio por última vez. Te pierde si te escondes, si le cortas la vista ~5 s o si te alejas mucho.
+    ///   Cazando   → camina hacia ti, lento y rígido (rama de mejoras: antes iba a trompicones); atraviesa las paredes,
+    ///               pero solo sabe dónde te vio por última vez. Te pierde si te escondes, si le cortas la vista ~5 s o si
+    ///               te alejas mucho. Caminando se le gana; corriendo, de sobra.
+    /// Las animaciones (Caminar, Quieto) salen de Herramientas/blender/observador_camina.py; el Animator lo pone
+    /// Editor/Mejoras/MejorasEscena.ObservadorCamina. Sin Animator sigue funcionando (se desliza).
     ///   Atrapado  → su cara encima de la tuya y Mateo colapsa.
     /// </summary>
     public class Observador : MonoBehaviour
@@ -17,6 +20,10 @@ namespace EstanDentro.Mente
         public bool Activo { get; set; }
         public static bool Pausado;                     // la prueba automática lo apaga
         public float velocidad = 3.5f, miradaParaVerte = 2.0f, distanciaSentirte = 3.2f;
+        [Tooltip("Metros por segundo caminando (Mateo camina a 2,8 y corre a 4,5).")]
+        public float velocidadCaminar = 2.1f;
+        [Tooltip("Metros por segundo que avanza la animación Caminar a velocidad 1 (para que los pies no patinen).")]
+        public float pasoAnimacion = 1.15f;
         [Tooltip("Segundos que ronda el escondite (con Mateo callado) antes de irse.")]
         public float rondaEscondite = 4.5f;
 
@@ -47,9 +54,23 @@ namespace EstanDentro.Mente
         void Awake() { Instancia = this; }
         void OnDestroy() { if (Instancia == this) Instancia = null; }
 
+        Animator anim;
+        string animActual;
+
+        /// <summary>Cambia de animación solo si es otra (con un fundido corto); la velocidad ajusta el paso al avance.</summary>
+        void Anim(string estado, float velocidadAnim = 1f)
+        {
+            if (!anim) return;
+            anim.speed = velocidadAnim;
+            if (animActual == estado) return;
+            animActual = estado;
+            anim.CrossFadeInFixedTime(estado, 0.25f);
+        }
+
         void Start()
         {
             cuerpo =transform.childCount > 0 ? transform.GetChild(0) : transform;
+            anim = GetComponentInChildren<Animator>(true);
             rs = GetComponentsInChildren<Renderer>(true);
             susurro = gameObject.AddComponent<AudioSource>();
             susurro.clip = Resources.Load<AudioClip>("Sonidos/susurro"); susurro.loop = true; susurro.spatialBlend = 1f;
@@ -106,6 +127,7 @@ namespace EstanDentro.Mente
 
         void Acechar()
         {
+            Anim("Quieto");
             MirarAlJugador(2f);
             bool visto = LoVe(out bool enPantalla);
             mirada = visto ? mirada + Time.deltaTime : Mathf.Max(0f, mirada - Time.deltaTime * 0.4f);
@@ -133,16 +155,17 @@ namespace EstanDentro.Mente
             bool perdido = Escondido() && dist > 1.4f && quieto > rondaEscondite || !Escondido() && sinVerte > 5f || dist > 22f;
             if (perdido) { StartCoroutine(Irse()); return; }
             if (dist < 1.05f && !Escondido()) { StartCoroutine(Atrapar()); return; }
-            // a trompicones: avanza, se congela un instante, salta
+            // camina: sin saltos, con un ritmo que no es del todo humano (acelera y frena un poco, como dudando)
             Vector3 meta = ultimaVez; Vector3 d = meta - transform.position; d.y = 0f;
-            MirarAlJugador(8f);
-            if (Time.time < proximoSalto - 0.12f || Time.time > proximoSalto)
+            MirarAlJugador(5f);
+            float v = velocidadCaminar * Mathf.Lerp(0.8f, 1.2f, Mathf.PerlinNoise(Time.time * 0.6f, 3.1f));
+            if (d.magnitude > 0.05f)
             {
-                float paso = velocidad * Time.deltaTime;
-                if (Time.time > proximoSalto) { paso += Random.Range(0.3f, 0.7f); proximoSalto = Time.time + Random.Range(0.6f, 1.3f); }
-                if (d.magnitude > 0.05f) transform.position += d.normalized * Mathf.Min(paso, d.magnitude);
+                transform.position += d.normalized * Mathf.Min(v * Time.deltaTime, d.magnitude);
                 AlPiso();
+                Anim("Caminar", v / Mathf.Max(0.1f, pasoAnimacion));
             }
+            else Anim("Quieto");
             if (!teVe && d.magnitude < 0.3f) sinVerte += Time.deltaTime * 2f;    // llegó a donde te vio y no estás
         }
 
@@ -160,6 +183,7 @@ namespace EstanDentro.Mente
         IEnumerator Atrapar()
         {
             modo = Modo.Atrapando;
+            Anim("Quieto");
             jugador.enabled = false;
             Vector3 d = transform.position - Pies; d.y = 0f;
             jugador.transform.rotation = Quaternion.LookRotation(d);

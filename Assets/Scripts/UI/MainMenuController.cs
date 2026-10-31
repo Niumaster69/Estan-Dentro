@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -144,6 +144,7 @@ namespace EstanDentro.UI
         private CanvasGroup canvasGroup;
         private Button playButton;
         private Button prologoButton;
+        private Button explorarButton;
         private Button continueButton;
         private Text continueHintText;
         private Button settingsButton;
@@ -248,7 +249,7 @@ namespace EstanDentro.UI
         private void RelayoutButtons()
         {
             const float startY = -40f;
-            Button[] order = { playButton, prologoButton, continueButton, settingsButton, quitButton };
+            Button[] order = { playButton, prologoButton, explorarButton, continueButton, settingsButton, quitButton };
             int visibleIdx = 0;
             string debugStr = "[MainMenu] RelayoutButtons: ";
             foreach (var btn in order)
@@ -433,6 +434,18 @@ namespace EstanDentro.UI
             EstanDentro.UI.Pausa.Reiniciar();
             Inventory.Inventory.NuevaPartida();
             SceneManager.LoadScene(prologoSceneName);
+        }
+
+        /// <summary>El colegio entero sin la historia: puertas abiertas, sin Observador, mapa con viaje rápido (Colegio/Exploracion.cs).</summary>
+        public void OnExplorarClicked()
+        {
+            HideMenuPanel();
+            if (BreathingInputProvider.Instance == null) new GameObject("__BreathingInputProvider").AddComponent<BreathingInputProvider>();
+            Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
+            EstanDentro.UI.Pausa.Reiniciar();
+            Inventory.Inventory.NuevaPartida();
+            EstanDentro.Colegio.Exploracion.Empezar();
+            SceneManager.LoadScene(playSceneName);
         }
 
         public void OnContinueClicked()
@@ -773,6 +786,7 @@ namespace EstanDentro.UI
             // Botones en columna centrada, debajo del subtitle.
             playButton = MakeMenuButton("Btn_Play", "NUEVA PARTIDA", Vector2.zero, OnPlayClicked);
             prologoButton = MakeMenuButton("Btn_Prologo", "PRÓLOGO (EL CARRO)", Vector2.zero, OnPrologoClicked);
+            explorarButton = MakeMenuButton("Btn_Explorar", "EXPLORAR EL COLEGIO", Vector2.zero, OnExplorarClicked);
             continueButton = MakeMenuButton("Btn_Continue", "CONTINUAR", Vector2.zero, OnContinueClicked);
             settingsButton = MakeMenuButton("Btn_Settings", "AJUSTES", Vector2.zero, OnSettingsClicked);
             quitButton = MakeMenuButton("Btn_Quit", "SALIR", Vector2.zero, OnQuitClicked);
@@ -780,12 +794,13 @@ namespace EstanDentro.UI
             buttonRTs = new RectTransform[] {
                 playButton.GetComponent<RectTransform>(),
                 prologoButton.GetComponent<RectTransform>(),
+                explorarButton.GetComponent<RectTransform>(),
                 continueButton.GetComponent<RectTransform>(),
                 settingsButton.GetComponent<RectTransform>(),
                 quitButton.GetComponent<RectTransform>()
             };
 
-            SetupNavigation(playButton, prologoButton, continueButton, settingsButton, quitButton);
+            SetupNavigation(playButton, prologoButton, explorarButton, continueButton, settingsButton, quitButton);
             RelayoutButtons();
 
             // Hint pequeño debajo del boton Continuar para indicar estado (sin partidas / sin conexion).

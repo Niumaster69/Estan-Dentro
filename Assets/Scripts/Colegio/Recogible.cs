@@ -13,6 +13,24 @@ namespace EstanDentro.Colegio
 
         public override string Accion => "Recoger: " + nombreVisible;
 
+        /// <summary>
+        /// Lo delgado (la pata de cabra de canto: 2 cm) se le escapaba a la mira. La caja para mirarlo tiene al menos 8 cm
+        /// por lado; lo que se ve no cambia.
+        /// </summary>
+        void Awake()
+        {
+            var bc = GetComponent<BoxCollider>();
+            if (!bc)
+            {
+                // con malla de colisión (de Blender) se le pone además una caja a su medida
+                var mf = GetComponent<MeshFilter>(); if (!mf || !mf.sharedMesh) return;
+                bc = gameObject.AddComponent<BoxCollider>(); bc.center = mf.sharedMesh.bounds.center; bc.size = mf.sharedMesh.bounds.size;
+            }
+            var s = transform.lossyScale;
+            const float minimo = 0.08f;
+            bc.size = Vector3.Max(bc.size, new Vector3(minimo / Mathf.Max(1e-4f, Mathf.Abs(s.x)), minimo / Mathf.Max(1e-4f, Mathf.Abs(s.y)), minimo / Mathf.Max(1e-4f, Mathf.Abs(s.z))));
+        }
+
 
         public override void Interact()
         {

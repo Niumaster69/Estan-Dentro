@@ -17,7 +17,7 @@ namespace EstanDentro.Inventory
     /// </summary>
     public class InventoryOverlay : MonoBehaviour
     {
-        public enum Tab { Items, Notas, Misiones }
+        public enum Tab { Items, Notas, Misiones, Mapa }
 
         private static InventoryOverlay instance;
         static readonly Color papel = new Color(0.90f, 0.86f, 0.76f);
@@ -49,6 +49,7 @@ namespace EstanDentro.Inventory
         public static void OpenTab(Tab t, Action onClose = null)
         {
             Asegurar();
+            instance.pisoMapa = -1; instance.salaMapa = -1;                 // el mapa abre en la planta y la sala donde está Mateo
             if (EstaAbierto) { instance.tab = t; instance.sel = 0; instance.Refrescar(); return; }
             instance.Abrir(t, null, false, onClose);
         }
@@ -117,7 +118,7 @@ namespace EstanDentro.Inventory
             if (consumir) { consumir = false; return; }
             var kb = Keyboard.current; var gp = Gamepad.current; var ms = Mouse.current;
 
-            bool cerrar = (kb != null && (kb.escapeKey.wasPressedThisFrame || kb.iKey.wasPressedThisFrame || kb.eKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
+            bool cerrar = (kb != null && (kb.escapeKey.wasPressedThisFrame || kb.iKey.wasPressedThisFrame || kb.eKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame || (tab == Tab.Mapa && kb.mKey.wasPressedThisFrame)))
                        || (gp != null && (gp.buttonEast.wasPressedThisFrame || gp.selectButton.wasPressedThisFrame));
             if (cerrar) { Close(); return; }
 
@@ -127,10 +128,14 @@ namespace EstanDentro.Inventory
                 if ((kb != null && (kb.sKey.wasPressedThisFrame || kb.downArrowKey.wasPressedThisFrame)) || (gp != null && gp.dpad.down.wasPressedThisFrame)) { sel = (sel + 1) % n; modoNuevo = false; Refrescar(); }
                 if ((kb != null && (kb.wKey.wasPressedThisFrame || kb.upArrowKey.wasPressedThisFrame)) || (gp != null && gp.dpad.up.wasPressedThisFrame)) { sel = (sel - 1 + n) % n; modoNuevo = false; Refrescar(); }
             }
-            if ((kb != null && kb.tabKey.wasPressedThisFrame) || (gp != null && gp.rightShoulder.wasPressedThisFrame)) CambiarTab((Tab)(((int)tab + 1) % 3));
+            int nTabs = Colegio.MapaColegio.Hay ? 4 : 3;
+            if ((kb != null && kb.tabKey.wasPressedThisFrame) || (gp != null && gp.rightShoulder.wasPressedThisFrame)) CambiarTab((Tab)(((int)tab + 1) % nTabs));
             if (kb != null && kb.digit1Key.wasPressedThisFrame) CambiarTab(Tab.Items);
             if (kb != null && kb.digit2Key.wasPressedThisFrame) CambiarTab(Tab.Notas);
             if (kb != null && kb.digit3Key.wasPressedThisFrame) CambiarTab(Tab.Misiones);
+            if (kb != null && kb.digit4Key.wasPressedThisFrame && nTabs == 4) CambiarTab(Tab.Mapa);
+
+            if (tab == Tab.Mapa && EntradaMapa(kb, gp, ms)) return;
 
             if (tab == Tab.Items && Inventory.Instance != null)
             {
@@ -188,9 +193,12 @@ namespace EstanDentro.Inventory
                 case Tab.Items: PaginaObjetos(); break;
                 case Tab.Notas: PaginaPistas(); break;
                 case Tab.Misiones: PaginaObjetivos(); break;
+                case Tab.Mapa: PaginaMapa(); break;
             }
             pie.text = modoNuevo ? "[E] seguir          [I] mochila"
                      : tab == Tab.Items ? "W/S elegir     Espacio mano ⇄ mochila     G soltar     Tab pestaña     I cerrar"
+                     : tab == Tab.Mapa ? (Colegio.Exploracion.Activo ? "A/D piso     W/S o clic sala     Espacio ir allí     Tab pestaña     M cerrar"
+                                                                  : "A/D piso     W/S sala     Tab pestaña     M cerrar")
                      : "W/S elegir     Tab pestaña     I cerrar";
         }
 
@@ -306,6 +314,144 @@ namespace EstanDentro.Inventory
             Texto(contDer, ahora != null ? ahora.text : "Seguir adelante.", 34, tinta, new Vector2(0, 300f), 620, TextAnchor.UpperLeft, 300f);
         }
 
+        // ------------------------------------------------------------------ mapa (estilo Resident Evil, a lápiz)
+        int pisoMapa = -1, salaMapa = -1;
+        Texture2D texMapa;
+        RectTransform rtMapa; RectInt recorteMapa;
+        readonly List<Colegio.MapaColegio.Sala> salasLista = new List<Colegio.MapaColegio.Sala>();
+        static readonly Color azulPuerta = new Color(0.16f, 0.36f, 0.72f);
+
+        /// <summary>Teclas propias del mapa. true = ya se atendió (el cuaderno se cerró para viajar).</summary>
+        bool EntradaMapa(Keyboard kb, Gamepad gp, Mouse ms)
+        {
+            if (!Colegio.MapaColegio.Hay) return false;
+            int n = Colegio.MapaColegio.Pisos.Count;
+            if ((kb != null && (kb.dKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame)) || (gp != null && gp.dpad.right.wasPressedThisFrame)) { pisoMapa = (pisoMapa + 1) % n; sel = 0; salaMapa = -1; Refrescar(); }
+            if ((kb != null && (kb.aKey.wasPressedThisFrame || kb.leftArrowKey.wasPressedThisFrame)) || (gp != null && gp.dpad.left.wasPressedThisFrame)) { pisoMapa = (pisoMapa - 1 + n) % n; sel = 0; salaMapa = -1; Refrescar(); }
+            // clic en el plano: elige la sala que está debajo
+            if (ms != null && ms.leftButton.wasPressedThisFrame && rtMapa != null && RectTransformUtility.RectangleContainsScreenPoint(rtMapa, ms.position.ReadValue(), null)
+                && RectTransformUtility.ScreenPointToLocalPointInRectangle(rtMapa, ms.position.ReadValue(), null, out var local))
+            {
+                var r = rtMapa.rect;
+                int ci = recorteMapa.x + Mathf.FloorToInt((local.x - r.xMin) / r.width * recorteMapa.width);
+                int cj = recorteMapa.y + Mathf.FloorToInt((local.y - r.yMin) / r.height * recorteMapa.height);
+                byte v = Colegio.MapaColegio.Valor(pisoMapa, ci, cj);
+                int i = v >= 3 ? salasLista.FindIndex(s => s.id == v - 3) : -1;
+                if (i >= 0)
+                {
+                    if (sel == i && Colegio.Exploracion.Activo) { Viajar(salasLista[i]); return true; }   // segundo clic: ir
+                    sel = i; Refrescar(); return true;
+                }
+            }
+            if (Colegio.Exploracion.Activo && sel < salasLista.Count && ((kb != null && kb.spaceKey.wasPressedThisFrame) || (gp != null && gp.buttonSouth.wasPressedThisFrame)))
+            { Viajar(salasLista[sel]); return true; }
+            return false;
+        }
+
+        void Viajar(Colegio.MapaColegio.Sala s)
+        {
+            Close();
+            Colegio.Exploracion.IrA(s);
+        }
+
+        void PaginaMapa()
+        {
+            salasLista.Clear();
+            if (!Colegio.MapaColegio.Hay || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Colegio")
+            {
+                Texto(contIzq, "Mapa", 40, tinta, new Vector2(0, 345f), 640, TextAnchor.MiddleLeft);
+                Texto(contIzq, "Aquí no sé dónde estoy.", 28, tintaSuave, new Vector2(0, 270f), 640, TextAnchor.MiddleLeft);
+                return;
+            }
+            var j = FindAnyObjectByType<Player.PlayerController>();
+            int actual = j ? Colegio.MapaColegio.SalaEn(j.transform.position) : -1;
+            if (pisoMapa < 0) pisoMapa = j ? Colegio.MapaColegio.PisoDe(j.transform.position.y) : 3;
+            var pisos = Colegio.MapaColegio.Pisos;
+
+            // hoja izquierda: la planta, las salas conocidas y la leyenda
+            Texto(contIzq, "Mapa del colegio", 38, tinta, new Vector2(0, 360f), 640, TextAnchor.MiddleLeft);
+            Texto(contIzq, $"‹ A      {pisos[pisoMapa].nombre.ToUpper()}      D ›", 28, rojo, new Vector2(0, 300f), 640, TextAnchor.MiddleLeft);
+            foreach (var s in Colegio.MapaColegio.Salas)
+                if (s.piso == pisoMapa && Colegio.MapaColegio.Visitada(s.id)) salasLista.Add(s);
+            salasLista.Sort((a, b) => b.id == actual ? 1 : a.id == actual ? -1 : string.Compare(a.nombre, b.nombre, StringComparison.CurrentCulture));
+            if (salaMapa >= 0) { int k = salasLista.FindIndex(s => s.id == salaMapa); if (k >= 0) sel = k; salaMapa = -1; }
+            float y = 240f;
+            if (salasLista.Count == 0)
+                Texto(contIzq, "Todavía no he estado en este piso.", 26, tintaSuave, new Vector2(0, y), 640, TextAnchor.MiddleLeft);
+            sel = Mathf.Clamp(sel, 0, Mathf.Max(0, salasLista.Count - 1));
+            int desde = Mathf.Clamp(sel - 7, 0, Mathf.Max(0, salasLista.Count - 15));       // caben 15 renglones
+            for (int i = 0; i < salasLista.Count; i++)
+            {
+                if (i < desde || i >= desde + 15) { filas.Add((Rect(contIzq, "Oculta", new Vector2(0, -2000f), Vector2.one), null)); continue; }
+                var s = salasLista[i]; bool es = i == sel;
+                string marca = s.id == actual ? "  (estoy aquí)" : "";
+                var t = Texto(contIzq, (es ? "›  " : "    ") + s.nombre + marca, 26, es ? tinta : tintaSuave, new Vector2(0, y), 640, TextAnchor.MiddleLeft);
+                if (es) Subrayar(t.rectTransform, 380f);
+                filas.Add((t.rectTransform, null)); y -= 38f;
+            }
+            float yl = -330f;
+            Leyenda(contIzq, new Vector2(-280f, yl), new Color(0.84f, 0.47f, 0.27f), "estoy aquí"); Leyenda(contIzq, new Vector2(20f, yl), new Color(0.43f, 0.59f, 0.75f), "ya estuve");
+            Leyenda(contIzq, new Vector2(-280f, yl - 40f), rojo, "puerta cerrada"); Leyenda(contIzq, new Vector2(20f, yl - 40f), azulPuerta, "puerta abierta");
+            if (Colegio.Exploracion.Activo)
+                Texto(contIzq, "Modo exploración: [Espacio] o doble clic para ir a la sala.", 21, rojo, new Vector2(0, yl - 86f), 640, TextAnchor.MiddleLeft);
+
+            // hoja derecha: el plano
+            int elegida = sel < salasLista.Count ? salasLista[sel].id : -1;
+            if (texMapa) Destroy(texMapa);
+            texMapa = Colegio.MapaColegio.Textura(pisoMapa, actual, elegida, out recorteMapa);
+            float maxW = 600f, maxH = 720f, k2 = Mathf.Min(maxW / recorteMapa.width, maxH / recorteMapa.height);
+            var tam = new Vector2(recorteMapa.width * k2, recorteMapa.height * k2);
+            rtMapa = Rect(contDer, "Plano", new Vector2(0f, 30f), tam);
+            var ri = rtMapa.gameObject.AddComponent<RawImage>(); ri.texture = texMapa; ri.raycastTarget = false;
+            Texto(contDer, pisos[pisoMapa].nombre.ToUpper(), 22, tintaSuave, new Vector2(0f, 30f + tam.y / 2f + 22f), 600, TextAnchor.MiddleCenter);
+
+            Vector2 AlPlano(Vector3 mundo)
+            {
+                var c = Colegio.MapaColegio.ACelda(mundo);
+                return new Vector2((c.x - recorteMapa.x) / recorteMapa.width - 0.5f, (c.y - recorteMapa.y) / recorteMapa.height - 0.5f) * tam;
+            }
+            bool EnPiso(float y0) => Colegio.MapaColegio.PisoDe(y0) == pisoMapa;
+
+            // nombres de las salas conocidas (las grandes)
+            foreach (var s in salasLista)
+            {
+                if (s.area * Colegio.MapaColegio.Celda * Colegio.MapaColegio.Celda < 30f && s.id != elegida) continue;
+                var lt = Texto(rtMapa, s.nombre, s.id == elegida ? 17 : 14, s.id == elegida ? rojo : tinta, AlPlano(new Vector3(s.cx, 0f, s.cz)), 150, TextAnchor.MiddleCenter);
+                lt.horizontalOverflow = HorizontalWrapMode.Wrap;
+            }
+            // puertas: rojo cerrada, azul abierta (solo las que dan a una sala conocida)
+            foreach (var p in FindObjectsByType<Interaction.LockedDoor>(FindObjectsSortMode.None))
+            {
+                var rr = p.GetComponentInChildren<Renderer>(); Vector3 c = rr ? rr.bounds.center : p.transform.position;
+                float base0 = rr ? rr.bounds.min.y : c.y - 1f;
+                if (!EnPiso(base0)) continue;
+                int sa = Colegio.MapaColegio.SalaEn(new Vector3(c.x, base0, c.z));
+                if (sa >= 0 && !Colegio.MapaColegio.Visitada(sa)) continue;
+                var d = Rect(rtMapa, "Puerta", AlPlano(c), new Vector2(9f, 9f));
+                d.gameObject.AddComponent<Image>().color = p.IsLocked ? rojo : azulPuerta;
+            }
+            // lo que cierra el paso (barricadas, portón)
+            foreach (var b in FindObjectsByType<Colegio.Bloqueo>(FindObjectsSortMode.None))
+            {
+                if (!EnPiso(b.transform.position.y)) continue;
+                Texto(rtMapa, "✕", 20, rojo, AlPlano(b.transform.position), 30, TextAnchor.MiddleCenter);
+            }
+            // Mateo: una flecha que mira hacia donde mira él
+            if (j && EnPiso(j.transform.position.y))
+            {
+                var fl = Texto(rtMapa, "▲", 26, new Color(0.75f, 0.1f, 0.08f), AlPlano(j.transform.position), 40, TextAnchor.MiddleCenter);
+                fl.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -j.transform.eulerAngles.y);
+                fl.gameObject.AddComponent<Outline>().effectColor = new Color(1f, 0.95f, 0.85f, 0.9f);
+            }
+        }
+
+        void Leyenda(Transform padre, Vector2 pos, Color c, string texto)
+        {
+            var cuadro = Rect(padre, "Leyenda", pos, new Vector2(22f, 22f));
+            cuadro.gameObject.AddComponent<Image>().color = c;
+            Texto(padre, texto, 22, tintaSuave, pos + new Vector2(140f, 0f), 240, TextAnchor.MiddleLeft);
+        }
+
         void Aviso(string msg)
         {
             if (string.IsNullOrEmpty(msg)) return;
@@ -343,6 +489,7 @@ namespace EstanDentro.Inventory
             Pestana(libro, Tab.Items, "OBJETOS", new Vector2(-590f, 446f), new Color(0.55f, 0.12f, 0.10f));
             Pestana(libro, Tab.Notas, "PISTAS", new Vector2(-460f, 446f), new Color(0.23f, 0.35f, 0.23f));
             Pestana(libro, Tab.Misiones, "OBJETIVOS", new Vector2(-330f, 446f), new Color(0.20f, 0.29f, 0.45f));
+            if (Colegio.MapaColegio.Hay) Pestana(libro, Tab.Mapa, "MAPA", new Vector2(-200f, 446f), new Color(0.62f, 0.48f, 0.18f));
 
             pie = Texto(canvas.transform, "", 20, new Color(0.95f, 0.93f, 0.85f, 0.6f), new Vector2(0f, -495f), 1500, TextAnchor.MiddleCenter);
         }
@@ -373,7 +520,7 @@ namespace EstanDentro.Inventory
             var ic = Rect(r, "Icono", Vector2.zero, new Vector2(46f, 46f));
             ic.anchorMin = ic.anchorMax = new Vector2(0.5f, 0.5f);
             var ii = ic.gameObject.AddComponent<Image>(); ii.raycastTarget = false; ii.preserveAspect = true;
-            ii.sprite = IconosCuaderno.Crear(t == Tab.Items ? IconosCuaderno.Icono.Mochila : t == Tab.Notas ? IconosCuaderno.Icono.Lupa : IconosCuaderno.Icono.Diana);
+            ii.sprite = IconosCuaderno.Crear(t == Tab.Items ? IconosCuaderno.Icono.Mochila : t == Tab.Notas ? IconosCuaderno.Icono.Lupa : t == Tab.Mapa ? IconosCuaderno.Icono.Mapa : IconosCuaderno.Icono.Diana);
             pestanas[t] = img;
         }
 

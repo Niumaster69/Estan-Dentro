@@ -161,7 +161,7 @@ namespace EstanDentro.Colegio
                 "Ese día no murió nadie.",
                 "Pa está vivo. Te visita todos los días.",
                 "El que no ha vuelto eres tú.",
-                "Tres años dormido."
+                "Habitación 306. Tres años dormido."       // el número que la Pesadilla escribió en el tablero
             };
             foreach (var s in giro) yield return Linea(s, 2.8f);
 

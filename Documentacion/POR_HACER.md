@@ -14,19 +14,16 @@ Entrega: martes 3-nov. Lo hecho está en `HECHO.md` (30-oct). Ciclo de trabajo e
   (aguantar el aire), el bucle del pasillo y el final del hospital. La prueba automática no cubre el escondite.
 - [ ] Medir FPS en la GTX 1650 con calidad Media y Alta (Ajustes > Video).
 - [ ] Hospital: cara de Mateo más trabajada (hoy es una forma simple), foto de Mateo y Pa en el portarretratos, cortina.
-- [ ] La Pesadilla esconde la clave: en la Pesadilla el tablero del 4°B muestra un número que en Normal está borrado.
-- [ ] Primer recuerdo guiado en el 4°B que enseñe a respirar (antes de la rectoría).
-- [ ] Observador que camina (animación de Mixamo) en vez de saltar.
+- [ ] Jugar a mano lo nuevo del 30-oct (noche): mapa (M), modo exploración, «hab. 306» y el candado del aula de música,
+  el recuerdo de respirar tras el apagón y el Observador caminando (¿asusta? ¿2,1 m/s está bien?).
 - [ ] Luz dorada propia del aula de música para el recuerdo de Pa cantando; alfombra de flores bajo el jacarandá.
 - [ ] Grabar "seis" con la voz de Pa (hoy solo subtítulo) y las grabaciones de Pa coleccionables.
 - [ ] Actualizar la página "Están Dentro — Remaster" con capturas nuevas al terminar cada bloque.
 
 ## A. Probar lo que ya existe (lo primero)
 ### ▶ SEGUIR AQUÍ (actualizado 19-oct tarde)
-- [ ] Pesadilla, siguiente: números cambiados en la Pesadilla (clave de un candado), animación de caminar del Observador (ahora salta a trompicones), ¿más recuerdos? (el celular de Pa). Probar a mano la persecución en el pasillo del piso 3.
+- [ ] Pesadilla, siguiente: ¿más recuerdos? (el celular de Pa). Probar a mano la persecución en el pasillo del piso 3.
 - [ ] **Rediseñar la escena de los ductos** (Henry: "que sea más lógica"): ducto que sale del techo del 4°B, corre sobre el piso 3 y baja por un tiro hasta la rectoría (y al revés).
-- [ ] Mapa estilo RE en el cuaderno (piso 3 + rectoría).
-- [ ] **Mapa estilo Resident Evil** en una pestaña del cuaderno: salas visitadas, puertas cerradas en rojo / abiertas en azul, dónde estoy (Henry 20-oct).
 - [ ] **Volver al 4°B**: ¿el nivel 1 es de ida (ducto sin regreso) o con regreso? Definir con Henry (puertas por color tipo RE).
 - [ ] **Posprocesado y shaders** (Henry lo propuso como siguiente).
 - [ ] **Escondites en armarios** de diseño distinto a los casilleros, donde quepa la cámara sin atravesar nada.

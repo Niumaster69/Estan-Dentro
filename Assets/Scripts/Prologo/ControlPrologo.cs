@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -63,6 +63,9 @@ namespace EstanDentro.Prologo
             Instancia = this;
             ConstruirUI();
             rot0 = ojos.localRotation; ojos0 = ojos.localPosition;
+            // el celular es delgado y queda casi de canto sobre las piernas: la mira se le escapaba. Una caja de 14 cm
+            // alrededor (como la mano que lo busca) basta para mirarlo sin tapar la lonchera ni el cuaderno
+            AgrandarParaMirar(celular, 0.14f);
             Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
             foreach (var l in lucesCamion) if (l) l.enabled = false;
             if (camion) camion.gameObject.SetActive(false);
@@ -331,9 +334,18 @@ namespace EstanDentro.Prologo
         {
             var local = Quaternion.Inverse(ojos.parent ? ojos.parent.rotation * rot0 : rot0) * dirMundo;
             yaw = Mathf.Clamp(Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg, -110f, 95f);
-            pitch = Mathf.Clamp(-Mathf.Atan2(local.y, new Vector2(local.x, local.z).magnitude) * Mathf.Rad2Deg, -45f, 70f);
+            pitch = Mathf.Clamp(-Mathf.Atan2(local.y, new Vector2(local.x, local.z).magnitude) * Mathf.Rad2Deg, -45f, 84f);
             ojos.localRotation = rot0 * Quaternion.Euler(0f, yaw, 0f) * Quaternion.Euler(pitch, 0f, 0f);
         }
+        static void AgrandarParaMirar(GameObject g, float lado)
+        {
+            if (!g) return;
+            var bc = g.GetComponent<BoxCollider>(); if (!bc) return;
+            var s = g.transform.lossyScale;
+            Vector3 minimo = new Vector3(lado / Mathf.Max(1e-4f, Mathf.Abs(s.x)), lado / Mathf.Max(1e-4f, Mathf.Abs(s.y)), lado / Mathf.Max(1e-4f, Mathf.Abs(s.z)));
+            bc.size = Vector3.Max(bc.size, minimo);
+        }
+
         public GameObject Mirando => mirando;
         public bool RadioLista => radioLista;
         /// <summary>Se puede tocar algo solo en silencio: nadie hablando, cantando ni eligiendo (así no se cruzan las conversaciones).</summary>
@@ -403,7 +415,7 @@ namespace EstanDentro.Prologo
             if (Gamepad.current != null) d += Gamepad.current.rightStick.ReadValue() * 90f * Time.deltaTime;
             yaw = Mathf.Clamp(yaw + d.x, -110f, 95f);           // no se puede girar del todo: va sentado con cinturón
             // hacia abajo se alcanza el celular y la lonchera; mirando a los lados, menos (el hombro está ahí)
-            float maxAbajo = Mathf.Lerp(72f, 38f, Mathf.InverseLerp(35f, 105f, Mathf.Abs(yaw)));
+            float maxAbajo = Mathf.Lerp(84f, 38f, Mathf.InverseLerp(35f, 105f, Mathf.Abs(yaw)));   // de frente se alcanza a mirar el celular en las piernas
             pitch = Mathf.Clamp(pitch - d.y, -45f, maxAbajo);
             ojos.localRotation = rot0 * Quaternion.Euler(0f, yaw, 0f) * Quaternion.Euler(pitch, 0f, 0f);
             // la cabeza gira sobre el cuello (detrás y debajo de los ojos), no sobre los ojos
